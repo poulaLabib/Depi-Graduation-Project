@@ -53,7 +53,6 @@ The platform bridges the gap between innovation and funding by offering an easy-
 - ✅ User authentication (Entrepreneurs & Investors)  
 - ✅ Project submission & pitch creation  
 - ✅ Investor dashboards for browsing projects  
-- ✅ Secure chat between entrepreneurs and investors  
 - ✅ Project rating & feedback system  
 
 ---
