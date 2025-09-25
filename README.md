@@ -1,3 +1,7 @@
+## Google drive link :
+https://drive.google.com/drive/folders/10ItZDCpwTAKaMxpzxY7eUkeuYQnQYLrc?usp=drive_link
+
+---
 # (“Fikraty”)
 
 > A digital platform inspired by *Shark Tank*, connecting **entrepreneurs** with **investors** in a professional, accessible way.
@@ -119,8 +123,6 @@ The platform bridges the gap between innovation and funding by offering an easy-
 ➡️ Next Phase: Firebase Integration and Authentication (User registration/login, role-based navigation, Firestore setup with security rules)
 
 ---
-## Google drive link :
-https://drive.google.com/drive/folders/10ItZDCpwTAKaMxpzxY7eUkeuYQnQYLrc?usp=drive_link
 ## 🚀 Getting Started
 
 ### Prerequisites
