@@ -1,4 +1,4 @@
-# 🚀 PitchUp (“Fikraty”)
+# (“Fikraty”)
 
 > A digital platform inspired by *Shark Tank*, connecting **entrepreneurs** with **investors** in a professional, accessible way.
 
