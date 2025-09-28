@@ -1,128 +1,198 @@
-# (“Fikraty”)
+# Fikraty  
 
-> A digital platform inspired by *Shark Tank*, connecting **entrepreneurs** with **investors** in a professional, accessible way.
-
----
-
-## 📌 Overview
-PitchUp is a mobile application designed to help **entrepreneurs** present their startup ideas and connect directly with **investors** seeking new opportunities.  
-
-The platform bridges the gap between innovation and funding by offering an easy-to-use, secure, and professional environment.
+> A digital platform inspired by *Shark Tank*, connecting **entrepreneurs** with **investors** in a professional, accessible way.  
 
 ---
 
-## 🎯 Objectives
-- 🤝 Facilitate direct communication between entrepreneurs and investors.  
-- ⚡ Accelerate access to funding opportunities.  
-- 🌍 Build a digital community for startup growth and collaboration.  
+## 📌 Overview  
+**Fikraty** is a mobile application designed to help **entrepreneurs** present their startup ideas and connect directly with **investors**.  
+The platform bridges the gap between innovation and funding by offering an easy-to-use, secure, and professional environment.  
 
 ---
 
-## 👥 Target Users
-- **Entrepreneurs** 🧑‍💻: Showcase their startup ideas and projects.  
-- **Investors** 💼: Discover promising opportunities and connect with innovators.  
+## 🎯 Objectives  
+- 🤝 Facilitate direct communication between entrepreneurs and investors  
+- ⚡ Accelerate access to funding opportunities  
+- 🌍 Build a digital community for startup growth and collaboration  
 
 ---
 
-## ⚠️ Challenges
-- 📈 Attracting both entrepreneurs and investors.  
-- 🧐 Ensuring quality of submitted projects (avoiding non-serious ideas).  
-- 🔒 Protecting sensitive investor and project data.  
-- ⏳ Managing time effectively between academic work and app development.  
+## 📲 Features  
+
+**General** 🔒  
+- Basic registration available for all users  
+- Additional **authorization required** to access full features  
+  - Entrepreneurs cannot submit requests or nudge investors without authorization  
+  - Investors cannot directly communicate with entrepreneurs without authorization  
+
+**Entrepreneurs** 🧑‍💻  
+- Create and manage personal & company profiles  
+- Submit requests (currently only **fundraising**)  
+- Browse investor profiles  
+- Nudge investors **(only if the investor has agreed & entrepreneur is authorized)**  
+
+**Investors** 💼  
+- Two types: **Angel Investors** & **Venture Capitalists**  
+- Create and manage personal profiles  
+- Browse fundraising requests  
+- View entrepreneur & company profiles **(only for those who submitted requests)**  
+- Sort requests by **industry** and **funding amount**  
+- Communicate directly with entrepreneurs **(only if authorized)**  
+- Choose whether to allow or block nudges  
 
 ---
 
-## 🛠️ Tech Stack
-- **Frontend:** Flutter  
-- **Backend:** Firebase (Authentication, Firestore, Cloud Functions)  
-- **UI/UX:** Figma (Prototyping & Wireframes)  
+## 👨‍💻 Team Members
+- Youssef Mohamed (**Team Leader**)  
+- Nourhan Ahmed  
+- Mohamed Adel  
+- Poula Labib  
+- Ahmed Mohamed  
+- Omar Ahmed Ali
 
 ---
 
-## 👨‍💻 Team Roles
-| Role | Member |
-|------|---------|
-| 🧑‍✈️ Project Manager | Youssef Mohamed |
-| 🎨 UI/UX Designers | Nourhan Ahmed & Youssef Mohamed |
-| 💻 Frontend Developers | Mohamed Adel & Poula Labib |
-| ⚙️ Backend Developers (Firebase) | Ahmed Mohamed & Omar Ahmed Ali |
+## 📅 Work Plan
+
+### 1. Research & Analysis
+#### 👥 Target Users
+- **Entrepreneurs** 🧑‍💻: Individuals or teams looking to showcase their startup ideas and attract funding.  
+- **Investors** 💼: Angel investors and venture capitalists interested in discovering promising opportunities.  
 
 ---
 
-## 📲 Features (Planned)
-- ✅ User authentication (Entrepreneurs & Investors)  
-- ✅ Project submission & pitch creation  
-- ✅ Investor dashboards for browsing projects  
-- ✅ Project rating & feedback system  
+### 2. Visual Identity
+[Link to Drive Folder](https://drive.google.com/drive/folders/13ekEDLPfK-LCBPbbIMYMziaHKOovLsgI)  
+*Logo design, branding elements, and color schemes.*
 
 ---
 
-# Project Timeline
-
-## Week 1: Setup, UI/UX, and Project Foundation
-**Tasks:**
-- Initialize the Flutter project and connect it to a GitHub repository for version control.
-- Design wireframes in Figma for the core flows:
-  - Entrepreneur signup & project submission.
-  - Investor signup & project browsing.
-  - Project detail and feedback screens.
-- Define Firestore database schema (users, projects, feedback).
-- Build static UI screens (non-functional): login, entrepreneur dashboard, investor dashboard, project detail page.
-
-**Deliverables:**
-- A Flutter project initialized and hosted on GitHub.
-- Complete Figma prototype for the MVP.
-- Static UI screens ready for authentication and data integration.
-
-## Week 2: Firebase Integration and Authentication
-**Tasks:**
-- Integrate Firebase into the Flutter project (Authentication, Firestore).
-- Implement user registration/login with role-based navigation (Entrepreneur vs. Investor).
-- Create profile setup for each role.
-- Configure Firestore with proper security rules for protecting user and project data.
-
-**Deliverables:**
-- Working login/registration system with roles.
-- Entrepreneurs and investors redirected to their dashboards.
-- Firestore database connected and secured.
-
-## Week 3: Core Features (Project Submission & Browsing)
-**Tasks:**
-- Implement project submission flow for entrepreneurs (title, description, pitch deck upload).
-- Build investor dashboard to list/filter projects.
-- Create project detail screen with all entrepreneur information.
-- Connect Firestore to handle project submissions and investor browsing in real time.
-
-**Deliverables:**
-- Entrepreneurs can submit projects.
-- Investors can browse and view project details.
-- Fully working integration between UI and Firestore.
-
-## Week 4: Feedback, Testing, and Finalization
-**Tasks:**
-- Implement project feedback/rating system for investors.
-- Test the full app flow: authentication → project submission → browsing → feedback.
-- Fix bugs, polish UI consistency, and optimize UX.
-- Prepare a release-ready build (Android, optionally iOS).
-- Prepare pitch/demo presentation.
-
-**Deliverables:**
-- Complete MVP (authentication, submission, browsing, feedback).
-- Tested and stable app ready for demo.
-- Final documentation and project presentation.
-
+### 3. Main Designs
+[Link to Drive Folder](https://drive.google.com/drive/folders/1b8ytB8BiUEWRhILur3lRKWeMXsrjdhO-)  
+*UI mockups, posters, and app screen designs.*
 
 ---
-# Current Phase
 
-✅ UI Screens Completed (Login, Entrepreneur Dashboard, Investor Dashboard, Project Detail Page)  
-➡️ Next Phase: Firebase Integration and Authentication (User registration/login, role-based navigation, Firestore setup with security rules)
-
----
-## Google drive link :
-https://drive.google.com/drive/folders/10ItZDCpwTAKaMxpzxY7eUkeuYQnQYLrc?usp=drive_link
+### 4. Final Presentation
+[Link to Drive Folder](https://drive.google.com/drive/folders/1i-v5P9e_PrK8GawTJ93Kt54WHdDPVbjc)  
+*Slides and materials prepared for the final project presentation.*
 
 ---
+
+## 👨‍💻 Roles & Responsibilities
+
+Each team member contributes across multiple areas to ensure collaboration and shared responsibility.
+
+### 🔧 Backend
+- **Firebase Authentication:** Ahmed Mohamed & Youssef Mohamed  
+- **Firestore Database Design & Management:** Omar Ahmed Ali & Mohamed Adel  
+- **Cloud Functions / API Integrations:** Ahmed Mohamed & Poula Labib  
+- **State Management & Data Flow:** Youssef Mohamed & Nourhan Ahmed  
+
+---
+
+### 🎨 Frontend (Flutter)
+- **UI Implementation:** Mohamed Adel & Nourhan Ahmed  
+- **Navigation & Routing:** Poula Labib & Youssef Mohamed  
+- **State Management (Bloc / Provider):** Ahmed Mohamed & Omar Ahmed Ali  
+- **Testing & Debugging:** All team members  
+
+---
+
+### 🖌️ UI/UX Design
+- **Wireframes & Prototypes:** Nourhan Ahmed & Youssef Mohamed  
+- **User Experience Flow:** Poula Labib & Mohamed Adel  
+- **Design Consistency & Branding:** Nourhan Ahmed & Omar Ahmed Ali  
+
+---
+
+### 📂 Project Management
+- **Task Allocation & Deadlines:** Youssef Mohamed  
+- **Documentation (README, Reports):** Ahmed Mohamed & Omar Ahmed Ali  
+- **Final Presentation:** All team members
+
+---
+
+## 👨‍🏫 Instructor
+- Ahmed Hassan
+
+---
+
+## 🗓️ Project Timeline
+
+### Week 1: Setup & UI/UX
+**Tasks:**  
+- Initialize Flutter project and GitHub repository  
+- Design wireframes in Figma for core flows: entrepreneur signup, project submission, investor signup, project browsing, project detail & feedback screens  
+- Plan Firestore database schema (users, projects, feedback)  
+- Build static UI screens (login, dashboards, project detail)  
+
+**Deliverables:**  
+- Flutter project on GitHub  
+- Figma prototype of MVP  
+- Static UI screens ready for integration  
+
+---
+
+### Week 2: Backend & Firebase Integration
+**Tasks:**  
+- Integrate Firebase (Authentication, Firestore, Cloud Functions)  
+- Implement role-based login/registration (Entrepreneur vs. Investor)  
+- Configure Firestore with proper security rules  
+- Begin connecting UI with backend (basic data flow)  
+
+**Deliverables:**  
+- Functional authentication system  
+- Firestore integrated and secured  
+- Initial backend connected to UI screens  
+
+---
+
+### Week 3: Core Features (Project Submission & Browsing)
+**Tasks:**  
+- Complete project submission for entrepreneurs (title, description, pitch deck)  
+- Build investor dashboard with sorting/filtering (industry, funding amount)  
+- Project detail screens showing entrepreneur/company info  
+- Implement nudge feature and authorization checks  
+
+**Deliverables:**  
+- Entrepreneurs can submit projects; investors can browse and view details  
+- Fully integrated core features with backend  
+
+---
+
+### Week 4: Feedback, Testing, and Finalization
+**Tasks:**  
+- Implement feedback/rating system for investors  
+- Test full app flow: authentication → submission → browsing → feedback  
+- Fix bugs, polish UI, optimize UX  
+- Prepare release-ready build (Android, optional iOS)  
+- Prepare final pitch/demo presentation  
+
+**Deliverables:**  
+- Complete and stable MVP ready for demo  
+- Final documentation and presentation materials  
+
+---
+
+## 🚀 Progress Update
+
+### ✅ Completed
+- UI Screens: Login, Entrepreneur Dashboard, Investor Dashboard, Project Detail Page
+
+### ➡️ Next Phase
+- Firebase Integration & Authentication:  
+  - User registration/login  
+  - Role-based navigation (Entrepreneur vs. Investor)  
+  - Firestore setup with security rules  
+
+---
+
+## 📂 Google Drive
+[Project Resources](https://drive.google.com/drive/folders/10ItZDCpwTAKaMxpzxY7eUkeuYQnQYLrc?usp=drive_link)  
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
