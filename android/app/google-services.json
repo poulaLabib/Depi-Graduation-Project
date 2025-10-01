@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "833597435439",
+    "project_id": "fikraty",
+    "storage_bucket": "fikraty.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:833597435439:android:a6364033a07e6e57f0a0da",
+        "android_client_info": {
+          "package_name": "com.example.depi_graduation_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4AAAYWnaOu4ro6JQ4jb533e8nUTw3rD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
