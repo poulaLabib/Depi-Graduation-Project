@@ -1,4 +1,4 @@
-import 'package:depi_graduation_project/screens/entrepreneur_main_screen.dart';
+import 'package:depi_graduation_project/screens/investor_main_screen.dart';
 import 'package:depi_graduation_project/theme/themes.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,8 @@ class Fikraty extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: appTheme,
-      home: EntrepreneurMainScreen(),
+      home: InvestorMainScreen(),
+      
     );
   }
 }
