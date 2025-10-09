@@ -12,4 +12,5 @@ final appTheme = ThemeData(
     tertiary: Colors.white,
     onTertiary: Colors.black,
   ),
+  scaffoldBackgroundColor: const Color.fromARGB(255, 255, 251, 222),
 );

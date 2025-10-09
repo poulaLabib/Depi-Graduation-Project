@@ -76,7 +76,7 @@ class RequestTileInvestorView extends StatelessWidget {
               ),
             ),
             Text(
-              "\$${offer}",
+              "\$$offer",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -99,7 +99,7 @@ class RequestTileInvestorView extends StatelessWidget {
               ),
             ),
             Text(
-              "${equity}%",
+              "$equity%",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class RequestTileInvestorView extends StatelessWidget {
               ),
             ),
             Text(
-              "${date}",
+              date,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,

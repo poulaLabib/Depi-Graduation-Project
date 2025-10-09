@@ -39,6 +39,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   google_fonts: ^6.3.2
   salomon_bottom_bar: ^3.3.2
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_lints: ^5.0.0
