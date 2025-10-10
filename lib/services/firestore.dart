@@ -1,0 +1,70 @@
+// collections investor, entrepreneur, company, requests.
+// investor ==> name*, photoUrl*, about*, phoneNumber*, Experience*, skills*, investmentCapacity*, NationalIdUrl*, PreferredIndustries*, InvestorType, uid
+// entrepreneur ==> about*, phoneNumber*, experience*, skills*, role*, NationalIdUrl*, uid
+// company ==> name*, description*, founded*, teamSize*, industry*, stage*, currency*, location*, teamMembers* list<map<>> => name, role*, verifiedCertificate*, uid, createdAt
+// request ==> description*, amountOfMoney*, equityInReturn*, whyAreYouRaising*, submittedAt, companyid, uid
+
+// CRUD
+// addCompany, addRequest, addInvestor, addEntrepreneur,
+// read data,
+// update data,
+// delete request,
+
+
+
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:depi_graduation_project/models/investor.dart';
+
+// global variable _db to access firestore functions to use in all 4 classes
+final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+
+// functions addInvestor, updateInvestor, getInvestorStream, getInvestors, deleteInvestor
+class InvestorFirestoreService {
+  // Function to add investor
+  Future<void> addInvestor({required String name, required String uid}) async {
+    await _db.collection('investors').doc(uid).set({
+      'name': name,
+      'InvestorType': '',
+      'photoUrl': '',
+      'about': '',
+      'phoneNumber': '',
+      'experience': '',
+      'skills': <String>[],
+      'investmentCapacity': 0,
+      'NationalIdUrl': '',
+      'PreferredIndustries': <String>[],
+    });
+  }
+
+  // Function to update investor data all at once requires map<String, dynamic>
+  Future<void> updateInvestor({
+    required String uid,
+    required Map<String, dynamic> updatedData,
+  }) async {
+    await _db.collection('investors').doc(uid).update(updatedData);
+  }
+
+  // Function to get stream of investor object => any thing changes in the firestore the investor changes as well, mainly for his profile page when he updates data.
+  Stream<Investor> getInvestorStream({required String uid}) {
+    return _db
+        .collection('investors')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => Investor.fromFireStore(snapshot.data() ?? {}, uid));
+  }
+
+  // Function to get all investors as objects, for entrepreneur to see all investors
+  Future<List<Investor>> getInvestors() async {
+    final snapshot = await _db.collection('investors').get();
+    return snapshot.docs.map((doc) {
+      return Investor.fromFireStore(doc.data(), doc.id);
+    }).toList();
+  }
+
+  // Function to delete investor document in investors collection, used if investor deletes his account
+  Future<void> deleteInvestor({required String uid}) async {
+    await _db.collection('investors').doc(uid).delete();
+  }
+}
