@@ -11,10 +11,9 @@
 // delete request,
 
 
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_graduation_project/models/investor.dart';
+import 'package:depi_graduation_project/models/request.dart';
 
 // global variable _db to access firestore functions to use in all 4 classes
 final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -68,3 +67,50 @@ class InvestorFirestoreService {
     await _db.collection('investors').doc(uid).delete();
   }
 }
+class RequestFirestoreService {
+  // Function to add request
+  Future<void> addRequest({
+    required String uid,
+    required String description,
+  }) async {
+    await _db.collection('requests').doc(uid).set({
+      'description': description,
+      'amountOfMoney': '',
+      'equityInReturn': '',
+      'whyAreYouRaising': '',
+      'submittedAt': FieldValue.serverTimestamp(),
+      'companyId': '',
+    });
+  }
+
+  // Function to update request data
+  Future<void> updateRequest({
+    required String uid,
+    required Map<String, dynamic> updatedData,
+  }) async {
+    await _db.collection('requests').doc(uid).update(updatedData);
+  }
+
+  // Function to get a stream of request data (auto-updates when Firestore changes)
+  Stream<Request> getRequestStream({required String uid}) {
+    return _db
+        .collection('requests')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => Request.fromFireStore(snapshot.data() ?? {}, uid));
+  }
+
+  // Function to get all requests
+  Future<List<Request>> getRequests() async {
+    final snapshot = await _db.collection('requests').get();
+    return snapshot.docs
+        .map((doc) => Request.fromFireStore(doc.data(), doc.id))
+        .toList();
+  }
+
+  // Function to delete request
+  Future<void> deleteRequest({required String uid}) async {
+    await _db.collection('requests').doc(uid).delete();
+  }
+}
+

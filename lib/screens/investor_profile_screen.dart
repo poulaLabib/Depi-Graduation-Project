@@ -1,14 +1,15 @@
-
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/investor_profile.dart';
+import '../models/investor.dart';
 import '../custom widgets/investor_profile_field.dart';
 import '../custom widgets/investor_edit_bottom_sheet.dart';
 import '../theme/themes.dart';
+
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class InvestorProfileScreen extends StatefulWidget {
   const InvestorProfileScreen({super.key});
 
@@ -29,21 +31,27 @@ class InvestorProfileScreen extends StatefulWidget {
 }
 
 class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
-  late InvestorProfile profile;
+  late Investor profile;
   final ImagePicker _picker = ImagePicker();
+
+  Uint8List? tempProfileImageBytes;
+  Uint8List? tempIdImageBytes;
 
   @override
   void initState() {
     super.initState();
-    profile = InvestorProfile(
+    profile = Investor(
+      uid: "123",
       name: "Omar Ahmed",
-      about: "About section here",
-      phone: "+20123456789",
-      experience: "3 years in tech",
-      skills: "Flutter, Dart",
-      investmentCapacity: 100000,
-      preferredIndustries: "Technology",
       investorType: "Venture Capital",
+      photoUrl: "",
+      about: "About section here",
+      phoneNumber: "+20123456789",
+      experience: "3 years in tech",
+      skills: ["Flutter", "Dart"],
+      investmentCapacity: 100000,
+      nationalIdUrl: "", // ممكن تحط لينك ID
+      preferredIndustries: ["Technology"],
     );
   }
 
@@ -58,6 +66,7 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
     return Scaffold(
       backgroundColor: cs.surface,
       body: SafeArea(
@@ -80,9 +89,9 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
                         context,
                         profile,
                         _pickImage,
-                        (updatedProfile) {
+                        (updatedInvestor) {
                           setState(() {
-                            profile = updatedProfile;
+                            profile = updatedInvestor;
                           });
                         },
                       );
@@ -97,10 +106,13 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: cs.tertiary,
-                  backgroundImage: profile.profileImage != null
-                      ? MemoryImage(profile.profileImage!)
-                      : null,
-                  child: profile.profileImage == null
+                  backgroundImage: tempProfileImageBytes != null
+                      ? MemoryImage(tempProfileImageBytes!)
+                      : (profile.photoUrl.isNotEmpty
+                          ? NetworkImage(profile.photoUrl)
+                          : null) as ImageProvider?,
+                  child: (tempProfileImageBytes == null &&
+                          profile.photoUrl.isEmpty)
                       ? Icon(Icons.camera_alt, size: 40, color: cs.onTertiary)
                       : null,
                 ),
@@ -116,15 +128,15 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
               ),
               const SizedBox(height: 20),
               ProfileField(title: "About", value: profile.about),
-              ProfileField(title: "Phone Number", value: profile.phone),
+              ProfileField(title: "Phone Number", value: profile.phoneNumber),
               ProfileField(title: "Experience", value: profile.experience),
-              ProfileField(title: "Skills", value: profile.skills),
+              ProfileField(title: "Skills", value: profile.skills.join(', ')),
               ProfileField(
                   title: "Investment Capacity",
                   value: profile.investmentCapacity.toString()),
               ProfileField(
                   title: "Preferred Industries",
-                  value: profile.preferredIndustries),
+                  value: profile.preferredIndustries.join(', ')),
               ProfileField(title: "Investor Type", value: profile.investorType),
               const SizedBox(height: 20),
               Column(
@@ -141,22 +153,28 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
                   SizedBox(
                     height: 200,
                     width: double.infinity,
-                    child: profile.idImage != null
+                    child: tempIdImageBytes != null
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.memory(profile.idImage!,
+                            child: Image.memory(tempIdImageBytes!,
                                 fit: BoxFit.contain),
                           )
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: cs.secondary,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Center(
-                              child: Icon(Icons.image_not_supported,
-                                  size: 40, color: cs.onSecondary),
-                            ),
-                          ),
+                        : (profile.nationalIdUrl.isNotEmpty
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(profile.nationalIdUrl,
+                                    fit: BoxFit.contain),
+                              )
+                            : Container(
+                                decoration: BoxDecoration(
+                                  color: cs.secondary,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.image_not_supported,
+                                      size: 40, color: cs.onSecondary),
+                                ),
+                              )),
                   ),
                 ],
               ),
@@ -187,4 +205,3 @@ class _InvestorProfileScreenState extends State<InvestorProfileScreen> {
     );
   }
 }
-

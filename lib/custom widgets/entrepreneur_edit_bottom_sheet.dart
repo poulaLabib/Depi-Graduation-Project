@@ -1,21 +1,21 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../models/entrepreneur_profile.dart';
+import '../models/entrepreneur.dart';
 
 void showEntrepreneurEditBottomSheet(
   BuildContext context,
-  EntrepreneurProfile profile,
+  Entrepreneur profile,
   Future<Uint8List?> Function() pickImage,
-  void Function(EntrepreneurProfile) onSave,
+  void Function(Entrepreneur) onSave,
 ) {
   String tempName = profile.name;
   String tempAbout = profile.about;
-  String tempPhone = profile.phone;
+  String tempPhone = profile.phoneNumber;
   String tempExperience = profile.experience;
   String tempSkills = profile.skills;
   String tempRole = profile.role;
-  Uint8List? tempProfileImage = profile.profileImageBytes;
-  Uint8List? tempIdImage = profile.idImageBytes;
+  String tempProfileImage = profile.profileImageUrl;
+  String tempIdImage = profile.idImageUrl;
 
   final nameController = TextEditingController(text: tempName);
   final aboutController = TextEditingController(text: tempAbout);
@@ -51,7 +51,7 @@ void showEntrepreneurEditBottomSheet(
                       final bytes = await pickImage();
                       if (bytes != null) {
                         setModalState(() {
-                          tempProfileImage = bytes;
+                          tempProfileImage = String.fromCharCodes(bytes);
                         });
                       }
                     },
@@ -61,10 +61,11 @@ void showEntrepreneurEditBottomSheet(
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: cs.tertiary,
-                        backgroundImage: tempProfileImage != null
-                            ? MemoryImage(tempProfileImage!)
+                        backgroundImage: tempProfileImage.isNotEmpty
+                            ? MemoryImage(Uint8List.fromList(
+                                tempProfileImage.codeUnits))
                             : null,
-                        child: tempProfileImage == null
+                        child: tempProfileImage.isEmpty
                             ? Icon(Icons.camera_alt,
                                 size: 40, color: cs.onTertiary)
                             : null,
@@ -151,17 +152,18 @@ void showEntrepreneurEditBottomSheet(
                           final bytes = await pickImage();
                           if (bytes != null) {
                             setModalState(() {
-                              tempIdImage = bytes;
+                              tempIdImage = String.fromCharCodes(bytes);
                             });
                           }
                         },
                         child: SizedBox(
                           height: 200,
                           width: double.infinity,
-                          child: tempIdImage != null
+                          child: tempIdImage.isNotEmpty
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(tempIdImage!,
+                                  child: Image.memory(
+                                      Uint8List.fromList(tempIdImage.codeUnits),
                                       fit: BoxFit.contain),
                                 )
                               : Container(
@@ -201,16 +203,19 @@ void showEntrepreneurEditBottomSheet(
                       _buildBottomSheetButton(
                         label: "Save",
                         onTap: () {
-                          onSave(EntrepreneurProfile(
-                            name: nameController.text,
-                            about: aboutController.text,
-                            phone: phoneController.text,
-                            experience: experienceController.text,
-                            skills: skillsController.text,
-                            role: tempRole,
-                            profileImageBytes: tempProfileImage,
-                            idImageBytes: tempIdImage,
-                          ));
+                          onSave(
+                            Entrepreneur(
+                              uid: profile.uid,
+                              name: nameController.text,
+                              about: aboutController.text,
+                              phoneNumber: phoneController.text,
+                              experience: experienceController.text,
+                              skills: skillsController.text,
+                              role: tempRole,
+                              profileImageUrl: tempProfileImage,
+                              idImageUrl: tempIdImage,
+                            ),
+                          );
                           Navigator.pop(context);
                         },
                         cs: cs,

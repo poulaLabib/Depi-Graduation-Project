@@ -1,31 +1,35 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import '../models/investor_profile.dart';
+import '../models/investor.dart';
 
 void showEditBottomSheet(
   BuildContext context,
-  InvestorProfile profile,
+  Investor profile,
   Future<Uint8List?> Function() pickImage,
-  void Function(InvestorProfile) onSave,
+  void Function(Investor) onSave,
 ) {
   String tempAbout = profile.about;
-  String tempPhone = profile.phone;
+  String tempPhone = profile.phoneNumber;
   String tempExperience = profile.experience;
-  String tempSkills = profile.skills;
+  List<String> tempSkills = List<String>.from(profile.skills);
   int tempInvestmentCapacity = profile.investmentCapacity;
-  String tempPreferredIndustries = profile.preferredIndustries;
+  List<String> tempPreferredIndustries =
+      List<String>.from(profile.preferredIndustries);
   String tempInvestorType = profile.investorType;
-  Uint8List? tempProfileImage = profile.profileImage;
-  Uint8List? tempIdImage = profile.idImage;
 
+  Uint8List? tempProfileImageBytes;
+  Uint8List? tempIdImageBytes;
+
+  // Controllers
   final aboutController = TextEditingController(text: tempAbout);
   final phoneController = TextEditingController(text: tempPhone);
   final experienceController = TextEditingController(text: tempExperience);
-  final skillsController = TextEditingController(text: tempSkills);
+  final skillsController =
+      TextEditingController(text: tempSkills.join(', '));
   final investmentCapacityController =
       TextEditingController(text: tempInvestmentCapacity.toString());
   final preferredIndustriesController =
-      TextEditingController(text: tempPreferredIndustries);
+      TextEditingController(text: tempPreferredIndustries.join(', '));
 
   final cs = Theme.of(context).colorScheme;
 
@@ -34,7 +38,8 @@ void showEditBottomSheet(
     context: context,
     backgroundColor: cs.surface,
     shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setModalState) {
@@ -53,7 +58,7 @@ void showEditBottomSheet(
                       final bytes = await pickImage();
                       if (bytes != null) {
                         setModalState(() {
-                          tempProfileImage = bytes;
+                          tempProfileImageBytes = bytes;
                         });
                       }
                     },
@@ -63,10 +68,13 @@ void showEditBottomSheet(
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: cs.tertiary,
-                        backgroundImage: tempProfileImage != null
-                            ? MemoryImage(tempProfileImage!)
-                            : null,
-                        child: tempProfileImage == null
+                        backgroundImage: tempProfileImageBytes != null
+                            ? MemoryImage(tempProfileImageBytes!)
+                            : (profile.photoUrl.isNotEmpty
+                                ? NetworkImage(profile.photoUrl)
+                                : null) as ImageProvider?,
+                        child: (tempProfileImageBytes == null &&
+                                profile.photoUrl.isEmpty)
                             ? Icon(Icons.camera_alt,
                                 size: 40, color: cs.onTertiary)
                             : null,
@@ -80,59 +88,29 @@ void showEditBottomSheet(
                           fontWeight: FontWeight.bold,
                           color: cs.onSurface)),
                   const SizedBox(height: 20),
+
                   _buildEditField("About", aboutController, cs),
                   _buildEditField("Phone Number", phoneController, cs),
                   _buildEditField("Experience", experienceController, cs),
-                  _buildEditField("Skills", skillsController, cs),
+                  _buildEditField("Skills (comma separated)", skillsController, cs),
                   _buildEditField("Investment Capacity",
                       investmentCapacityController, cs,
                       isNumber: true),
-                  _buildEditField(
-                      "Preferred Industries", preferredIndustriesController, cs),
-                  Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Investor Type",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: cs.onSurface)),
-                        const SizedBox(height: 4),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          decoration: BoxDecoration(
-                            color: cs.secondary,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: DropdownButtonFormField<String>(
-                            initialValue: tempInvestorType,
-                            decoration:
-                                const InputDecoration(border: InputBorder.none),
-                            dropdownColor: cs.secondary,
-                            items: const [
-                              DropdownMenuItem(
-                                  value: "Venture Capital",
-                                  child: Text("Venture Capital")),
-                              DropdownMenuItem(
-                                  value: "Angel Investor",
-                                  child: Text("Angel Investor")),
-                            ],
-                            onChanged: (value) {
-                              setModalState(() {
-                                tempInvestorType = value!;
-                              });
-                            },
-                            icon:
-                                Icon(Icons.arrow_drop_down, color: cs.onSecondary),
-                            style: TextStyle(color: cs.onSecondary),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildEditField("Preferred Industries (comma separated)",
+                      preferredIndustriesController, cs),
+
+                  const SizedBox(height: 10),
+                  // Investor Type Dropdown
+                  _buildInvestorTypeDropdown(
+                      tempInvestorType, cs, (value) {
+                    setModalState(() {
+                      tempInvestorType = value!;
+                    });
+                  }),
+
                   const SizedBox(height: 20),
+
+                  // National ID
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -147,67 +125,86 @@ void showEditBottomSheet(
                           final bytes = await pickImage();
                           if (bytes != null) {
                             setModalState(() {
-                              tempIdImage = bytes;
+                              tempIdImageBytes = bytes;
                             });
                           }
                         },
                         child: SizedBox(
                           height: 200,
                           width: double.infinity,
-                          child: tempIdImage != null
+                          child: tempIdImageBytes != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(tempIdImage!,
+                                  child: Image.memory(tempIdImageBytes!,
                                       fit: BoxFit.contain),
                                 )
-                              : Container(
-                                  decoration: BoxDecoration(
-                                    color: cs.secondary,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.add,
-                                            color: cs.onSecondary, size: 30),
-                                        Text("Upload your national ID",
-                                            style:
-                                                TextStyle(color: cs.onSecondary)),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                              : (profile.nationalIdUrl.isNotEmpty
+                                  ? ClipRRect(
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: Image.network(
+                                          profile.nationalIdUrl,
+                                          fit: BoxFit.contain),
+                                    )
+                                  : Container(
+                                      decoration: BoxDecoration(
+                                        color: cs.secondary,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.add,
+                                                color: cs.onSecondary, size: 30),
+                                            Text("Upload your national ID",
+                                                style: TextStyle(
+                                                    color: cs.onSecondary)),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
                         ),
                       ),
                     ],
                   ),
+
                   const SizedBox(height: 20),
+
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _buildBottomSheetButton(
-                          label: "Cancel",
-                          onTap: () => Navigator.pop(context),
-                          cs: cs),
+                        label: "Cancel",
+                        onTap: () => Navigator.pop(context),
+                        cs: cs,
+                      ),
                       _buildBottomSheetButton(
                         label: "Save",
                         onTap: () {
-                          onSave(InvestorProfile(
+                          onSave(Investor(
+                            uid: profile.uid,
                             name: profile.name,
+                            investorType: tempInvestorType,
+                            photoUrl: profile.photoUrl,
                             about: aboutController.text,
-                            phone: phoneController.text,
+                            phoneNumber: phoneController.text,
                             experience: experienceController.text,
-                            skills: skillsController.text,
+                            skills: skillsController.text
+                                .split(',')
+                                .map((e) => e.trim())
+                                .where((e) => e.isNotEmpty)
+                                .toList(),
                             investmentCapacity: int.tryParse(
                                     investmentCapacityController.text) ??
                                 0,
+                            nationalIdUrl: profile.nationalIdUrl,
                             preferredIndustries:
-                                preferredIndustriesController.text,
-                            investorType: tempInvestorType,
-                            profileImage: tempProfileImage,
-                            idImage: tempIdImage,
+                                preferredIndustriesController.text
+                                    .split(',')
+                                    .map((e) => e.trim())
+                                    .where((e) => e.isNotEmpty)
+                                    .toList(),
                           ));
                           Navigator.pop(context);
                         },
@@ -255,8 +252,48 @@ Widget _buildEditField(String title, TextEditingController controller,
   );
 }
 
-Widget _buildBottomSheetButton(
-    {required String label, required VoidCallback onTap, required ColorScheme cs}) {
+Widget _buildInvestorTypeDropdown(
+    String value, ColorScheme cs, ValueChanged<String?> onChanged) {
+  return Container(
+    margin: const EdgeInsets.only(top: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("Investor Type",
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 16, color: cs.onSurface)),
+        const SizedBox(height: 4),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          decoration: BoxDecoration(
+            color: cs.secondary,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: DropdownButtonFormField<String>(
+            initialValue: value,
+            decoration: const InputDecoration(border: InputBorder.none),
+            dropdownColor: cs.secondary,
+            items: const [
+              DropdownMenuItem(
+                  value: "Venture Capital", child: Text("Venture Capital")),
+              DropdownMenuItem(
+                  value: "Angel Investor", child: Text("Angel Investor")),
+            ],
+            onChanged: onChanged,
+            icon: Icon(Icons.arrow_drop_down, color: cs.onSecondary),
+            style: TextStyle(color: cs.onSecondary),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildBottomSheetButton({
+  required String label,
+  required VoidCallback onTap,
+  required ColorScheme cs,
+}) {
   return InkWell(
     onTap: onTap,
     child: Container(

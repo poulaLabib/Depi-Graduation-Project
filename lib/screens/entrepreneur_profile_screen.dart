@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../models/entrepreneur_profile.dart';
+import '../models/entrepreneur.dart';
 import '../custom widgets/entrepreneur_profile_field.dart';
 import '../theme/themes.dart';
 
@@ -32,20 +32,25 @@ class EntrepreneurProfileScreen extends StatefulWidget {
 
 class _EntrepreneurProfileScreenState
     extends State<EntrepreneurProfileScreen> {
-  EntrepreneurProfile profile = EntrepreneurProfile(
+  Entrepreneur profile = Entrepreneur(
+    uid: "1",
     name: "Omar Ahmed",
     about: "About section here",
-    phone: "+20123456789",
+    phoneNumber: "+20123456789",
     experience: "3 years in tech",
     skills: "Flutter, Dart",
     role: "Entrepreneur",
+    profileImageUrl: "",
+    idImageUrl: "",
   );
 
   final ImagePicker _picker = ImagePicker();
 
-  Future<Uint8List?> _pickImage() async {
+  Future<String?> _pickImageAndConvert() async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
-    return picked != null ? await picked.readAsBytes() : null;
+    if (picked == null) return null;
+    final bytes = await picked.readAsBytes();
+    return String.fromCharCodes(bytes);
   }
 
   void _openEditBottomSheet() {
@@ -61,12 +66,12 @@ class _EntrepreneurProfileScreenState
       builder: (context) {
         return StatefulBuilder(builder: (context, setModalState) {
           String tempAbout = profile.about;
-          String tempPhone = profile.phone;
+          String tempPhone = profile.phoneNumber;
           String tempExperience = profile.experience;
           String tempSkills = profile.skills;
           String tempRole = profile.role;
-          Uint8List? tempProfileImage = profile.profileImageBytes;
-          Uint8List? tempIdImage = profile.idImageBytes;
+          String tempProfileImage = profile.profileImageUrl;
+          String tempIdImage = profile.idImageUrl;
 
           final aboutController = TextEditingController(text: tempAbout);
           final phoneController = TextEditingController(text: tempPhone);
@@ -87,9 +92,9 @@ class _EntrepreneurProfileScreenState
                 children: [
                   GestureDetector(
                     onTap: () async {
-                      final bytes = await _pickImage();
-                      if (bytes != null) {
-                        setModalState(() => tempProfileImage = bytes);
+                      final imgStr = await _pickImageAndConvert();
+                      if (imgStr != null) {
+                        setModalState(() => tempProfileImage = imgStr);
                       }
                     },
                     child: SizedBox(
@@ -98,10 +103,11 @@ class _EntrepreneurProfileScreenState
                       child: CircleAvatar(
                         radius: 60,
                         backgroundColor: cs.tertiary,
-                        backgroundImage: tempProfileImage != null
-                            ? MemoryImage(tempProfileImage)
+                        backgroundImage: tempProfileImage.isNotEmpty
+                            ? MemoryImage(
+                                Uint8List.fromList(tempProfileImage.codeUnits))
                             : null,
-                        child: tempProfileImage == null
+                        child: tempProfileImage.isEmpty
                             ? Icon(Icons.camera_alt,
                                 size: 40, color: cs.onTertiary)
                             : null,
@@ -132,18 +138,19 @@ class _EntrepreneurProfileScreenState
                       const SizedBox(height: 6),
                       InkWell(
                         onTap: () async {
-                          final bytes = await _pickImage();
-                          if (bytes != null) {
-                            setModalState(() => tempIdImage = bytes);
+                          final imgStr = await _pickImageAndConvert();
+                          if (imgStr != null) {
+                            setModalState(() => tempIdImage = imgStr);
                           }
                         },
                         child: SizedBox(
                           height: 200,
                           width: double.infinity,
-                          child: tempIdImage != null
+                          child: tempIdImage.isNotEmpty
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.memory(tempIdImage,
+                                  child: Image.memory(
+                                      Uint8List.fromList(tempIdImage.codeUnits),
                                       fit: BoxFit.contain),
                                 )
                               : Container(
@@ -182,15 +189,16 @@ class _EntrepreneurProfileScreenState
                         label: "Save",
                         onTap: () {
                           setState(() {
-                            profile = EntrepreneurProfile(
+                            profile = Entrepreneur(
+                              uid: profile.uid,
                               name: profile.name,
                               about: aboutController.text,
-                              phone: phoneController.text,
+                              phoneNumber: phoneController.text,
                               experience: experienceController.text,
                               skills: skillsController.text,
                               role: roleController.text,
-                              profileImageBytes: tempProfileImage,
-                              idImageBytes: tempIdImage,
+                              profileImageUrl: tempProfileImage,
+                              idImageUrl: tempIdImage,
                             );
                           });
                           Navigator.pop(context);
@@ -232,10 +240,11 @@ class _EntrepreneurProfileScreenState
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.white,
-                  backgroundImage: profile.profileImageBytes != null
-                      ? MemoryImage(profile.profileImageBytes!)
+                  backgroundImage: profile.profileImageUrl.isNotEmpty
+                      ? MemoryImage(
+                          Uint8List.fromList(profile.profileImageUrl.codeUnits))
                       : null,
-                  child: profile.profileImageBytes == null
+                  child: profile.profileImageUrl.isEmpty
                       ? const Icon(Icons.camera_alt,
                           size: 40, color: Colors.black)
                       : null,
@@ -250,7 +259,7 @@ class _EntrepreneurProfileScreenState
               const SizedBox(height: 20),
               EntrepreneurProfileField(title: "About", value: profile.about),
               EntrepreneurProfileField(
-                  title: "Phone Number", value: profile.phone),
+                  title: "Phone Number", value: profile.phoneNumber),
               EntrepreneurProfileField(
                   title: "Experience", value: profile.experience),
               EntrepreneurProfileField(title: "Skills", value: profile.skills),
@@ -266,11 +275,13 @@ class _EntrepreneurProfileScreenState
                   SizedBox(
                     height: 200,
                     width: double.infinity,
-                    child: profile.idImageBytes != null
+                    child: profile.idImageUrl.isNotEmpty
                         ? ClipRRect(
                             borderRadius: BorderRadius.circular(8),
-                            child: Image.memory(profile.idImageBytes!,
-                                fit: BoxFit.contain),
+                            child: Image.memory(
+                              Uint8List.fromList(profile.idImageUrl.codeUnits),
+                              fit: BoxFit.contain,
+                            ),
                           )
                         : Container(
                             decoration: BoxDecoration(
@@ -345,10 +356,11 @@ Widget _buildEditField(
   );
 }
 
-Widget _buildBottomSheetButton(
-    {required String label,
-    required VoidCallback onTap,
-    required ColorScheme cs}) {
+Widget _buildBottomSheetButton({
+  required String label,
+  required VoidCallback onTap,
+  required ColorScheme cs,
+}) {
   return InkWell(
     onTap: onTap,
     child: Container(
