@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-//
 class Request {
   final String uid;
   final String description;
