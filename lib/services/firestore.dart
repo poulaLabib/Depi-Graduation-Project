@@ -14,6 +14,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_graduation_project/models/investor.dart';
 import 'package:depi_graduation_project/models/request.dart';
+import 'package:depi_graduation_project/models/company.dart';
 
 // global variable _db to access firestore functions to use in all 4 classes
 final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -111,6 +112,53 @@ class RequestFirestoreService {
   // Function to delete request
   Future<void> deleteRequest({required String uid}) async {
     await _db.collection('requests').doc(uid).delete();
+  }
+}
+class CompanyFirestoreService {
+  // Function to add company
+  Future<void> addCompany({required String name, required String uid}) async {
+    await _db.collection('companies').doc(uid).set({
+      'name': name,
+      'description': '',
+      'founded': 0,
+      'teamSize': 0,
+      'industry': '',
+      'stage': '',
+      'currency': '',
+      'location': '',
+      'teamMembers': <Map<String, dynamic>>[],
+      'createdAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  // Function to update company data all at once requires map<String, dynamic>
+  Future<void> updateCompany({
+    required String uid,
+    required Map<String, dynamic> updatedData,
+  }) async {
+    await _db.collection('companies').doc(uid).update(updatedData);
+  }
+
+  // Function to get stream of company object => any thing changes in the firestore the company changes as well, mainly for his profile page when he updates data.
+  Stream<Company> getCompanyStream({required String uid}) {
+    return _db
+        .collection('companies')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => Company.fromFireStore(snapshot.data() ?? {}, uid));
+  }
+
+  // Function to get all companies as objects, for entrepreneur to see all companies
+  Future<List<Company>> getCompanies() async {
+    final snapshot = await _db.collection('companies').get();
+    return snapshot.docs.map((doc) {
+      return Company.fromFireStore(doc.data(), doc.id);
+    }).toList();
+  }
+
+  // Function to delete company document in companies collection, used if company deletes his account
+  Future<void> deleteCompany({required String uid}) async {
+    await _db.collection('companies').doc(uid).delete();
   }
 }
 
