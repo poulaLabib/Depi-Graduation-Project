@@ -15,6 +15,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:depi_graduation_project/models/investor.dart';
 import 'package:depi_graduation_project/models/request.dart';
 import 'package:depi_graduation_project/models/company.dart';
+import 'package:depi_graduation_project/models/entrepreneur.dart';
 
 // global variable _db to access firestore functions to use in all 4 classes
 final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -159,6 +160,49 @@ class CompanyFirestoreService {
   // Function to delete company document in companies collection, used if company deletes his account
   Future<void> deleteCompany({required String uid}) async {
     await _db.collection('companies').doc(uid).delete();
+  }
+}
+class EntrepreneurFirestoreService {
+  // Add entrepreneur
+  Future<void> addEntrepreneur({required String uid}) async {
+    await _db.collection('entrepreneurs').doc(uid).set({
+      'about': '',
+      'phoneNumber': '',
+      'experience': '',
+      'skills': <String>[],
+      'role': '',
+      'NationalIdUrl': '',
+    });
+  }
+
+  // Update entrepreneur
+  Future<void> updateEntrepreneur({
+    required String uid,
+    required Map<String, dynamic> updatedData,
+  }) async {
+    await _db.collection('entrepreneurs').doc(uid).update(updatedData);
+  }
+
+  // Get entrepreneur stream
+  Stream<Entrepreneur> getEntrepreneurStream({required String uid}) {
+    return _db
+        .collection('entrepreneurs')
+        .doc(uid)
+        .snapshots()
+        .map((snapshot) => Entrepreneur.fromFireStore(snapshot.data() ?? {}, uid));
+  }
+
+  // Get all entrepreneurs
+  Future<List<Entrepreneur>> getEntrepreneurs() async {
+    final snapshot = await _db.collection('entrepreneurs').get();
+    return snapshot.docs.map((doc) {
+      return Entrepreneur.fromFireStore(doc.data(), doc.id);
+    }).toList();
+  }
+
+  // Delete entrepreneur
+  Future<void> deleteEntrepreneur({required String uid}) async {
+    await _db.collection('entrepreneurs').doc(uid).delete();
   }
 }
 
