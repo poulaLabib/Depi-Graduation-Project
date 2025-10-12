@@ -17,7 +17,6 @@ class Entrepreneur {
     required this.nationalIdUrl,
   });
 
-  // Factory constructor for Firestore
   factory Entrepreneur.fromFireStore(Map<String, dynamic> data, String uid) {
     return Entrepreneur(
       uid: uid,
@@ -30,7 +29,6 @@ class Entrepreneur {
     );
   }
 
-  // Convert to Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'about': about,
