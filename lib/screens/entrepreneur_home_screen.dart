@@ -28,7 +28,7 @@ class EntrepreneurHomeScreen extends StatelessWidget {
         children: [
           SizedBox(height: 15),
           Padding(
-            padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
+            padding: EdgeInsets.symmetric(horizontal: 30),
             child: Row(
               spacing: 30,
               children: [

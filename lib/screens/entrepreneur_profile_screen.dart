@@ -38,10 +38,11 @@ class _EntrepreneurProfileScreenState
     about: "About section here",
     phoneNumber: "+20123456789",
     experience: "3 years in tech",
-    skills: "Flutter, Dart",
+    skills: ["Flutter", "Dart"],
     role: "Entrepreneur",
     profileImageUrl: "",
-    idImageUrl: "",
+    idImageUrl: "", 
+    nationalIdUrl: '305000123456789',
   );
 
   final ImagePicker _picker = ImagePicker();
@@ -68,7 +69,7 @@ class _EntrepreneurProfileScreenState
           String tempAbout = profile.about;
           String tempPhone = profile.phoneNumber;
           String tempExperience = profile.experience;
-          String tempSkills = profile.skills;
+          List<String> tempSkills = profile.skills;
           String tempRole = profile.role;
           String tempProfileImage = profile.profileImageUrl;
           String tempIdImage = profile.idImageUrl;
@@ -77,7 +78,7 @@ class _EntrepreneurProfileScreenState
           final phoneController = TextEditingController(text: tempPhone);
           final experienceController =
               TextEditingController(text: tempExperience);
-          final skillsController = TextEditingController(text: tempSkills);
+          final skillsController = TextEditingController(text: tempSkills.join(', '));
           final roleController = TextEditingController(text: tempRole);
 
           return Padding(
@@ -195,10 +196,11 @@ class _EntrepreneurProfileScreenState
                               about: aboutController.text,
                               phoneNumber: phoneController.text,
                               experience: experienceController.text,
-                              skills: skillsController.text,
+                              skills: skillsController.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
                               role: roleController.text,
                               profileImageUrl: tempProfileImage,
                               idImageUrl: tempIdImage,
+                              nationalIdUrl: tempIdImage,
                             );
                           });
                           Navigator.pop(context);
@@ -262,7 +264,7 @@ class _EntrepreneurProfileScreenState
                   title: "Phone Number", value: profile.phoneNumber),
               EntrepreneurProfileField(
                   title: "Experience", value: profile.experience),
-              EntrepreneurProfileField(title: "Skills", value: profile.skills),
+              EntrepreneurProfileField(title: "Skills", value: profile.skills.join(', ')),
               EntrepreneurProfileField(title: "Role", value: profile.role),
               const SizedBox(height: 20),
               Column(

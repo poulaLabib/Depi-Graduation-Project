@@ -12,7 +12,7 @@ void showEntrepreneurEditBottomSheet(
   String tempAbout = profile.about;
   String tempPhone = profile.phoneNumber;
   String tempExperience = profile.experience;
-  String tempSkills = profile.skills;
+  String tempSkills = profile.skills.join(', ');
   String tempRole = profile.role;
   String tempProfileImage = profile.profileImageUrl;
   String tempIdImage = profile.idImageUrl;
@@ -107,7 +107,7 @@ void showEntrepreneurEditBottomSheet(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: DropdownButtonFormField<String>(
-                            initialValue: tempRole,
+                            value: tempRole,
                             decoration:
                                 const InputDecoration(border: InputBorder.none),
                             dropdownColor: cs.secondary,
@@ -210,10 +210,11 @@ void showEntrepreneurEditBottomSheet(
                               about: aboutController.text,
                               phoneNumber: phoneController.text,
                               experience: experienceController.text,
-                              skills: skillsController.text,
+                              skills: skillsController.text.split(',').map((s) => s.trim()).where((s) => s.isNotEmpty).toList(),
                               role: tempRole,
                               profileImageUrl: tempProfileImage,
                               idImageUrl: tempIdImage,
+                              nationalIdUrl: tempIdImage,
                             ),
                           );
                           Navigator.pop(context);
