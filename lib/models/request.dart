@@ -29,4 +29,13 @@ class Request {
       companyId: data['companyId'] ?? '',
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'description':description,
+      'amountOfMoney': amountOfMoney,
+      'equityInReturn': equityInReturn,
+      'whyAreYouRaising': whyAreYouRaising,
+      'submittedAt':submittedAt,
+    };
+  }
 }

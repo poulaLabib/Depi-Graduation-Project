@@ -40,6 +40,19 @@ class Investor {
       preferredIndustries: List<String>.from(data['PreferredIndustries'] ?? []),
     );
   }
-
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'investorType':investorType,
+      'photoUrl':photoUrl,
+      'about': about,
+      'phoneNumber': phoneNumber,
+      'experience': experience,
+      'skills': skills,
+      'investmentCapacity': investmentCapacity,
+      'nationalIdUrl': nationalIdUrl,
+      'preferredIndustries': preferredIndustries,
+    };
+  }
   
 }
