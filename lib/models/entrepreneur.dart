@@ -8,7 +8,6 @@ class Entrepreneur {
   final String role;
   final String profileImageUrl;
   final String idImageUrl;
-  final String nationalIdUrl;
 
   Entrepreneur({
     required this.uid,
@@ -20,7 +19,6 @@ class Entrepreneur {
     required this.role,
     required this.profileImageUrl,
     required this.idImageUrl,
-    required this.nationalIdUrl,
   });
 
   factory Entrepreneur.fromFireStore(Map<String, dynamic> data, String uid) {
@@ -34,7 +32,6 @@ class Entrepreneur {
       role: data['role'] ?? '',
       profileImageUrl: data['profileImageUrl'] ?? '',
       idImageUrl: data['idImageUrl'] ?? '',
-      nationalIdUrl: data['NationalIdUrl'] ?? '',
     );
   }
 
@@ -48,7 +45,6 @@ class Entrepreneur {
       'role': role,
       'profileImageUrl': profileImageUrl,
       'idImageUrl': idImageUrl,
-      'NationalIdUrl': nationalIdUrl,
     };
   }
 }

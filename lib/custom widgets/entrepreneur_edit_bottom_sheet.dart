@@ -107,7 +107,7 @@ void showEntrepreneurEditBottomSheet(
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: DropdownButtonFormField<String>(
-                            value: tempRole,
+                            initialValue: tempRole,
                             decoration:
                                 const InputDecoration(border: InputBorder.none),
                             dropdownColor: cs.secondary,
@@ -214,7 +214,6 @@ void showEntrepreneurEditBottomSheet(
                               role: tempRole,
                               profileImageUrl: tempProfileImage,
                               idImageUrl: tempIdImage,
-                              nationalIdUrl: tempIdImage,
                             ),
                           );
                           Navigator.pop(context);

@@ -270,7 +270,7 @@ Widget _buildInvestorTypeDropdown(
             borderRadius: BorderRadius.circular(8),
           ),
           child: DropdownButtonFormField<String>(
-            value: value,
+            initialValue: value,
             decoration: const InputDecoration(border: InputBorder.none),
             dropdownColor: cs.secondary,
             items: const [

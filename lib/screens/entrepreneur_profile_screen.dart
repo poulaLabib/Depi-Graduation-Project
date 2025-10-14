@@ -42,7 +42,6 @@ class _EntrepreneurProfileScreenState
     role: "Entrepreneur",
     profileImageUrl: "",
     idImageUrl: "", 
-    nationalIdUrl: '305000123456789',
   );
 
   final ImagePicker _picker = ImagePicker();
@@ -200,7 +199,7 @@ class _EntrepreneurProfileScreenState
                               role: roleController.text,
                               profileImageUrl: tempProfileImage,
                               idImageUrl: tempIdImage,
-                              nationalIdUrl: tempIdImage,
+                              
                             );
                           });
                           Navigator.pop(context);
