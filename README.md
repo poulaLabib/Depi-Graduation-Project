@@ -84,31 +84,30 @@ The platform bridges the gap between innovation and funding by offering an easy-
 Each team member contributes across multiple areas to ensure collaboration and shared responsibility.
 
 ### 🔧 Backend
-- **Firebase Authentication:** Ahmed Mohamed & Youssef Mohamed  
-- **Firestore Database Design & Management:** Omar Ahmed Ali & Mohamed Adel  
-- **Cloud Functions / API Integrations:** Ahmed Mohamed & Poula Labib  
-- **State Management & Data Flow:** Youssef Mohamed & Nourhan Ahmed  
+- **Firebase Authentication:** Nourhan Ahmed & Youssef Mohamed  
+- **Firestore Database Design & Management:** Omar Ahmed Ali & Mohamed Adel & Poula Labib & Ahmed Mohamed    
+- **State Management & Data Flow:** All team members   
 
 ---
 
 ### 🎨 Frontend (Flutter)
-- **UI Implementation:** Mohamed Adel & Nourhan Ahmed  
-- **Navigation & Routing:** Poula Labib & Youssef Mohamed  
-- **State Management (Bloc / Provider):** Ahmed Mohamed & Omar Ahmed Ali  
+- **UI Implementation:** All team members  
+- **Navigation & Routing:** All team members  
+- **State Management (Bloc / Provider):** All team members  
 - **Testing & Debugging:** All team members  
 
 ---
 
 ### 🖌️ UI/UX Design
-- **Wireframes & Prototypes:** Nourhan Ahmed & Youssef Mohamed  
-- **User Experience Flow:** Poula Labib & Mohamed Adel  
-- **Design Consistency & Branding:** Nourhan Ahmed & Omar Ahmed Ali  
+- **Wireframes & Prototypes:** All team members  
+- **User Experience Flow:** All team members  
+  
 
 ---
 
 ### 📂 Project Management
-- **Task Allocation & Deadlines:** Youssef Mohamed  
-- **Documentation (README, Reports):** Ahmed Mohamed & Omar Ahmed Ali  
+- **Task Allocation & Deadlines:** Ahmed Mohamed  
+- **Documentation (README, Reports):** Ahmed Mohamed & Youssef Mohamed  
 - **Final Presentation:** All team members
 
 ---
