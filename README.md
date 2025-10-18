@@ -178,13 +178,19 @@ Each team member contributes across multiple areas to ensure collaboration and s
 ## 🚀 Progress Update
 
 ### ✅ Completed
-- UI Screens: Login, Entrepreneur Dashboard, Investor Dashboard, Project Detail Page
+- 🖥️ UI screens and layouts  
+- 🔐 Authentication & BLoC integration  
+- 🧾 Basic registration for all users  
+
+### 👷‍♂️ In Progress
+- 👨‍💻 Entrepreneur & company profiles  
+- 💼 Investor profiles  
+- 💰 Fundraising request submission flow  
 
 ### ➡️ Next Phase
-- Firebase Integration & Authentication:  
-  - User registration/login  
-  - Role-based navigation (Entrepreneur vs. Investor)  
-  - Firestore setup with security rules  
+- 🔍 Investor browsing & sorting  
+- 🤝 Nudge & communication authorization system
+
 
 ---
 
