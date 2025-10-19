@@ -27,6 +27,9 @@ class AuthenticationService {
     }
   }
 
+  // getter of current user
+  User? get currentUser => _auth.currentUser;
+
   //login
   Future<User?> login({required String email, required String password}) async {
     try {
@@ -45,7 +48,6 @@ class AuthenticationService {
   Future<void> logout() async {
     try {
       await _auth.signOut();
-      print("Logged Out Successfully");
     } catch (e) {
       print("Logout Error: $e");
       rethrow;

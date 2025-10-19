@@ -1,169 +1,346 @@
+import 'dart:math' as math;
+import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RequestTileInvestorView extends StatelessWidget {
-  final String companyname;
-  final String offer;
-  final String equity;
-  final String date;
-  final String description;
-  const RequestTileInvestorView({super.key, required this.companyname, required this.offer, required this.equity, required this.date, required this.description});
+  const RequestTileInvestorView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-            width: 280,
-            height: 370,
-            decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 231, 227, 227),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.black.withAlpha(50), width: 1),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color.fromARGB(255, 0, 0, 0).withAlpha(50),
-                    blurRadius: 10,
-                    offset: Offset(0, 5),
-                  ),
-                ],
-                
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(27),
+            border: Border.all(
+              color: const Color.fromARGB(255, 74, 74, 74),
+              width: 0.7,
             ),
-            padding:  EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(25),
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/company2.jpeg'),
-                    fit: BoxFit.cover,
+          ),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(27),
+                  bottomLeft: Radius.circular(27),
+                ),
+                child: CustomPaint(
+                  painter: RectanglesBg(
+                    color: const Color.fromARGB(255, 145, 199, 229),
+                  ),
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: constraints.maxWidth / 8,
+                    height: constraints.maxHeight,
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage(
+                        'assets/images/company2.jpeg',
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-             SizedBox(height: 12),
-             Text(
-             companyname,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-                color: Theme.of(context).colorScheme.onTertiary,
+              VerticalDivider(
+                color: const Color.fromARGB(255, 74, 74, 74),
+                thickness: 1,
+                width: 0,
               ),
-            ),
-                  SizedBox(height: 8),
-                  Divider(
-                    color: const Color.fromARGB(255, 107, 51, 51).withAlpha(50),
-                    thickness: 1,
-                    height: 0,
+              CustomPaint(
+                painter: RectanglesBg(
+                  color: const Color.fromARGB(255, 145, 199, 229),
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  width: constraints.maxWidth / 8,
+                  height: constraints.maxHeight,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      CircleAvatar(
+                        radius: 17,
+                        backgroundImage: AssetImage(
+                          'assets/images/profile1.jpg',
+                        ),
+                      ),
+                      AutoText(
+                        maxLines: 3,
+                        maxFontSize: 11,
+                        minFontSize: 11,
+                        textAlign: TextAlign.center,
+                        'Ahmad Salim',
+                        style: GoogleFonts.robotoSlab(
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 8),
-      Align(
-        alignment: Alignment.centerLeft,
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Offer:",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.red,
+                ),
               ),
-            ),
-            Text(
-              "\$$offer",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.green, 
+              VerticalDivider(
+                color: const Color.fromARGB(255, 74, 74, 74),
+                thickness: 1,
+                width: 0,
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 6),
-      
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Equity:",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.red,
+              SizedBox(width: constraints.maxHeight * 0.1),
+              Container(
+                decoration: BoxDecoration(
+                  // color: const Color.fromARGB(255, 245, 245, 245),
+                  borderRadius: BorderRadius.circular(5),
+                  // border: Border.all( color: const Color.fromARGB(255, 74, 74, 74), width: )
+                ),
+                height: 0.9 * constraints.maxHeight,
+                width: constraints.maxWidth / 3,
+                // padding: EdgeInsets.all(5),
+                child: AutoText(
+                  maxFontSize: 11,
+                  minFontSize: 10,
+                  maxLines: 5,
+                  'Forests are large areas covered mainly by trees and other vegetation. They are often called the lungs of the Earth because they produce oxygen and absorb carbon dioxide, helping to keep our planet’s air clean and balanced.',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: Colors.black.withAlpha(150),
+                  ),
+                ),
               ),
-            ),
-            Text(
-              "$equity%",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.green, 
+              SizedBox(width: constraints.maxHeight * 0.1),
+              VerticalDivider(
+                color: const Color.fromARGB(255, 74, 74, 74),
+                thickness: 0.2,
+                width: 0,
               ),
-            ),
-          ],
-        ),
-        SizedBox(height: 6),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Date:",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.red,
-              ),
-            ),
-            Text(
-              date,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.green,
-              ),
-            ),
-           
-          ],
+              Expanded(
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(5),
+                        bottomRight: Radius.circular(5),
+                      ),
 
-        ),
-         SizedBox(height: 8),
-                  Divider(
-                    color: const Color.fromARGB(255, 107, 51, 51).withAlpha(50),
-                    thickness: 1,
-                    height: 0,
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-        "Description:",
-        style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.w900,
-          color: const Color.fromARGB(255, 0, 0, 0),
-        ),
-      ),
-      SizedBox(height: 4),
-      Text(
-        description,
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w300,
-          color: const Color.fromARGB(255, 0, 0, 0),
-        ),
-        textAlign: TextAlign.left,
-        softWrap: true,
-        overflow: TextOverflow.visible,
-      ),
-      ],
-        ),
-        ),
-      ],
-    ),
-  );
+                      child: Container(
+                        alignment: Alignment.center,
+                        height: constraints.maxHeight / 7,
+                        width: constraints.maxWidth / 6,
+                        color: const Color.fromARGB(255, 74, 74, 74),
+
+                        child: Text(
+                          'Fundraise',
+                          style: GoogleFonts.anton(
+                            color: Colors.white,
+                            letterSpacing: 0.5,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        spacing: 3,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(27),
+                              topLeft: Radius.circular(27),
+                            ),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: constraints.maxHeight / 3,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(27),
+                                        bottomLeft: Radius.circular(27),
+                                      ),
+                                      child: CustomPaint(
+                                        painter: RectanglesBg(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            145,
+                                            199,
+                                            229,
+                                          ),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+
+                                          child: Text(
+                                            'Ask',
+                                            style: GoogleFonts.anton(
+                                              fontSize: 12,
+                                              color: const Color.fromARGB(
+                                                255,
+                                                74,
+                                                74,
+                                                74,
+                                              ),
+                                              letterSpacing: 0.5,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      74,
+                                      74,
+                                      74,
+                                    ),
+                                    thickness: 1,
+                                    width: 0,
+                                  ),
+                                  Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '10000000 EGP',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                       
+                          ClipRRect(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(27),
+                              bottomLeft: Radius.circular(27),
+                            ),
+                            child: Container(
+                              alignment: Alignment.center,
+                              height: constraints.maxHeight / 3,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 5,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '20% Equity',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  VerticalDivider(
+                                    color: const Color.fromARGB(
+                                      255,
+                                      74,
+                                      74,
+                                      74,
+                                    ),
+                                    thickness: 1,
+                                    width: 0,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(27),
+                                        bottomRight: Radius.circular(27),
+                                      ),
+                                      child: CustomPaint(
+                                        painter: RectanglesBg(
+                                          color: const Color.fromARGB(
+                                            255,
+                                            145,
+                                            199,
+                                            229,
+                                          ),
+                                        ),
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            'In Return',
+                                            style: GoogleFonts.anton(
+                                              // fontWeight: FontWeight.w500,
+                                              color: const Color.fromARGB(
+                                                255,
+                                                74,
+                                                74,
+                                                74,
+                                              ),
+                                              letterSpacing: 0.5,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class RectanglesBg extends CustomPainter {
+  final Color color;
+
+  RectanglesBg({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    int rows = 4;
+    int columns = 4;
+    final random = math.Random();
+
+    final rectWidth = size.width / columns;
+    final rectHeight = size.height / rows;
+
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    for (int y = 0; y < rows; y++) {
+      for (int x = 0; x < columns; x++) {
+        final paint =
+            Paint()
+              ..color = color.withAlpha(100 + random.nextInt(20))
+              ..maskFilter = MaskFilter.blur(BlurStyle.normal, 2);
+        final rect = Rect.fromLTWH(
+          x * rectWidth,
+          y * rectHeight,
+          rectWidth,
+          rectHeight,
+        );
+        canvas.drawRect(rect, paint);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant RectanglesBg oldDelegate) {
+    return oldDelegate.color != color;
   }
 }

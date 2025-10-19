@@ -1,3 +1,4 @@
+import 'package:depi_graduation_project/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
@@ -57,7 +58,14 @@ class _WelcomeState extends State<Welcome> {
 
               //Entrepreneur
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignUp(userType: 'entrepreneur'),
+                    ),
+                  );
+                },
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   width: 150,
@@ -88,7 +96,14 @@ class _WelcomeState extends State<Welcome> {
 
               //Investor
               InkWell(
-                onTap: () {},
+                onTap: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignUp(userType: 'investor'),
+                    ),
+                  );
+                },
                 borderRadius: BorderRadius.circular(16),
                 child: Container(
                   width: 150,
@@ -118,9 +133,9 @@ class _WelcomeState extends State<Welcome> {
               const SizedBox(height: 30),
 
               //sign in
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) {
@@ -135,11 +150,10 @@ class _WelcomeState extends State<Welcome> {
                     fontSize: 22,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
+                    decoration: TextDecoration.underline
                   ),
                 ),
               ),
-              const SizedBox(height: 3),
-              Container(width: 63, height: 1, color: Colors.black),
             ],
           ),
         ),

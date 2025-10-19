@@ -1,25 +1,31 @@
+import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
+import 'package:depi_graduation_project/bloc/auth/auth_event.dart';
+import 'package:depi_graduation_project/bloc/auth/auth_state.dart';
+import 'package:depi_graduation_project/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-
-void main() => runApp(SignUp());
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignUp extends StatefulWidget {
+  final String userType;
+  const SignUp({required this.userType, super.key});
+
   @override
   State<SignUp> createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignUp> {
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _usernameController.dispose();
+    _fullNameController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -27,41 +33,13 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: const Color.fromRGBO(247, 240, 225, 1),
-        appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black,
-                    blurRadius: 6,
-                    offset: const Offset(2, 2),
-                  ),
-                ],
-              ),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.black,
-                  size: 22,
-                ),
-              ),
-            ),
-          ),
-          backgroundColor: const Color.fromRGBO(247, 240, 225, 1),
-          elevation: 0,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+    return Scaffold(
+      backgroundColor: const Color.fromRGBO(247, 240, 225, 1),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,89 +54,9 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 20),
 
-                //first name
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "First Name",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          TextField(
-                            controller: _firstNameController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color(0xFF91C7E5),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF91C7E5),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF91C7E5),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-
-                    //last name
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            "Last Name",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          TextField(
-                            controller: _lastNameController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: const Color(0xFF91C7E5),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF91C7E5),
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                                borderSide: const BorderSide(
-                                  color: Color(0xFF91C7E5),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-
-                //username
+                // full name
                 const Text(
-                  "Username / Email",
+                  "Name",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -166,24 +64,45 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFF91C7E5),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                  ),
+                TextFormField(
+                  controller: _fullNameController,
+                  decoration: _inputDecoration(),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? 'Enter your name'
+                              : null,
                 ),
                 const SizedBox(height: 8),
 
-                //password
+                // username/email
+                const Text(
+                  "Email",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                TextFormField(
+                  controller: _emailController,
+                  decoration: _inputDecoration(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Email is required';
+                    }
+                    final emailRegex = RegExp(
+                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                    );
+                    if (!emailRegex.hasMatch(value)) {
+                      return 'Enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 8),
+
                 const Text(
                   "Password",
                   style: TextStyle(
@@ -193,25 +112,19 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                TextField(
+                TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFF91C7E5),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                  ),
+                  decoration: _inputDecoration(),
+                  validator:
+                      (value) =>
+                          value == null || value.length < 6
+                              ? 'Password must be at least 6 characters'
+                              : null,
                 ),
                 const SizedBox(height: 8),
 
-                //confirm password
+                // confirm password
                 const Text(
                   "Confirm Password",
                   style: TextStyle(
@@ -221,35 +134,71 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 const SizedBox(height: 5),
-                TextField(
+                TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: const Color(0xFF91C7E5),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(color: Color(0xFF91C7E5)),
-                    ),
-                  ),
+                  decoration: _inputDecoration(),
+                  validator:
+                      (value) =>
+                          value != _passwordController.text
+                              ? 'Passwords don’t match'
+                              : null,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 15),
+                BlocConsumer<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is InitialState) {
+                      return SizedBox.shrink();
+                    } else if (state is AuthLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (state is AuthSuccessfull) {
+                      return Text(
+                        'Success',
+                        style: TextStyle(color: Colors.green),
+                      );
+                    } else if (state is AuthError) {
+                      return Text(
+                        'Something went wrong',
+                        style: TextStyle(color: Colors.red),
+                      );
+                    } else if (state is InitialState) {
+                      return SizedBox.shrink();
+                    } else if (state is AuthUnsuccessfull) {
+                      return Text(
+                        'You entered wrong data',
+                        style: TextStyle(color: Colors.red),
+                      );
+                    }
+                    return SizedBox.shrink();
+                  },
+                  listener: (context, state) {},
+                ),
+                const SizedBox(height: 15),
 
-                //button
+                // button
                 Center(
                   child: InkWell(
                     onTap: () {
-                      print("First Name: ${_firstNameController.text}");
-                      print("Last Name: ${_lastNameController.text}");
-                      print("Username: ${_usernameController.text}");
-                      print("Password: ${_passwordController.text}");
-                      print(
-                        "Confirm Password: ${_confirmPasswordController.text}",
-                      );
+                      if (_formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(
+                          SignUpButtonPressed(
+                            fullName: _fullNameController.text,
+                            email: _emailController.text,
+                            password: _passwordController.text,
+                            userType: widget.userType,
+                          ),
+                        );
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) => LogIn(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ),
+                          ),
+                        );
+                      }
                     },
                     borderRadius: BorderRadius.circular(16),
                     child: Container(
@@ -278,10 +227,59 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
+                SizedBox(height: 15),
+                Center(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return LogIn();
+                          },
+                        ),
+                      );
+                    },
+                    child: Column(
+                      spacing: 1,
+                      children: [
+                        Text(
+                          "Already have an account?",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                          ),
+                        ),
+                        Divider(
+                          color: Colors.black,
+                          indent: 90,
+                          endIndent: 90,
+                          height: 0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // simple helper for consistent styling
+  InputDecoration _inputDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: const Color(0xFF91C7E5),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFF91C7E5)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Color(0xFF91C7E5)),
       ),
     );
   }
