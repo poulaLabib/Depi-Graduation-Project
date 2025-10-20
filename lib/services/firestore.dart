@@ -128,25 +128,46 @@ class CompanyFirestoreService {
       'currency': '',
       'location': '',
       'teamMembers': <Map<String, dynamic>>[],
+      'logoUrl': '',
+      'certificateUrl': '',
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
   // Function to update company data all at once requires map<String, dynamic>
-  Future<void> updateCompany({
+  Future<bool> updateCompany({
     required String uid,
     required Map<String, dynamic> updatedData,
   }) async {
-    await _db.collection('companies').doc(uid).update(updatedData);
+    try {
+      await _db.collection('companies').doc(uid).set(
+        updatedData,
+        SetOptions(merge: true),
+      );
+      return true;
+    } catch (e) {
+      print('Error updating company: $e');
+      return false;
+    }
   }
 
-  // Function to get stream of company object => any thing changes in the firestore the company changes as well, mainly for his profile page when he updates data.
+  Future<bool> companyExists({required String uid}) async {
+  final doc = await _db.collection('companies').doc(uid).get();
+  return doc.exists;
+}
+
   Stream<Company> getCompanyStream({required String uid}) {
     return _db
         .collection('companies')
         .doc(uid)
         .snapshots()
         .map((snapshot) => Company.fromFireStore(snapshot.data() ?? {}, uid));
+  }
+
+  // get company once
+  Future<Company> getCompany({required String uid}) async {
+    final doc = await _db.collection('companies').doc(uid).get();
+    return Company.fromFireStore(doc.data() ?? {}, uid);
   }
 
   // Function to get all companies as objects, for entrepreneur to see all companies
@@ -157,12 +178,31 @@ class CompanyFirestoreService {
     }).toList();
   }
 
+  // update company logo url
+  Future<void> updateCompanyLogoUrl({
+    required String uid,
+    required String newUrl,
+  }) async {
+    await _db.collection('companies').doc(uid).update({
+      'logoUrl': newUrl,
+    });
+  }
+
+  // update company certificate url
+  Future<void> updateCompanyCertificateUrl({
+    required String uid,
+    required String newUrl,
+  }) async {
+    await _db.collection('companies').doc(uid).update({
+      'certificateUrl': newUrl,
+    });
+  }
+
   // Function to delete company document in companies collection, used if company deletes his account
   Future<void> deleteCompany({required String uid}) async {
     await _db.collection('companies').doc(uid).delete();
   }
 }
-
 class EntrepreneurFirestoreService {
   // Add entrepreneur
   Future<void> addEntrepreneur({
