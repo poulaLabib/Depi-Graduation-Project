@@ -1,4 +1,3 @@
-
 class Company {
   final String uid;
   final String name;
@@ -10,6 +9,8 @@ class Company {
   final String currency;
   final String location;
   final List<Map<String, dynamic>> teamMembers;
+  final String logoUrl;
+  final String certificateUrl;
 
   Company({
     required this.uid,
@@ -22,6 +23,8 @@ class Company {
     required this.currency,
     required this.location,
     required this.teamMembers,
+    required this.logoUrl,
+    required this.certificateUrl,
   });
 
   factory Company.fromFireStore(Map<String, dynamic> data, String uid) {
@@ -36,6 +39,8 @@ class Company {
       currency: data['currency'] ?? '',
       location: data['location'] ?? '',
       teamMembers: List<Map<String, dynamic>>.from(data['teamMembers'] ?? []),
+      logoUrl: data['logoUrl'] ?? '',
+      certificateUrl: data['certificateUrl'] ?? '',
     );
   }
 
@@ -50,6 +55,8 @@ class Company {
       'currency': currency,
       'location': location,
       'teamMembers': teamMembers,
+      'logoUrl': logoUrl,
+      'certificateUrl': certificateUrl,
     };
   }
 }
