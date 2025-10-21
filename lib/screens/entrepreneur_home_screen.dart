@@ -1,5 +1,5 @@
-import 'package:depi_graduation_project/custom%20widgets/investor_tile.dart';
-import 'package:depi_graduation_project/custom%20widgets/request_card_enrepreneur_view.dart';
+// import 'package:depi_graduation_project/custom%20widgets/investor_tile.dart';
+// import 'package:depi_graduation_project/custom%20widgets/request_card_enrepreneur_view.dart';
 import 'package:depi_graduation_project/custom%20widgets/request_tile_investor_view.dart';
 import 'package:flutter/material.dart';
 

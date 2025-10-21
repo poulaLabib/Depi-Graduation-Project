@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/cps_event.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/cps_state.dart';
-import 'package:depi_graduation_project/models/company.dart';
+// import 'package:depi_graduation_project/models/company.dart';
 import 'package:depi_graduation_project/services/firebase_auth_service.dart';
 import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:depi_graduation_project/services/supabase_storage.dart';

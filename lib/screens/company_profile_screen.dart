@@ -36,6 +36,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
 
   final ImagePicker _picker = ImagePicker();
 
+  // ignore: unused_element
   Future<void> _pickImage(bool isLogo) async {
     final picked = await _picker.pickImage(source: ImageSource.gallery);
     if (picked != null) {

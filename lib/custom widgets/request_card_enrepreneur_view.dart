@@ -1,6 +1,6 @@
-import 'package:auto_text_resizer/auto_text_resizer.dart';
+// import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class RequestCardEnrepreneurView extends StatelessWidget {
   final String companyname;
@@ -76,7 +76,7 @@ class RequestCardEnrepreneurView extends StatelessWidget {
               ),
             ),
             Text(
-              "\$${offer}",
+              "\$$offer",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -99,7 +99,7 @@ class RequestCardEnrepreneurView extends StatelessWidget {
               ),
             ),
             Text(
-              "${equity}%",
+              "$equity%",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -121,7 +121,7 @@ class RequestCardEnrepreneurView extends StatelessWidget {
               ),
             ),
             Text(
-              "${date}",
+              date,
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
