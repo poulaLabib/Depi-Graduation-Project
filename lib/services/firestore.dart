@@ -25,15 +25,15 @@ class InvestorFirestoreService {
   Future<void> addInvestor({required String name, required String uid}) async {
     await _db.collection('investors').doc(uid).set({
       'name': name,
-      'InvestorType': '',
+      'investorType': '',
       'photoUrl': '',
       'about': '',
       'phoneNumber': '',
       'experience': '',
       'skills': <String>[],
       'investmentCapacity': 0,
-      'NationalIdUrl': '',
-      'PreferredIndustries': <String>[],
+      'nationalIdUrl': '',
+      'preferredIndustries': <String>[],
     });
   }
 
@@ -54,12 +54,36 @@ class InvestorFirestoreService {
         .map((snapshot) => Investor.fromFireStore(snapshot.data() ?? {}, uid));
   }
 
+  // get investor once
+  Future<Investor> getInvestor({required String uid}) async {
+    final doc = await _db.collection('investors').doc(uid).get();
+    return Investor.fromFireStore(doc.data() ?? {}, uid);
+  }
+
   // Function to get all investors as objects, for entrepreneur to see all investors
   Future<List<Investor>> getInvestors() async {
     final snapshot = await _db.collection('investors').get();
     return snapshot.docs.map((doc) {
       return Investor.fromFireStore(doc.data(), doc.id);
     }).toList();
+  }
+
+  // update profile photo url
+  Future<void> updateInvestorProfilePhotoUrl({
+    required String uid,
+    required String newUrl,
+  }) async {
+    await _db.collection('investors').doc(uid).update({'photoUrl': newUrl});
+  }
+
+  // update id photo url
+  Future<void> updateInvestorNationalIdUrl({
+    required String uid,
+    required String newUrl,
+  }) async {
+    await _db.collection('investors').doc(uid).update({
+      'nationalIdUrl': newUrl,
+    });
   }
 
   // Function to delete investor document in investors collection, used if investor deletes his account
@@ -140,10 +164,10 @@ class CompanyFirestoreService {
     required Map<String, dynamic> updatedData,
   }) async {
     try {
-      await _db.collection('companies').doc(uid).set(
-        updatedData,
-        SetOptions(merge: true),
-      );
+      await _db
+          .collection('companies')
+          .doc(uid)
+          .set(updatedData, SetOptions(merge: true));
       return true;
     } catch (e) {
       print('Error updating company: $e');
@@ -152,9 +176,9 @@ class CompanyFirestoreService {
   }
 
   Future<bool> companyExists({required String uid}) async {
-  final doc = await _db.collection('companies').doc(uid).get();
-  return doc.exists;
-}
+    final doc = await _db.collection('companies').doc(uid).get();
+    return doc.exists;
+  }
 
   Stream<Company> getCompanyStream({required String uid}) {
     return _db
@@ -183,9 +207,7 @@ class CompanyFirestoreService {
     required String uid,
     required String newUrl,
   }) async {
-    await _db.collection('companies').doc(uid).update({
-      'logoUrl': newUrl,
-    });
+    await _db.collection('companies').doc(uid).update({'logoUrl': newUrl});
   }
 
   // update company certificate url
@@ -203,6 +225,7 @@ class CompanyFirestoreService {
     await _db.collection('companies').doc(uid).delete();
   }
 }
+
 class EntrepreneurFirestoreService {
   // Add entrepreneur
   Future<void> addEntrepreneur({

@@ -1,33 +1,41 @@
-// store image and return image url
-
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class SupabaseStorage {
-  // function uploads images
-
-  static Future<String?> uploadImage(File imageFile, String uid) async {
+  static Future<String?> uploadImage(
+    File imageFile,
+    String uid, {
+    String? oldUrl,
+  }) async {
     final supabase = Supabase.instance.client;
-    final path = '$uid-profile.jpg';
+    const bucket = 'photos';
+    final uuid = const Uuid().v4();
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final path = '$uid-$uuid-$timestamp.jpg';
 
     try {
-      // Upload and overwrite if exists
-      final res = await supabase.storage
-          .from('photos')
+      if (oldUrl != null && oldUrl.isNotEmpty) {
+        try {
+          final oldFileName = oldUrl.split('/').last.split('?').first;
+          await supabase.storage.from(bucket).remove([oldFileName]);
+        } catch (e) {
+          print('Failed to delete old image: $e');
+        }
+      }
+
+      await supabase.storage
+          .from(bucket)
           .upload(
             path,
             imageFile,
-            fileOptions: const FileOptions(upsert: true),
+            fileOptions: const FileOptions(upsert: false),
           );
-      print('upload result: $res');
 
-      // Get public URL
-      final url = supabase.storage.from('photos').getPublicUrl(path);
-
-      // Add cache-busting timestamp
-      return '$url?t=${DateTime.now().millisecondsSinceEpoch}';
+      final url = supabase.storage.from(bucket).getPublicUrl(path);
+      return '$url?t=$timestamp';
     } catch (e, st) {
-      print('upload exception: $e\n$st');
+      print('Upload exception: $e\n$st');
       return null;
     }
   }

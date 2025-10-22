@@ -1,6 +1,7 @@
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_bloc.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
+import 'package:depi_graduation_project/bloc/investor_profile_screen/ips_bloc.dart';
 import 'package:depi_graduation_project/fikraty.dart';
 import 'package:depi_graduation_project/firebase_options.dart';
 import 'package:depi_graduation_project/services/firebase_auth_service.dart';
@@ -43,6 +44,13 @@ void main() async {
               (BuildContext context) => CompanyBloc(
                 auth: AuthenticationService(),
                 company: CompanyFirestoreService(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (BuildContext context) => IpsBloc(
+                auth: AuthenticationService(),
+                investor: InvestorFirestoreService(),
               ),
         ),
       ],

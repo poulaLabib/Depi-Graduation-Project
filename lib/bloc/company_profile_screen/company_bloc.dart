@@ -43,11 +43,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           uid: auth.currentUser!.uid,
         );
         
-        if (comp != null) {
-          emit(EditCompanyInfo(company: comp));
-        } else {
-        }
-      
+        emit(EditCompanyInfo(company: comp));
+            
     });
 
     on<SaveCompanyButtonPressed>((event, emit) async {
@@ -74,11 +71,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           uid: auth.currentUser!.uid,
         );
         
-        if (updatedCompany != null) {
-          emit(DisplayCompanyInfo(company: updatedCompany));
-        } else {
-        }
-      
+        emit(DisplayCompanyInfo(company: updatedCompany));
+            
     });
 
     on<CancelCompanyButtonPressed>((event, emit) async {
@@ -88,11 +82,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           uid: auth.currentUser!.uid,
         );
         
-        if (updatedCompany != null) {
-          emit(DisplayCompanyInfo(company: updatedCompany));
-        } else {
-        }
-      
+        emit(DisplayCompanyInfo(company: updatedCompany));
+            
     });
 
     on<EditCompanyLogo>((event, emit) async {
