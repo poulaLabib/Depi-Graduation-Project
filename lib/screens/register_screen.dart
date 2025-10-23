@@ -70,7 +70,7 @@ class _SignUpState extends State<SignUp> {
                   validator:
                       (value) =>
                           value == null || value.isEmpty
-                              ? 'Enter your name'
+                              ? 'Enter Your Name'
                               : null,
                 ),
                 const SizedBox(height: 8),
@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                       return Center(child: CircularProgressIndicator());
                     } else if (state is AuthSuccessfull) {
                       return Text(
-                        'Success',
+                        'Signed Up Successfully',
                         style: TextStyle(color: Colors.green),
                       );
                     } else if (state is AuthError) {
