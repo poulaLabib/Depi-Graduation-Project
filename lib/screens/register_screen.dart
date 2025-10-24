@@ -56,7 +56,7 @@ class _SignUpState extends State<SignUp> {
 
                 // full name
                 const Text(
-                  "Name",
+                  "Full Name",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20,
@@ -75,7 +75,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 8),
 
-                // username/email
+                //email
                 const Text(
                   "Email",
                   style: TextStyle(
@@ -124,7 +124,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 8),
 
-                // confirm password
+                //confirm password
                 const Text(
                   "Confirm Password",
                   style: TextStyle(
@@ -158,14 +158,14 @@ class _SignUpState extends State<SignUp> {
                       );
                     } else if (state is AuthError) {
                       return Text(
-                        'Something went wrong',
+                        'Something Went Wrong',
                         style: TextStyle(color: Colors.red),
                       );
                     } else if (state is InitialState) {
                       return SizedBox.shrink();
                     } else if (state is AuthUnsuccessfull) {
                       return Text(
-                        'You entered wrong data',
+                        'You Entered Wrong Data',
                         style: TextStyle(color: Colors.red),
                       );
                     }
@@ -175,7 +175,7 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 15),
 
-                // button
+                //button
                 Center(
                   child: InkWell(
                     onTap: () {
