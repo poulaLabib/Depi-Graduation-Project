@@ -25,15 +25,15 @@ class InvestorFirestoreService {
   Future<void> addInvestor({required String name, required String uid}) async {
     await _db.collection('investors').doc(uid).set({
       'name': name,
-      'investorType': '',
+      'InvestorType': '',
       'photoUrl': '',
       'about': '',
       'phoneNumber': '',
       'experience': '',
       'skills': <String>[],
       'investmentCapacity': 0,
-      'nationalIdUrl': '',
-      'preferredIndustries': <String>[],
+      'NationalIdUrl': '',
+      'PreferredIndustries': <String>[],
     });
   }
 
@@ -54,36 +54,12 @@ class InvestorFirestoreService {
         .map((snapshot) => Investor.fromFireStore(snapshot.data() ?? {}, uid));
   }
 
-  // get investor once
-  Future<Investor> getInvestor({required String uid}) async {
-    final doc = await _db.collection('investors').doc(uid).get();
-    return Investor.fromFireStore(doc.data() ?? {}, uid);
-  }
-
   // Function to get all investors as objects, for entrepreneur to see all investors
   Future<List<Investor>> getInvestors() async {
     final snapshot = await _db.collection('investors').get();
     return snapshot.docs.map((doc) {
       return Investor.fromFireStore(doc.data(), doc.id);
     }).toList();
-  }
-
-  // update profile photo url
-  Future<void> updateInvestorProfilePhotoUrl({
-    required String uid,
-    required String newUrl,
-  }) async {
-    await _db.collection('investors').doc(uid).update({'photoUrl': newUrl});
-  }
-
-  // update id photo url
-  Future<void> updateInvestorNationalIdUrl({
-    required String uid,
-    required String newUrl,
-  }) async {
-    await _db.collection('investors').doc(uid).update({
-      'nationalIdUrl': newUrl,
-    });
   }
 
   // Function to delete investor document in investors collection, used if investor deletes his account
@@ -93,39 +69,47 @@ class InvestorFirestoreService {
 }
 
 class RequestFirestoreService {
-  // Function to add request
+  //  Add request
   Future<void> addRequest({
     required String uid,
     required String description,
+    required double amountOfMoney,
+    required String equityInReturn,
+    String? whyAreYouRaising,
   }) async {
-    await _db.collection('requests').doc(uid).set({
+    await _db.collection('requests').add({
+      'uid': uid,
       'description': description,
-      'amountOfMoney': '',
-      'equityInReturn': '',
-      'whyAreYouRaising': '',
+      'amountOfMoney': amountOfMoney,
+      'equityInReturn': equityInReturn,
+      'whyAreYouRaising': whyAreYouRaising ?? '',
       'submittedAt': FieldValue.serverTimestamp(),
-      'companyId': '',
     });
   }
 
-  // Function to update request data
+  //  Update request by document ID
   Future<void> updateRequest({
-    required String uid,
+    required String requestId,
     required Map<String, dynamic> updatedData,
   }) async {
-    await _db.collection('requests').doc(uid).update(updatedData);
+    await _db.collection('requests').doc(requestId).update(updatedData);
   }
 
-  // Function to get a stream of request data (auto-updates when Firestore changes)
-  Stream<Request> getRequestStream({required String uid}) {
+  //  Stream of user's requests
+  Stream<List<Request>> getRequestsStream({required String uid}) {
     return _db
         .collection('requests')
-        .doc(uid)
+        .where('uid', isEqualTo: uid)
         .snapshots()
-        .map((snapshot) => Request.fromFireStore(snapshot.data() ?? {}, uid));
+        .map(
+          (snapshot) =>
+              snapshot.docs
+                  .map((doc) => Request.fromFireStore(doc.data(), doc.id))
+                  .toList(),
+        );
   }
 
-  // Function to get all requests
+  //  Get all requests
   Future<List<Request>> getRequests() async {
     final snapshot = await _db.collection('requests').get();
     return snapshot.docs
@@ -133,9 +117,22 @@ class RequestFirestoreService {
         .toList();
   }
 
-  // Function to delete request
-  Future<void> deleteRequest({required String uid}) async {
-    await _db.collection('requests').doc(uid).delete();
+  // return stream of one request
+  Stream<Request?> getRequest(String uid, String requestId) {
+    return _db.collection('requests').doc(requestId).snapshots().map((
+      docSnapshot,
+    ) {
+      if (docSnapshot.exists) {
+        return Request.fromFireStore(docSnapshot.data()!, docSnapshot.id);
+      } else {
+        return null;
+      }
+    });
+  }
+
+  //  Delete request by document ID
+  Future<void> deleteRequest({required String requestId}) async {
+    await _db.collection('requests').doc(requestId).delete();
   }
 }
 
@@ -152,34 +149,19 @@ class CompanyFirestoreService {
       'currency': '',
       'location': '',
       'teamMembers': <Map<String, dynamic>>[],
-      'logoUrl': '',
-      'certificateUrl': '',
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
 
   // Function to update company data all at once requires map<String, dynamic>
-  Future<bool> updateCompany({
+  Future<void> updateCompany({
     required String uid,
     required Map<String, dynamic> updatedData,
   }) async {
-    try {
-      await _db
-          .collection('companies')
-          .doc(uid)
-          .set(updatedData, SetOptions(merge: true));
-      return true;
-    } catch (e) {
-      print('Error updating company: $e');
-      return false;
-    }
+    await _db.collection('companies').doc(uid).update(updatedData);
   }
 
-  Future<bool> companyExists({required String uid}) async {
-    final doc = await _db.collection('companies').doc(uid).get();
-    return doc.exists;
-  }
-
+  // Function to get stream of company object => any thing changes in the firestore the company changes as well, mainly for his profile page when he updates data.
   Stream<Company> getCompanyStream({required String uid}) {
     return _db
         .collection('companies')
@@ -188,36 +170,12 @@ class CompanyFirestoreService {
         .map((snapshot) => Company.fromFireStore(snapshot.data() ?? {}, uid));
   }
 
-  // get company once
-  Future<Company> getCompany({required String uid}) async {
-    final doc = await _db.collection('companies').doc(uid).get();
-    return Company.fromFireStore(doc.data() ?? {}, uid);
-  }
-
   // Function to get all companies as objects, for entrepreneur to see all companies
   Future<List<Company>> getCompanies() async {
     final snapshot = await _db.collection('companies').get();
     return snapshot.docs.map((doc) {
       return Company.fromFireStore(doc.data(), doc.id);
     }).toList();
-  }
-
-  // update company logo url
-  Future<void> updateCompanyLogoUrl({
-    required String uid,
-    required String newUrl,
-  }) async {
-    await _db.collection('companies').doc(uid).update({'logoUrl': newUrl});
-  }
-
-  // update company certificate url
-  Future<void> updateCompanyCertificateUrl({
-    required String uid,
-    required String newUrl,
-  }) async {
-    await _db.collection('companies').doc(uid).update({
-      'certificateUrl': newUrl,
-    });
   }
 
   // Function to delete company document in companies collection, used if company deletes his account
