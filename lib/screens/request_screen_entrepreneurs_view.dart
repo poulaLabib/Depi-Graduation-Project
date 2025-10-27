@@ -5,6 +5,11 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+<<<<<<< HEAD
+=======
+  const MyApp({super.key});
+
+>>>>>>> 005ef053a64f49e76737955daa0cec2a93b21a1a
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -15,6 +20,11 @@ class MyApp extends StatelessWidget {
 }
 
 class RequestPageEntrepreneur extends StatefulWidget {
+<<<<<<< HEAD
+=======
+  const RequestPageEntrepreneur({super.key});
+
+>>>>>>> 005ef053a64f49e76737955daa0cec2a93b21a1a
   @override
   _RequestPageState createState() => _RequestPageState();
 }

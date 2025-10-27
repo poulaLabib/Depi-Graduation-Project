@@ -1,5 +1,9 @@
+import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
+import 'package:depi_graduation_project/bloc/auth/auth_event.dart';
 import 'package:depi_graduation_project/custom%20widgets/request_tile_investor_view.dart';
+import 'package:depi_graduation_project/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class InvestorHomeScreen extends StatelessWidget {
   
@@ -24,8 +28,24 @@ class InvestorHomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: RequestTileInvestorView(companyname: 'YourCompanyName', offer: '50000', equity: '10', date: '2024-06-15', description: 'bladfdhfghdfhbbfdhbfbhbfbfdhdhfbfghthfgbchfhfhgfhgfhgfhgfhgfhjgjhgdrhtr'),
+      body: Column(
+        children: [
+          Center(
+            child: RequestTileInvestorView(),
+          ),
+
+          InkWell(
+            onTap: () {
+              context.read<AuthBloc>().add(LogoutButtonPressed());
+              Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) => WelcomePage(),));
+            },
+            child: Container(
+              width: 100,
+              height: 100,
+              color:  Colors.white,
+            ),
+          )
+        ],
       ),
     );
   }
