@@ -13,7 +13,7 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
     : super(LoadingRequest()) {
     on<LoadRequest>((event, emit) async {
       await emit.forEach(
-        request.getRequest(auth.currentUser!.uid, event.request.requestId),
+        request.getRequest(auth.currentUser!.uid, event.request.uid),
         onData: (request) {
           req = request ?? event.request;
           return DisplayingRequest(request: request ?? event.request);
@@ -33,7 +33,7 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
         'submittedAt': req.submittedAt,
       };
       await request.updateRequest(
-        requestId: req.requestId,
+        uid: req.uid,
         updatedData: updatedRequest,
       );
       emit(DisplayingRequest(request: req));

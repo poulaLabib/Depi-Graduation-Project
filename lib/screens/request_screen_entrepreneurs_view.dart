@@ -1,11 +1,20 @@
-import 'package:depi_graduation_project/bloc/home/entrep_home_screen/requests_section/requests_section_bloc.dart';
-import 'package:depi_graduation_project/bloc/request_screen/request_screen_bloc.dart';
-import 'package:depi_graduation_project/bloc/request_screen/request_screen_event.dart';
-import 'package:depi_graduation_project/bloc/request_screen/request_screen_state.dart';
-import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
-import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: RequestPageEntrepreneur(),
+    );
+  }
+}
 
 class RequestPageEntrepreneur extends StatefulWidget {
   const RequestPageEntrepreneur({super.key});
@@ -15,257 +24,114 @@ class RequestPageEntrepreneur extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPageEntrepreneur> {
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _amountController = TextEditingController();
-  final TextEditingController _equityController = TextEditingController();
-  final TextEditingController _reasonController = TextEditingController();
+  String description = "";
+  String amount = "";
+  String equity = "";
+  String reason = "";
+  String submittedAt = "";
+
+  final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController equityController = TextEditingController();
+  final TextEditingController reasonController = TextEditingController();
+  final TextEditingController submittedAtController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFFDF8EE),
-      body: BlocConsumer<RequestScreenBloc, RequestScreenState>(
-        builder: (context, state) {
-          if (state is LoadingRequest) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is DisplayingRequest) {
-            _descriptionController.text = state.request.description;
-            _amountController.text = state.request.amountOfMoney.toString();
-            _equityController.text = state.request.equityInReturn;
-            _reasonController.text = state.request.whyAreYouRaising;
-            return SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Stack(
+              children: [
+                Container(
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(16),
+                      bottomRight: Radius.circular(16),
+                    ),
+                  ),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "Company photo",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 30,
+                  left: 16,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.arrow_back, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(top: 10, right: 16),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: buildTopWhiteButton("Edit", () {
+                  openEditSheet(context);
+                }),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Stack(
+                  buildLabel("Description (Short)"),
+                  buildDisplayBox(description),
+                  buildLabel("Amount Of Money"),
+                  buildDisplayBox(amount),
+                  buildLabel("Equity"),
+                  buildDisplayBox(equity),
+                  buildLabel("Why They Are Raising?"),
+                  buildDisplayBox(reason),
+                  buildLabel("SubmittedAt"),
+                  buildDisplayBox(submittedAt),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "Company photo",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 30,
-                        left: 16,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
+                      buildTabButton("Founder", const Color(0xFF91C7E5)),
+                      buildTabButton("Company", const Color(0xFF91C7E5)),
                     ],
                   ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, right: 16),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: buildTopWhiteButton("Edit", () {
-                        context.read<RequestScreenBloc>().add(
-                          EditRequestRequested(),
-                        );
-                      }),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        EntrepreneurProfileField(
-                          title: 'Description',
-                          value: _descriptionController.text,
-                        ),
-                        EntrepreneurProfileField(
-                          title: 'Amount of money asked',
-                          value: _amountController.text,
-                        ),
-                        EntrepreneurProfileField(
-                          title: 'In return',
-                          value: _equityController.text,
-                        ),
-                        EntrepreneurProfileField(
-                          title: 'Reason for the request',
-                          value: _reasonController.text,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildTabButton("Founder", const Color(0xFF91C7E5)),
-                            buildTabButton("Company", const Color(0xFF91C7E5)),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        Column(
-                          children: [
-                            buildRoundButton(
-                              "Statue",
-                              Colors.green,
-                              textColor: Colors.white,
-                            ),
-                            const SizedBox(height: 16),
-                            buildRoundButton(
-                              "Cancel",
-                              Colors.red,
-                              textColor: Colors.white,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 30),
+                  Column(
+                    children: [
+                      buildRoundButton("Statue", Colors.green,
+                          textColor: Colors.white),
+                      const SizedBox(height: 16),
+                      buildRoundButton("Cancel", Colors.red,
+                          textColor: Colors.white),
+                    ],
                   ),
                 ],
               ),
-            );
-          } else if (state is EditingRequest) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Stack(
-                    children: [
-                      Container(
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300],
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(16),
-                            bottomRight: Radius.circular(16),
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Text(
-                          "Company photo",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 30,
-                        left: 16,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.arrow_back,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        buildTopWhiteButton("cancel", () {
-                          context.read<RequestScreenBloc>().add(
-                            CancelButtonPressed(),
-                          );
-                        }),
-                        buildTopWhiteButton("save", () {
-                          context.read<RequestScreenBloc>().add(
-                            EditRequestConfirmed(
-                              description: _descriptionController.text,
-                              whyAreYouRaising: _reasonController.text,
-                              amountOfMoney: _amountController.text,
-                              equityInReturn: _equityController.text,
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
-                      children: [
-                        EntrepreneurProfileTextfield(
-                          title: 'Description',
-                          controller: _descriptionController,
-                        ),
-                        EntrepreneurProfileTextfield(
-                          title: 'Amount of money asked',
-                          controller: _amountController,
-                        ),
-                        EntrepreneurProfileTextfield(
-                          title: 'In return',
-                          controller: _equityController,
-                        ),
-                        EntrepreneurProfileTextfield(
-                          title: 'Reason for the request',
-                          controller: _reasonController,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildTabButton("Founder", const Color(0xFF91C7E5)),
-                            buildTabButton("Company", const Color(0xFF91C7E5)),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-          return SizedBox.shrink();
-        },
-        listener: (context, state) {},
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -299,11 +165,8 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
     );
   }
 
-  Widget buildRoundButton(
-    String text,
-    Color bgColor, {
-    Color textColor = Colors.black,
-  }) {
+  Widget buildRoundButton(String text, Color bgColor,
+      {Color textColor = Colors.black}) {
     return InkWell(
       onTap: () {},
       child: Container(
@@ -317,20 +180,14 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
         child: Text(
           text,
           style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-            color: textColor,
-          ),
+              fontWeight: FontWeight.bold, fontSize: 18, color: textColor),
         ),
       ),
     );
   }
 
-  Widget buildTabButton(
-    String text,
-    Color bgColor, {
-    Color textColor = Colors.black,
-  }) {
+  Widget buildTabButton(String text, Color bgColor,
+      {Color textColor = Colors.black}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
       decoration: BoxDecoration(
@@ -340,29 +197,88 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
       child: Text(
         text,
         style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-          color: textColor,
-        ),
+            fontWeight: FontWeight.bold, fontSize: 17, color: textColor),
         textAlign: TextAlign.center,
       ),
     );
   }
 
-  Widget buildEditBox(
-    String label,
-    TextEditingController controller, {
-    int maxLines = 1,
-  }) {
+  void openEditSheet(BuildContext context) {
+    descriptionController.text = description;
+    amountController.text = amount;
+    equityController.text = equity;
+    reasonController.text = reason;
+    submittedAtController.text = submittedAt;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.6,
+          minChildSize: 0.3,
+          maxChildSize: 0.9,
+          builder: (context, scrollController) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+              ),
+              child: SingleChildScrollView(
+                controller: scrollController,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        buildTopWhiteButton("Cancel", () {
+                          Navigator.pop(context);
+                        }),
+                        const SizedBox(width: 8),
+                        buildTopWhiteButton("Save", () {
+                          setState(() {
+                            description = descriptionController.text;
+                            amount = amountController.text;
+                            equity = equityController.text;
+                            reason = reasonController.text;
+                            submittedAt = submittedAtController.text;
+                          });
+                          Navigator.pop(context);
+                        }),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    buildEditBox("Description (Short)", descriptionController),
+                    buildEditBox("Amount Of Money", amountController),
+                    buildEditBox("Equity", equityController),
+                    buildEditBox("Why They Are Raising?", reasonController,
+                        maxLines: 3),
+                    buildEditBox("SubmittedAt", submittedAtController),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget buildEditBox(String label, TextEditingController controller,
+      {int maxLines = 1}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
+          Text(label,
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
           const SizedBox(height: 6),
           Container(
             decoration: BoxDecoration(
