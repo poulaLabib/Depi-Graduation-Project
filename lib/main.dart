@@ -1,3 +1,4 @@
+import 'package:depi_graduation_project/bloc/Request%20section/requests_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_bloc.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
@@ -51,6 +52,13 @@ void main() async {
               (BuildContext context) => IpsBloc(
                 auth: AuthenticationService(),
                 investor: InvestorFirestoreService(),
+              ),
+        ),
+         BlocProvider(
+          create:
+              (BuildContext context) => RequestsSectionBloc(
+                auth: AuthenticationService(),
+                request: RequestFirestoreService(),
               ),
         ),
       ],

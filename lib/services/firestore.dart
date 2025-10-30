@@ -93,63 +93,70 @@ class InvestorFirestoreService {
 }
 
 class RequestFirestoreService {
-  // Function to add request
+  //  Add request
   Future<void> addRequest({
     required String uid,
     required String description,
+    required double amountOfMoney,
+    required String equityInReturn,
+    String? whyAreYouRaising,
   }) async {
-    await _db.collection('requests').doc(uid).set({
+    await _db.collection('requests').add({
+      'uid': uid,
       'description': description,
-      'amountOfMoney': '',
-      'equityInReturn': '',
-      'whyAreYouRaising': '',
+      'amountOfMoney': amountOfMoney,
+      'equityInReturn': equityInReturn,
+      'whyAreYouRaising': whyAreYouRaising ?? '',
       'submittedAt': FieldValue.serverTimestamp(),
-      'companyId': '',
     });
   }
 
-  // Function to update request data
+  //  Update request by document ID
   Future<void> updateRequest({
-    required String uid,
+    required String requestId,
     required Map<String, dynamic> updatedData,
   }) async {
-    await _db.collection('requests').doc(uid).update(updatedData);
+    await _db.collection('requests').doc(requestId).update(updatedData);
   }
 
-  // Function to get a stream of request data (auto-updates when Firestore changes)
-  Stream<Request> getRequestStream({required String uid}) {
+  //  Stream of user's requests
+  Stream<List<Request>> getRequestsStream({required String uid}) {
     return _db
         .collection('requests')
-        .doc(uid)
+        .where('uid', isEqualTo: uid)
         .snapshots()
-        .map((snapshot) => Request.fromFireStore(snapshot.data() ?? {}, uid));
+        .map(
+          (snapshot) =>
+              snapshot.docs
+                  .map((doc) => Request.fromFireStore(doc.data(), doc.id))
+                  .toList(),
+        );
   }
 
-  // Function to get all requests
+  //  Get all requests
   Future<List<Request>> getRequests() async {
     final snapshot = await _db.collection('requests').get();
     return snapshot.docs
         .map((doc) => Request.fromFireStore(doc.data(), doc.id))
         .toList();
   }
+
+  // return stream of one request
   Stream<Request?> getRequest(String uid, String requestId) {
-  return _db
-      .collection('requests')
-      .doc(requestId)
-      .snapshots()
-      .map((snapshot) {
-    if (snapshot.exists) {
-      return Request.fromFireStore(snapshot.data() ?? {}, snapshot.id);
-    } else {
-      return null;
-    }
-  });
-}
+    return _db.collection('requests').doc(requestId).snapshots().map((
+      docSnapshot,
+    ) {
+      if (docSnapshot.exists) {
+        return Request.fromFireStore(docSnapshot.data()!, docSnapshot.id);
+      } else {
+        return null;
+      }
+    });
+  }
 
-
-  // Function to delete request
-  Future<void> deleteRequest({required String uid}) async {
-    await _db.collection('requests').doc(uid).delete();
+  //  Delete request by document ID
+  Future<void> deleteRequest({required String requestId}) async {
+    await _db.collection('requests').doc(requestId).delete();
   }
 }
 

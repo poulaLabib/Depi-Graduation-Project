@@ -3,9 +3,11 @@ import 'package:depi_graduation_project/bloc/home/entrep_home_screen/ehs_event.d
 import 'package:depi_graduation_project/bloc/home/entrep_home_screen/ehs_state.dart';
 // import 'package:depi_graduation_project/custom%20widgets/your_requests_section.dart';
 import 'package:depi_graduation_project/custom%20widgets/investor_tile.dart';
+import 'package:depi_graduation_project/custom%20widgets/investors_section.dart';
 // import 'package:depi_graduation_project/custom%20widgets/investors_section.dart';
 import 'package:depi_graduation_project/custom%20widgets/request_card_enrepreneur_view.dart';
 import 'package:depi_graduation_project/custom%20widgets/request_tile_investor_view.dart';
+import 'package:depi_graduation_project/custom%20widgets/your_requests_section.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
