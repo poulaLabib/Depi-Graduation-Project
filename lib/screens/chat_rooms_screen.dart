@@ -1,9 +1,17 @@
 // lib/screens/chat_rooms_screen.dart
-
+import 'package:depi_graduation_project/bloc/chatroom/chatroom_bloc.dart';
+import 'package:depi_graduation_project/screens/chat_room_srceen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
+import 'package:depi_graduation_project/bloc/chatlist/chatlist_state.dart';
+import 'package:depi_graduation_project/bloc/chatlist/chatlist_event.dart';
+import 'package:depi_graduation_project/models/chat_room.dart';
+import 'package:depi_graduation_project/services/firebase_auth_service.dart';
+import 'package:depi_graduation_project/services/firestore.dart';
 
 class ChatRoomsScreen extends StatefulWidget {
-  const ChatRoomsScreen({Key? key}) : super(key: key);
+  const ChatRoomsScreen({super.key});
 
   @override
   State<ChatRoomsScreen> createState() => _ChatRoomsScreenState();
@@ -13,248 +21,185 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
 
-  // Static chat data for demo
-  final List<Map<String, dynamic>> _staticChats = [
-    {
-      'id': '1',
-      'userName': 'Ahmed El-Sayed',
-      'userPhoto': 'https://i.pravatar.cc/150?img=1',
-      'lastMessage': 'I\'m interested in your startup idea. Let\'s discuss the investment details.',
-      'time': DateTime.now().subtract(const Duration(minutes: 5)),
-      'unreadCount': 3,
-    },
-    {
-      'id': '2',
-      'userName': 'Sarah Mohammed',
-      'userPhoto': 'https://i.pravatar.cc/150?img=5',
-      'lastMessage': 'That sounds great! When can we schedule a meeting?',
-      'time': DateTime.now().subtract(const Duration(hours: 2)),
-      'unreadCount': 1,
-    },
-    {
-      'id': '3',
-      'userName': 'Mohamed Ali',
-      'userPhoto': 'https://i.pravatar.cc/150?img=12',
-      'lastMessage': 'Thanks for sharing the business plan. I\'ll review it and get back to you.',
-      'time': DateTime.now().subtract(const Duration(hours: 5)),
-      'unreadCount': 0,
-    },
-    {
-      'id': '4',
-      'userName': 'Fatma Hassan',
-      'userPhoto': 'https://i.pravatar.cc/150?img=9',
-      'lastMessage': 'Your company profile looks impressive!',
-      'time': DateTime.now().subtract(const Duration(days: 1)),
-      'unreadCount': 0,
-    },
-    {
-      'id': '5',
-      'userName': 'Omar Khaled',
-      'userPhoto': 'https://i.pravatar.cc/150?img=15',
-      'lastMessage': 'Can you send me more details about the equity offer?',
-      'time': DateTime.now().subtract(const Duration(days: 2)),
-      'unreadCount': 5,
-    },
-    {
-      'id': '6',
-      'userName': 'Nour Ibrahim',
-      'userPhoto': '',
-      'lastMessage': 'Let me know if you need any help with the pitch deck.',
-      'time': DateTime.now().subtract(const Duration(days: 3)),
-      'unreadCount': 0,
-    },
-  ];
-
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
 
-  String _getInitials(String name) {
-    if (name.isEmpty) return '?';
-    final parts = name.trim().split(' ');
-    if (parts.length == 1) return parts[0][0].toUpperCase();
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  List<ChatRoom> _filterRooms(List<ChatRoom> rooms) {
+    if (_searchQuery.isEmpty) return rooms;
+    final query = _searchQuery.toLowerCase();
+    return rooms
+        .where(
+          (room) =>
+              room.participantsNames.any(
+                (name) => name.toLowerCase().contains(query),
+              ) ||
+              (room.lastMessage).toLowerCase().contains(query),
+        )
+        .toList();
   }
 
-  String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
+  int _totalUnread(List<ChatRoom> rooms) =>
+      rooms.fold<int>(0, (sum, room) => sum + (room.unreadCount));
 
-    if (difference.inDays == 0) {
-      final hour = dateTime.hour;
-      final minute = dateTime.minute.toString().padLeft(2, '0');
-      final period = hour >= 12 ? 'PM' : 'AM';
-      final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-      return '$displayHour:$minute $period';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      return days[dateTime.weekday - 1];
-    } else {
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-    }
-  }
-
-  List<Map<String, dynamic>> _getFilteredChats() {
-    if (_searchQuery.isEmpty) return _staticChats;
-    
-    return _staticChats.where((chat) {
-      final userName = chat['userName'].toString().toLowerCase();
-      final lastMessage = chat['lastMessage'].toString().toLowerCase();
-      final query = _searchQuery.toLowerCase();
-      return userName.contains(query) || lastMessage.contains(query);
-    }).toList();
-  }
-
-  int _getTotalUnread() {
-    return _staticChats.fold(0, (sum, chat) => sum + (chat['unreadCount'] as int));
-  }
-
-  void _showDeleteDialog(String chatId, String userName) {
-    showDialog(
+  void _confirmDelete(BuildContext context, ChatRoom room) {
+    showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete Chat'),
-        content: Text('Are you sure you want to delete chat with $userName?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+      builder:
+          (dialogContext) => AlertDialog(
+            title: const Text('Delete Chat'),
+            content: Text(
+              'Are you sure you want to delete chat with ${room.targetName ?? 'this user'}?',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.red),
+                onPressed: () {
+                  context.read<ChatListBloc>().add(
+                    DeleteChatRoom(chatRoomId: room.id),
+                  );
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                _staticChats.removeWhere((chat) => chat['id'] == chatId);
-              });
-              Navigator.pop(dialogContext);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Chat deleted')),
-              );
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
     );
   }
 
-  Widget _buildChatTile(Map<String, dynamic> chat) {
-    final hasUnread = (chat['unreadCount'] as int) > 0;
-    
+  Widget _buildTile(BuildContext context, ChatRoom room) {
+    final hasUnread = (room.unreadCount) > 0;
+    final lastMessage = room.lastMessage;
+    final formattedTime = room.lastMessageTimeFormatted;
+    final profileUrl = room.targetPhotoUrl ?? '';
+
     return InkWell(
       onTap: () {
-        // Mark as read
-        setState(() {
-          chat['unreadCount'] = 0;
-        });
-        
-        // TODO: Navigate to chat screen
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Opening chat with ${chat['userName']}')),
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder:
+                (_) => BlocProvider(
+                  create:
+                      (_) => ChatRoomBloc(
+                        chatRoomService: ChatRoomFirestoreService(),
+                        chatRoomId: room.id,
+                        currentUserId: AuthenticationService().currentUser!.uid,
+                        receiverId: room.otherParticipantId(
+                          AuthenticationService().currentUser!.uid,
+                        ),
+                      ),
+                  child: ChatRoomScreen(room: room),
+                ),
+          ),
         );
       },
-      onLongPress: () => _showDeleteDialog(chat['id'], chat['userName']),
+      onLongPress: () => _confirmDelete(context, room),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: hasUnread 
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.05)
-              : Colors.transparent,
+          color:
+              hasUnread
+                  ? Theme.of(context).colorScheme.primary.withAlpha(11)
+                  : Colors.transparent,
           border: Border(
             bottom: BorderSide(color: Colors.grey.shade300, width: 0.5),
           ),
         ),
         child: Row(
           children: [
-            // Profile Picture
             CircleAvatar(
               radius: 28,
               backgroundColor: Theme.of(context).colorScheme.primary,
-              backgroundImage: chat['userPhoto'].toString().isNotEmpty
-                  ? NetworkImage(chat['userPhoto'])
-                  : null,
-              child: chat['userPhoto'].toString().isEmpty
-                  ? Text(
-                      _getInitials(chat['userName']),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    )
-                  : null,
+              backgroundImage:
+                  profileUrl.isNotEmpty ? NetworkImage(profileUrl) : null,
+              child:
+                  profileUrl.isEmpty
+                      ? Text(
+                        room.initials,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      )
+                      : null,
             ),
-            
             const SizedBox(width: 12),
-            
-            // Chat Info
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    chat['userName'],
+                    room.targetName ?? 'Unknown User',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: hasUnread ? FontWeight.bold : FontWeight.w600,
                       color: Colors.black87,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    chat['lastMessage'],
-                    style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
-                      color: hasUnread ? Colors.black87 : Colors.grey.shade600,
-                    ),
+                    lastMessage,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight:
+                          hasUnread ? FontWeight.w500 : FontWeight.normal,
+                      color: hasUnread ? Colors.black87 : Colors.grey.shade600,
+                    ),
                   ),
                 ],
               ),
             ),
-            
             const SizedBox(width: 8),
-            
-            // Time and Unread Badge
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  _formatTime(chat['time']),
+                  formattedTime,
                   style: TextStyle(
                     fontSize: 12,
-                    color: hasUnread 
-                        ? Theme.of(context).colorScheme.primary
-                        : Colors.grey.shade600,
+                    color:
+                        hasUnread
+                            ? Theme.of(context).colorScheme.primary
+                            : Colors.grey.shade600,
                     fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
                 const SizedBox(height: 4),
                 if (hasUnread)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 7,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
+                    constraints: const BoxConstraints(
+                      minWidth: 20,
+                      minHeight: 20,
+                    ),
                     child: Text(
-                      chat['unreadCount'] > 99 ? '99+' : chat['unreadCount'].toString(),
+                      room.unreadCount > 99
+                          ? '99+'
+                          : room.unreadCount.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ),
               ],
@@ -265,135 +210,183 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final filteredChats = _getFilteredChats();
-    final totalUnread = _getTotalUnread();
+  Widget _buildBody(BuildContext context, ChatListState state) {
+    if (state is ChatListLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        elevation: 0,
-        title: const Text(
-          'Chats',
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
-        ),
-        actions: [
-          // Total Unread Count Badge
-          if (totalUnread > 0)
-            Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    totalUnread > 99 ? '99+' : totalUnread.toString(),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+    if (state is ChatListError) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline,
+                size: 80,
+                color: Colors.redAccent,
               ),
-            ),
-        ],
-      ),
-      body: Column(
+              const SizedBox(height: 16),
+              Text(
+                'Oops! Unable to load chats.\n${state.message}',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton(
+                onPressed:
+                    () => context.read<ChatListBloc>().add(LoadChatRooms()),
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (state is ChatListLoaded) {
+      final filtered = _filterRooms(state.chatRooms);
+      final totalUnread = _totalUnread(state.chatRooms);
+
+      return Column(
         children: [
-          // Search Bar
           Padding(
             padding: const EdgeInsets.all(16),
             child: TextField(
               controller: _searchController,
-              onChanged: (value) {
-                setState(() {
-                  _searchQuery = value;
-                });
-              },
+              onChanged: (value) => setState(() => _searchQuery = value),
               decoration: InputDecoration(
                 hintText: 'Search chats...',
                 prefixIcon: const Icon(Icons.search),
-                suffixIcon: _searchController.text.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () {
-                          _searchController.clear();
-                          setState(() {
-                            _searchQuery = '';
-                          });
-                        },
-                      )
-                    : null,
+                suffixIcon:
+                    _searchController.text.isNotEmpty
+                        ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () {
+                            _searchController.clear();
+                            setState(() => _searchQuery = '');
+                          },
+                        )
+                        : null,
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide.none,
                 ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
               ),
             ),
           ),
-
-          // Chat Rooms List
           Expanded(
-            child: filteredChats.isEmpty
-                ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          _searchQuery.isEmpty ? Icons.chat_bubble_outline : Icons.search_off,
-                          size: 80,
-                          color: Colors.grey.shade300,
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _searchQuery.isEmpty ? 'No chats yet' : 'No chats found',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade700,
-                          ),
-                        ),
-                        if (_searchQuery.isEmpty) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            'Start a conversation with\ninvestors or entrepreneurs',
-                            style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ],
-                    ),
-                  )
-                : RefreshIndicator(
-                    onRefresh: () async {
-                      setState(() {});
-                      await Future.delayed(const Duration(milliseconds: 500));
-                      if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Chats refreshed'),
-                            duration: Duration(seconds: 1),
-                          ),
-                        );
-                      }
-                    },
-                    child: ListView.builder(
-                      itemCount: filteredChats.length,
-                      itemBuilder: (context, index) {
-                        return _buildChatTile(filteredChats[index]);
+            child:
+                filtered.isEmpty
+                    ? _EmptyState(hasQuery: _searchQuery.isNotEmpty)
+                    : RefreshIndicator(
+                      onRefresh: () async {
+                        context.read<ChatListBloc>().add(LoadChatRooms());
+                        await Future.delayed(const Duration(milliseconds: 400));
                       },
+                      child: ListView.builder(
+                        itemCount: filtered.length,
+                        itemBuilder:
+                            (context, index) =>
+                                _buildTile(context, filtered[index]),
+                      ),
                     ),
-                  ),
           ),
+          if (totalUnread > 0)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Text(
+                  totalUnread > 99 ? '99+' : totalUnread.toString(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create:
+          (_) => ChatListBloc(
+            chatRoomService: ChatRoomFirestoreService(),
+            auth: AuthenticationService(),
+          ),
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          elevation: 0,
+          title: const Text(
+            'Chats',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        body: BlocBuilder<ChatListBloc, ChatListState>(builder: _buildBody),
+      ),
+    );
+  }
+}
+
+class _EmptyState extends StatelessWidget {
+  final bool hasQuery;
+  const _EmptyState({required this.hasQuery});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            hasQuery ? Icons.search_off : Icons.chat_bubble_outline,
+            size: 80,
+            color: Colors.grey.shade300,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            hasQuery ? 'No chats found' : 'No chats yet',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
+          ),
+          if (!hasQuery) ...[
+            const SizedBox(height: 8),
+            Text(
+              'Start a conversation with\ninvestors or entrepreneurs',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+            ),
+          ],
         ],
       ),
     );
