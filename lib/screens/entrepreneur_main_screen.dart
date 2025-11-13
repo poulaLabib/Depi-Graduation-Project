@@ -1,3 +1,4 @@
+import 'package:depi_graduation_project/screens/chat_rooms_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_company_profile_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_home_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_profile_screen.dart';
@@ -15,6 +16,7 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
   List<Widget> screens = [
     EntrepreneurHomeScreen(),
     EntrepreneurCompanyProfileScreen(),
+        ChatRoomsScreen(),
     EntrepreneurProfileScreen(),
   ];
   int selectedIndex = 0;
@@ -35,6 +37,7 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
         items: [
           SalomonBottomBarItem(icon: Icon(Icons.home), title: Text('Home')),
           SalomonBottomBarItem(icon: Icon(Icons.business), title: Text('Company')),
+          SalomonBottomBarItem(icon: Icon(Icons.chat), title: Text('Chats')), // Add
           SalomonBottomBarItem(icon: Icon(Icons.account_circle), title: Text('Profile')),
         ],
       ),

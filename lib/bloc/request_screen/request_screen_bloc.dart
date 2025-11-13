@@ -33,7 +33,7 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
         'submittedAt': req.submittedAt,
       };
       await request.updateRequest(
-        uid: req.uid,
+        requestId: req.uid,
         updatedData: updatedRequest,
       );
       emit(DisplayingRequest(request: req));
