@@ -1,33 +1,30 @@
-// store image and return image url
-
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseStorage {
-  // function uploads images
-
-  static Future<String?> uploadImage(File imageFile, String uid) async {
+  static Future<String?> uploadImage(
+    File imageFile,
+    String uid, {
+    required String type, // 'profile' or 'id'
+  }) async {
     final supabase = Supabase.instance.client;
-    final path = '$uid-profile.jpg';
+    const bucket = 'photos';
+    final path = '$uid/$type.jpg'; // each user has profile.jpg and id.jpg
 
     try {
-      // Upload and overwrite if exists
-      final res = await supabase.storage
-          .from('photos')
-          .upload(
-            path,
-            imageFile,
-            fileOptions: const FileOptions(upsert: true),
-          );
-      print('upload result: $res');
+      // upload or replace
+      await supabase.storage.from(bucket).upload(
+        path,
+        imageFile,
+        fileOptions: const FileOptions(upsert: true), // replaces if exists
+      );
 
-      // Get public URL
-      final url = supabase.storage.from('photos').getPublicUrl(path);
-
-      // Add cache-busting timestamp
-      return '$url?t=${DateTime.now().millisecondsSinceEpoch}';
+      // get public URL (timestamp ensures latest version is fetched)
+      final url = supabase.storage.from(bucket).getPublicUrl(path);
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      return '$url?t=$timestamp';
     } catch (e, st) {
-      print('upload exception: $e\n$st');
+      print('Upload exception: $e\n$st');
       return null;
     }
   }

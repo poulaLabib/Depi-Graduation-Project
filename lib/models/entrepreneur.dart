@@ -47,4 +47,27 @@ class Entrepreneur {
       'idImageUrl': idImageUrl,
     };
   }
+
+  Entrepreneur copyWith({
+    String? name,
+    String? about,
+    String? phoneNumber,
+    String? experience,
+    List<String>? skills,
+    String? role,
+    String? profileImageUrl,
+    String? idImageUrl,
+  }) {
+    return Entrepreneur(
+      uid: uid,
+      name: name ?? this.name,
+      about: about ?? this.about,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      experience: experience ?? this.experience,
+      skills: skills ?? List<String>.from(this.skills),
+      role: role ?? this.role,
+      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+      idImageUrl: idImageUrl ?? this.idImageUrl,
+    );
+  }
 }

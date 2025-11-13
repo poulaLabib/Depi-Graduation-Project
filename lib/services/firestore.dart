@@ -54,6 +54,11 @@ class InvestorFirestoreService {
         .map((snapshot) => Investor.fromFireStore(snapshot.data() ?? {}, uid));
   }
 
+  Future<Investor> getInvestor({required String uid}) async {
+    final doc = await _db.collection('investors').doc(uid).get();
+    return Investor.fromFireStore(doc.data() ?? {}, uid);
+  }
+
   // Function to get all investors as objects, for entrepreneur to see all investors
   Future<List<Investor>> getInvestors() async {
     final snapshot = await _db.collection('investors').get();
@@ -241,7 +246,7 @@ class EntrepreneurFirestoreService {
     required String newUrl,
   }) async {
     await _db.collection('entrepreneurs').doc(uid).update({
-      'profilePhotoUrl': newUrl,
+      'profileImageUrl': newUrl,
     });
   }
 
