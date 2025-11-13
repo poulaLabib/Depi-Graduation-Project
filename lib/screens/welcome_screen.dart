@@ -7,6 +7,8 @@ void main() {
 }
 
 class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(debugShowCheckedModeBanner: false, home: Welcome());
@@ -14,6 +16,8 @@ class WelcomePage extends StatelessWidget {
 }
 
 class Welcome extends StatefulWidget {
+  const Welcome({super.key});
+
   @override
   State<Welcome> createState() => _WelcomeState();
 }
@@ -150,7 +154,7 @@ class _WelcomeState extends State<Welcome> {
                     fontSize: 22,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
-                    decoration: TextDecoration.underline
+                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),

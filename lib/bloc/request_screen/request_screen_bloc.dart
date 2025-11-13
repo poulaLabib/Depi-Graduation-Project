@@ -9,22 +9,25 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
   final RequestFirestoreService request;
   final AuthenticationService auth;
   late Request req;
+
   RequestScreenBloc({required this.request, required this.auth})
-    : super(LoadingRequest()) {
+      : super(LoadingRequest()) {
     on<LoadRequest>((event, emit) async {
       await emit.forEach(
         request.getRequest(auth.currentUser!.uid, event.request.requestId),
-        onData: (request) {
-          req = request ?? event.request;
-          return DisplayingRequest(request: request ?? event.request);
+        onData: (requestData) {
+          req = requestData ?? event.request;
+          return DisplayingRequest(request: requestData ?? event.request);
         },
       );
     });
+
     on<EditRequestRequested>((event, emit) {
       emit(EditingRequest(request: req));
     });
+
     on<EditRequestConfirmed>((event, emit) async {
-      Map<String, dynamic> updatedRequest = {
+      final updatedRequest = {
         'uid': auth.currentUser!.uid,
         'description': event.description,
         'amountOfMoney': double.tryParse(event.amountOfMoney),
@@ -32,12 +35,15 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
         'whyAreYouRaising': event.whyAreYouRaising,
         'submittedAt': req.submittedAt,
       };
+
       await request.updateRequest(
         requestId: req.requestId,
         updatedData: updatedRequest,
       );
+
       emit(DisplayingRequest(request: req));
     });
+
     on<CancelButtonPressed>((event, emit) {
       emit(DisplayingRequest(request: req));
     });

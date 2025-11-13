@@ -25,6 +25,7 @@ class SupabaseStorage {
       return '$url?t=$timestamp';
     } catch (e, st) {
       print('Upload exception: $e\n$st');
+      print('Upload exception: $e\n$st');
       return null;
     }
   }

@@ -1,7 +1,6 @@
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_event.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_state.dart';
-import 'package:depi_graduation_project/screens/register_screen.dart';
 import 'package:depi_graduation_project/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +72,7 @@ class _LogInState extends State<LogIn> {
                     ),
                     const SizedBox(height: 40),
 
-                    // 🔹 Email Field
+                    //Email
                     const Text(
                       "Email",
                       style: TextStyle(
@@ -118,7 +117,7 @@ class _LogInState extends State<LogIn> {
 
                     const SizedBox(height: 25),
 
-                    // 🔹 Password Field
+                    //Password
                     const Text(
                       "Password",
                       style: TextStyle(
@@ -167,19 +166,19 @@ class _LogInState extends State<LogIn> {
                           return Center(child: CircularProgressIndicator());
                         } else if (state is AuthSuccessfull) {
                           return Text(
-                            'Success',
+                            'Logged in successfully',
                             style: TextStyle(color: Colors.green),
                           );
                         } else if (state is AuthError) {
                           return Text(
-                            'Something went wrong',
+                            'Something Went Wrong',
                             style: TextStyle(color: Colors.red),
                           );
                         } else if (state is InitialState) {
                           return SizedBox.shrink();
                         } else if (state is AuthUnsuccessfull) {
                           return Text(
-                            'You entered wrong data',
+                            'You Entered Wrong Data',
                             style: TextStyle(color: Colors.red),
                           );
                         }
@@ -189,7 +188,7 @@ class _LogInState extends State<LogIn> {
                     ),
                     const SizedBox(height: 20),
 
-                    // 🔹 Login Button
+                    //Login Button
                     Center(
                       child: InkWell(
                         onTap: () {
@@ -232,7 +231,7 @@ class _LogInState extends State<LogIn> {
 
                     const SizedBox(height: 10),
 
-                    // 🔹 Create Account Link
+                    //Create new account
                     Center(
                       child: TextButton(
                         onPressed: () {

@@ -1,6 +1,6 @@
-import 'package:depi_graduation_project/bloc/home/entrep_home_screen/requests_section/requests_section_bloc.dart';
-import 'package:depi_graduation_project/bloc/home/entrep_home_screen/requests_section/requests_section_event.dart';
-import 'package:depi_graduation_project/bloc/home/entrep_home_screen/requests_section/requests_section_state.dart';
+import 'package:depi_graduation_project/bloc/Request section/requests_section_bloc.dart';
+import 'package:depi_graduation_project/bloc/Request section/requests_section_event.dart';
+import 'package:depi_graduation_project/bloc/Request section/requests_section_state.dart';
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_bloc.dart';
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_event.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';

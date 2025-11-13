@@ -1,9 +1,11 @@
+import 'package:depi_graduation_project/bloc/Request%20section/requests_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
+import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
 import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_bloc.dart';
 import 'package:depi_graduation_project/bloc/home/entrep_home_screen/ehs_bloc.dart';
-import 'package:depi_graduation_project/bloc/home/entrep_home_screen/requests_section/requests_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/investor_profile_screen/ips_bloc.dart';
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_bloc.dart';
+import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
 import 'package:depi_graduation_project/fikraty.dart';
 import 'package:depi_graduation_project/firebase_options.dart';
 import 'package:depi_graduation_project/services/firebase_auth_service.dart';
@@ -50,16 +52,17 @@ void main() async {
               ),
         ),
         BlocProvider(create: (BuildContext context) => EhsBloc()),
+
         BlocProvider(
           create:
-              (BuildContext context) => RequestsSectionBloc( 
+              (BuildContext context) => RequestScreenBloc(
                 auth: AuthenticationService(),
                 request: RequestFirestoreService(),
               ),
         ),
         BlocProvider(
           create:
-              (BuildContext context) => RequestScreenBloc(
+              (BuildContext context) => RequestsSectionBloc(
                 auth: AuthenticationService(),
                 request: RequestFirestoreService(),
               ),
@@ -71,6 +74,22 @@ void main() async {
                 investorService: InvestorFirestoreService(),
               ),
         ),
+        BlocProvider(
+          create:
+              (BuildContext context) => CompanyBloc(
+                auth: AuthenticationService(),
+                company: CompanyFirestoreService(),
+              ),
+        ),
+
+        BlocProvider(
+          create:
+              (BuildContext context) => ChatListBloc(
+                chatRoomService: ChatRoomFirestoreService(),
+                auth: AuthenticationService(),
+              ),
+        ),
+        
       ],
       child: Fikraty(),
     ),

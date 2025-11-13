@@ -1,4 +1,3 @@
-import 'package:depi_graduation_project/bloc/request_screen/request_screen_state.dart';
 import 'package:depi_graduation_project/models/request.dart';
 
 abstract class RequestScreenEvent {}
@@ -8,9 +7,7 @@ class LoadRequest extends RequestScreenEvent {
   LoadRequest({required this.request});
 }
 
-class EditRequestRequested extends RequestScreenEvent {
-
-}
+class EditRequestRequested extends RequestScreenEvent {}
 
 class EditRequestConfirmed extends RequestScreenEvent {
   final String description;
@@ -25,6 +22,4 @@ class EditRequestConfirmed extends RequestScreenEvent {
   });
 }
 
-class CancelButtonPressed extends RequestScreenEvent {
-  
-}
+class CancelButtonPressed extends RequestScreenEvent {}

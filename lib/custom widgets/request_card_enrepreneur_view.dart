@@ -1,11 +1,12 @@
 import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:depi_graduation_project/models/request.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 
 class RequestCardEnrepreneurView extends StatelessWidget {
   final Request request;
   const RequestCardEnrepreneurView({required this.request, super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -157,5 +158,6 @@ class RequestCardEnrepreneurView extends StatelessWidget {
         ],
       ),
     );
+
   }
 }

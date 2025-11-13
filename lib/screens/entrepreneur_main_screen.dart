@@ -1,9 +1,8 @@
+import 'package:depi_graduation_project/screens/chat_rooms_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_company_profile_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_home_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_profile_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class EntrepreneurMainScreen extends StatefulWidget {
@@ -17,6 +16,7 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
   List<Widget> screens = [
     EntrepreneurHomeScreen(),
     EntrepreneurCompanyProfileScreen(),
+        ChatRoomsScreen(),
     EntrepreneurProfileScreen(),
   ];
   int selectedIndex = 0;
@@ -26,7 +26,7 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
       body: IndexedStack(index: selectedIndex, children: screens),
       bottomNavigationBar: Container(
         height: 63,
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
           border: Border(
             top: BorderSide(
@@ -43,13 +43,14 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
           onTap: (index) => setState(() => selectedIndex = index),
           backgroundColor: Theme.of(context).colorScheme.surface,
           itemPadding: EdgeInsets.symmetric(horizontal: 23, vertical: 5),
-          items: List.generate(3, (index) {
+          items: List.generate(4, (index) {
             final icons = [
               Icons.home,
               Icons.business,
+              Icons.chat,
               Icons.account_circle,
             ];
-            final labels = ['Home', 'Company', 'Profile'];
+            final labels = ['Home', 'Company', 'Chats','Profile'];
 
             final isSelected = selectedIndex == index;
 

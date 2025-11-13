@@ -1,4 +1,4 @@
-import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_state.dart';
+// import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_state.dart';
 
 abstract class EpsEvent {}
 

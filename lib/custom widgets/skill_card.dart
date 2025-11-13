@@ -22,9 +22,9 @@ class SkillCard extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.black.withAlpha(state == 'toAdd' ? 150 : 40),
-          width: state == 'toAdd' ? 1 : 0.3,
+          width: state == 'toAdd' ? 1 : 1,
         ),
-        color: const Color.fromARGB(255, 251, 106, 62),
+        // color:  Colors.white,
 
         borderRadius: BorderRadius.circular(5),
       ),

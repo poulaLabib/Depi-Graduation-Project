@@ -21,7 +21,7 @@ class EntrepreneurProfileTextfield extends StatelessWidget {
       maxLines: null,
       controller: controller,
       validator: validator,
-      keyboardType: TextInputType.multiline,
+      keyboardType: keyboardType,
       style: GoogleFonts.roboto(
         color: Colors.black,
         fontWeight: FontWeight.w400,
