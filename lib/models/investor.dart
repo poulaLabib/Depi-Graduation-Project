@@ -44,6 +44,8 @@ class Investor {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'investorType': investorType,
+      'photoUrl': photoUrl,
       'about': about,
       'phoneNumber': phoneNumber,
       'experience': experience,
@@ -54,5 +56,33 @@ class Investor {
       'nationalIdUrl': nationalIdUrl,
       'photoUrl': photoUrl,
     };
+  }
+
+  Investor copyWith({
+    String? name,
+    String? investorType,
+    String? photoUrl,
+    String? about,
+    String? phoneNumber,
+    String? experience,
+    List<String>? skills,
+    int? investmentCapacity,
+    String? nationalIdUrl,
+    List<String>? preferredIndustries,
+  }) {
+    return Investor(
+      uid: uid,
+      name: name ?? this.name,
+      investorType: investorType ?? this.investorType,
+      photoUrl: photoUrl ?? this.photoUrl,
+      about: about ?? this.about,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      experience: experience ?? this.experience,
+      skills: skills ?? List<String>.from(this.skills),
+      investmentCapacity: investmentCapacity ?? this.investmentCapacity,
+      nationalIdUrl: nationalIdUrl ?? this.nationalIdUrl,
+      preferredIndustries:
+          preferredIndustries ?? List<String>.from(this.preferredIndustries),
+    );
   }
 }
