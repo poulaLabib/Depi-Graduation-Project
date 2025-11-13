@@ -1,21 +1,22 @@
 import 'dart:io';
+
 import 'package:bloc/bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:depi_graduation_project/services/firestore.dart';
-import 'package:depi_graduation_project/services/firebase_auth_service.dart';
-import 'package:depi_graduation_project/services/supabase_storage.dart';
-import 'ips_event.dart';
-import 'ips_state.dart';
 import 'package:depi_graduation_project/data/industries.dart';
 import 'package:depi_graduation_project/data/skills.dart';
+import 'package:depi_graduation_project/services/firebase_auth_service.dart';
+import 'package:depi_graduation_project/services/firestore.dart';
+import 'package:depi_graduation_project/services/supabase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'ips_event.dart';
+import 'ips_state.dart';
 
 class IpsBloc extends Bloc<IpsEvent, IpsState> {
   final InvestorFirestoreService investorService;
   final AuthenticationService auth;
 
   IpsBloc({required this.investorService, required this.auth})
-    : super(LoadingInvestorProfile()) {
-    // Load stream
+      : super(LoadingInvestorProfile()) {
     on<LoadInvestorData>((event, emit) async {
       await emit.forEach(
         investorService.getInvestorStream(uid: auth.currentUser!.uid),
@@ -23,13 +24,12 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       );
     });
 
-    // Edit button pressed
     on<EditInvestorButtonPressed>((event, emit) async {
-      final inv = await investorService.getInvestor(uid: auth.currentUser!.uid);
-      emit(EditInvestorInfo(investor: inv));
+      final investor =
+          await investorService.getInvestor(uid: auth.currentUser!.uid);
+      emit(EditInvestorInfo(investor: investor));
     });
 
-    // Save changes
     on<SaveInvestorButtonPressed>((event, emit) async {
       final inv = await investorService.getInvestor(uid: auth.currentUser!.uid);
       final updatedData = {
@@ -49,24 +49,22 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
         uid: auth.currentUser!.uid,
         updatedData: updatedData,
       );
-      final updatedInvestor = await investorService.getInvestor(
-        uid: auth.currentUser!.uid,
-      );
+
+      final updatedInvestor =
+          await investorService.getInvestor(uid: auth.currentUser!.uid);
       emit(DisplayInvestorInfo(investor: updatedInvestor));
     });
 
-    // Cancel edit
     on<CancelInvestorButtonPressed>((event, emit) async {
-      final updatedInvestor = await investorService.getInvestor(
-        uid: auth.currentUser!.uid,
-      );
-      emit(DisplayInvestorInfo(investor: updatedInvestor));
+      final investor =
+          await investorService.getInvestor(uid: auth.currentUser!.uid);
+      emit(DisplayInvestorInfo(investor: investor));
     });
 
-    // Edit photo
     on<EditInvestorPhoto>((event, emit) async {
       final picker = ImagePicker();
       final xFile = await picker.pickImage(source: ImageSource.gallery);
+
       if (xFile != null) {
         final file = File(xFile.path);
         final photoUrl = await SupabaseStorage.uploadImage(
@@ -74,138 +72,130 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
           auth.currentUser!.uid,
           type: event.type,
         );
+
         if (photoUrl != null) {
-          if (event.type == 'profile') {
-            await investorService.updateInvestor(
-              uid: auth.currentUser!.uid,
-              updatedData: {'photoUrl': photoUrl},
-            );
-          } else if (event.type == 'id') {
-            await investorService.updateInvestor(
-              uid: auth.currentUser!.uid,
-              updatedData: {'NationalIdUrl': photoUrl},
-            );
-          }
+          await investorService.updateInvestor(
+            uid: auth.currentUser!.uid,
+            updatedData: event.type == 'profile'
+                ? {'photoUrl': photoUrl}
+                : {'NationalIdUrl': photoUrl},
+          );
         }
       }
     });
+
     on<AddTempSkillButtonPressed>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final unavailable = [...current.investor.skills, ...current.tempSkills];
-        final available =
-            entrepreneurSkills
-                .where((skill) => !unavailable.contains(skill))
-                .toList();
-        emit(current.copyWith(showSkills: true, availableSkills: available));
-      }
-    });
-    on<AddTempSkillInvestor>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final updatedTemp = [...current.tempSkills, event.skill];
-        final unavailable = [...current.investor.skills, ...updatedTemp];
-        final updatedAvailable =
-            entrepreneurSkills
-                .where((skill) => !unavailable.contains(skill))
-                .toList();
-        emit(
-          current.copyWith(
-            tempSkills: updatedTemp,
-            availableSkills: updatedAvailable,
-            showSkills: false,
-          ),
-        );
-      }
-    });
-    on<RemoveTempSkillInvestor>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final updatedTemp =
-            current.tempSkills.where((skill) => skill != event.skill).toList();
-        final updatedSaved =
-            current.investor.skills
-                .where((skill) => skill != event.skill)
-                .toList();
-        final unavailable = [...updatedSaved, ...updatedTemp];
-        final updatedAvailable =
-            entrepreneurSkills
-                .where((skill) => !unavailable.contains(skill))
-                .toList();
-        emit(
-          current.copyWith(
-            tempSkills: updatedTemp,
-            investor: current.investor.copyWith(skills: updatedSaved),
-            availableSkills: updatedAvailable,
-            showSkills: false,
-          ),
-        );
-      }
-    });
-    on<AddTempIndustryButtonPressed>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final unavailable = [
-          ...current.investor.preferredIndustries,
-          ...current.tempIndustries,
-        ];
-        final available =
-            industries
-                .where((industry) => !unavailable.contains(industry))
-                .toList();
-        emit(
-          current.copyWith(
-            showIndustries: true,
-            availableIndustries: available,
-          ),
-        );
-      }
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final unavailable = [...current.investor.skills, ...current.tempSkills];
+      final available = entrepreneurSkills
+          .where((skill) => !unavailable.contains(skill))
+          .toList();
+      emit(current.copyWith(showSkills: true, availableSkills: available));
     });
 
-    // Industries (similar to skills)
+    on<AddTempSkillInvestor>((event, emit) {
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final updatedTemp = [...current.tempSkills, event.skill];
+      final unavailable = [...current.investor.skills, ...updatedTemp];
+      final available = entrepreneurSkills
+          .where((skill) => !unavailable.contains(skill))
+          .toList();
+
+      emit(
+        current.copyWith(
+          tempSkills: updatedTemp,
+          availableSkills: available,
+          showSkills: false,
+        ),
+      );
+    });
+
+    on<RemoveTempSkillInvestor>((event, emit) {
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final updatedTemp =
+          current.tempSkills.where((skill) => skill != event.skill).toList();
+      final updatedSaved = current.investor.skills
+          .where((skill) => skill != event.skill)
+          .toList();
+      final unavailable = [...updatedSaved, ...updatedTemp];
+      final available = entrepreneurSkills
+          .where((skill) => !unavailable.contains(skill))
+          .toList();
+
+      emit(
+        current.copyWith(
+          tempSkills: updatedTemp,
+          investor: current.investor.copyWith(skills: updatedSaved),
+          availableSkills: available,
+          showSkills: false,
+        ),
+      );
+    });
+
+    on<AddTempIndustryButtonPressed>((event, emit) {
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final unavailable = [
+        ...current.investor.preferredIndustries,
+        ...current.tempIndustries,
+      ];
+      final available = industries
+          .where((industry) => !unavailable.contains(industry))
+          .toList();
+
+      emit(
+        current.copyWith(
+          showIndustries: true,
+          availableIndustries: available,
+        ),
+      );
+    });
+
     on<AddTempIndustryInvestor>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final updatedTemp = [...current.tempIndustries, event.industry];
-        final unavailable = [
-          ...current.investor.preferredIndustries,
-          ...updatedTemp,
-        ];
-        final updatedAvailable =
-            industries.where((i) => !unavailable.contains(i)).toList();
-        emit(
-          current.copyWith(
-            tempIndustries: updatedTemp,
-            availableIndustries: updatedAvailable,
-            showIndustries: false,
-          ),
-        );
-      }
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final updatedTemp = [...current.tempIndustries, event.industry];
+      final unavailable = [
+        ...current.investor.preferredIndustries,
+        ...updatedTemp,
+      ];
+      final available = industries
+          .where((industry) => !unavailable.contains(industry))
+          .toList();
+
+      emit(
+        current.copyWith(
+          tempIndustries: updatedTemp,
+          availableIndustries: available,
+          showIndustries: false,
+        ),
+      );
     });
 
     on<RemoveTempIndustryInvestor>((event, emit) {
-      if (state is EditInvestorInfo) {
-        final current = state as EditInvestorInfo;
-        final updatedTemp =
-            current.tempIndustries.where((i) => i != event.industry).toList();
-        final updatedSaved =
-            current.investor.preferredIndustries
-                .where((i) => i != event.industry)
-                .toList();
-        final unavailable = [...updatedSaved, ...updatedTemp];
-        final updatedAvailable =
-            industries.where((i) => !unavailable.contains(i)).toList();
-        emit(
-          current.copyWith(
-            tempIndustries: updatedTemp,
-            investor: current.investor.copyWith(
-              preferredIndustries: updatedSaved,
-            ),
-            availableIndustries: updatedAvailable,
-            showIndustries: false,
-          ),
-        );
-      }
+      if (state is! EditInvestorInfo) return;
+      final current = state as EditInvestorInfo;
+      final updatedTemp =
+          current.tempIndustries.where((i) => i != event.industry).toList();
+      final updatedSaved = current.investor.preferredIndustries
+          .where((i) => i != event.industry)
+          .toList();
+      final unavailable = [...updatedSaved, ...updatedTemp];
+      final available =
+          industries.where((i) => !unavailable.contains(i)).toList();
+
+      emit(
+        current.copyWith(
+          tempIndustries: updatedTemp,
+          investor:
+              current.investor.copyWith(preferredIndustries: updatedSaved),
+          availableIndustries: available,
+          showIndustries: false,
+        ),
+      );
     });
 
     add(LoadInvestorData());
