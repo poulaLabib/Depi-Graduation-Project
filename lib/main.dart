@@ -1,3 +1,4 @@
+import 'package:depi_graduation_project/bloc/Investor section/investor_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/Request%20section/requests_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
@@ -65,6 +66,12 @@ void main() async {
               (BuildContext context) => RequestsSectionBloc(
                 auth: AuthenticationService(),
                 request: RequestFirestoreService(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (BuildContext context) => InvestorSectionBloc(
+                investorService: InvestorFirestoreService(),
               ),
         ),
         BlocProvider(

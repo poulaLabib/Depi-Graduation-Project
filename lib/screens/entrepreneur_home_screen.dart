@@ -107,33 +107,6 @@ class EntrepreneurHomeScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(24),
-                          onTap: () {
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color:
-                                  state.displayedSectionIndex == 1
-                                      ? Theme.of(context).colorScheme.primary
-                                      : Theme.of(context).colorScheme.secondary,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Text(
-                              'Chats',
-                              style: TextStyle(
-                                color:
-                                Theme.of(context).colorScheme.onSecondary,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14.5,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),
