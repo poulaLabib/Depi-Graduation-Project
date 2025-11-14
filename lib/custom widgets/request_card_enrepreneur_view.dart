@@ -7,6 +7,7 @@ class RequestCardEnrepreneurView extends StatelessWidget {
   final Request request;
   const RequestCardEnrepreneurView({required this.request, super.key});
 
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,5 +158,6 @@ class RequestCardEnrepreneurView extends StatelessWidget {
         ],
       ),
     );
+
   }
 }

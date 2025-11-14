@@ -25,6 +25,23 @@ class SaveButtonPressed extends EpsEvent {
 
 class CancelButtonPressed extends EpsEvent {}
 
-class EditProfilePhoto extends EpsEvent {}
+class EditPhoto extends EpsEvent {
+  final String type; // profile or id
+  EditPhoto({required this.type});
+}
 
 class EditAuthenticationPhoto extends EpsEvent {}
+
+class AddSkillButtonPressed extends EpsEvent {}
+
+class LoadAvailableSkills extends EpsEvent {}
+
+class AddTempSkill extends EpsEvent {
+  final String skill;
+  AddTempSkill({required this.skill});
+}
+
+class RemoveTempSkill extends EpsEvent {
+  final String skill;
+  RemoveTempSkill({required this.skill});
+}

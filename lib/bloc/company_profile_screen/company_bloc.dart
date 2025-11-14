@@ -95,7 +95,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           final file = File(xFile.path);
           final logoUrl = await SupabaseStorage.uploadImage(
             file,
-            '${auth.currentUser!.uid}_company_logo',
+            auth.currentUser!.uid,
+            type: 'company_logo',
           );
 
           if (logoUrl != null) {
@@ -117,7 +118,8 @@ class CompanyBloc extends Bloc<CompanyEvent, CompanyState> {
           final file = File(xFile.path);
           final certificateUrl = await SupabaseStorage.uploadImage(
             file,
-            '${auth.currentUser!.uid}_company_certificate',
+            auth.currentUser!.uid,
+            type: 'company_certificate',
           );
 
           if (certificateUrl != null) {
