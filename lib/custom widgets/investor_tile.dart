@@ -5,10 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class InvestorTile extends StatelessWidget {
   final String name;
   final String bio;
-  final String photoPath;
+  final String? photoPath;
+  final String? photoUrl;
   final List<String> industries;
   const InvestorTile({
-    required this.photoPath,
+    this.photoPath,
+    this.photoUrl,
     required this.name,
     required this.bio,
     required this.industries,
@@ -85,8 +87,15 @@ class InvestorTile extends StatelessWidget {
                     child: Stack(
                       children: [
                         CircleAvatar(
-                          backgroundImage: AssetImage(photoPath),
+                          backgroundImage: photoUrl != null && photoUrl!.isNotEmpty
+                              ? NetworkImage(photoUrl!)
+                              : photoPath != null
+                                  ? AssetImage(photoPath!)
+                                  : null,
                           radius: 45,
+                          child: (photoUrl == null || photoUrl!.isEmpty) && photoPath == null
+                              ? Icon(Icons.person, size: 45)
+                              : null,
                         ),
                         Positioned(
                           bottom: 0,

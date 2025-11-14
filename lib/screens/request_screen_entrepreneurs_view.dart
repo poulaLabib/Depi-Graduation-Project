@@ -3,6 +3,8 @@ import 'package:depi_graduation_project/bloc/request_screen/request_screen_event
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_state.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
+import 'package:depi_graduation_project/models/request.dart';
+import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -198,25 +200,53 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
     return Stack(
       children: [
         Container(
-          height: 180,
+          height: 200,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
             borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(16),
-              bottomRight: Radius.circular(16),
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
             ),
           ),
           alignment: Alignment.center,
-          child: const Text(
-            "Company photo",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+          child: FutureBuilder(
+            future: _getCompanyInfo(),
+            builder: (context, snapshot) {
+              final logoUrl = snapshot.data?['logoUrl'] ?? '';
+              if (snapshot.hasData && logoUrl.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  child: Image.network(
+                    logoUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Container(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    ),
+                  ),
+                );
+              }
+              return Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Text(
+                    (snapshot.data?['name'] ?? 'C')[0].toUpperCase(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
         Positioned(
-          top: 30,
+          top: 40,
           left: 16,
           child: InkWell(
             onTap: () {
@@ -228,15 +258,36 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
+              child: const Icon(Icons.arrow_back, color: Colors.black),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Future<Map<String, String>> _getCompanyInfo() async {
+    try {
+      final state = context.read<RequestScreenBloc>().state;
+      Request? request;
+      if (state is DisplayingRequest) {
+        request = state.request;
+      } else if (state is EditingRequest) {
+        request = state.request;
+      }
+      
+      if (request != null) {
+        final uid = request.uid;
+        final companyExists = await CompanyFirestoreService().companyExists(uid: uid);
+        if (companyExists) {
+          final company = await CompanyFirestoreService().getCompany(uid: uid);
+          return {'name': company.name, 'logoUrl': company.logoUrl};
+        }
+      }
+    } catch (e) {
+      // Handle error
+    }
+    return {'name': 'Company', 'logoUrl': ''};
   }
 
   Widget buildRoundButton(
