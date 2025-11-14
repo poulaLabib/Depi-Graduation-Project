@@ -18,14 +18,14 @@ class EntrepreneurProfileTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final inputField = TextFormField(
+      maxLines: null,
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
       style: GoogleFonts.roboto(
         color: Colors.black,
-        fontWeight: FontWeight.w500,
-        fontSize: 14,
-        
+        fontWeight: FontWeight.w400,
+        fontSize: 15,
       ),
       decoration: const InputDecoration(
         border: InputBorder.none,

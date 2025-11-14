@@ -2,14 +2,17 @@ import 'package:depi_graduation_project/bloc/Request%20section/requests_section_
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
 import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_bloc.dart';
-import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
+import 'package:depi_graduation_project/bloc/home/entrep_home_screen/ehs_bloc.dart';
 import 'package:depi_graduation_project/bloc/investor_profile_screen/ips_bloc.dart';
+import 'package:depi_graduation_project/bloc/request_screen/request_screen_bloc.dart';
+import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
 import 'package:depi_graduation_project/fikraty.dart';
 import 'package:depi_graduation_project/firebase_options.dart';
 import 'package:depi_graduation_project/services/firebase_auth_service.dart';
 import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -22,6 +25,13 @@ void main() async {
     url: 'https://tqoyfzbnysoxqqjywbkc.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxb3lmemJueXNveHFxanl3YmtjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkzMzAyODEsImV4cCI6MjA3NDkwNjI4MX0.xtEnp2TGYmy4HyXhkMZWNdy1uV8BZCbWVoHCMJ0t68k',
+  );
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness:
+          Brightness.dark,
+    ),
   );
   runApp(
     MultiBlocProvider(
@@ -41,18 +51,13 @@ void main() async {
                 entrepreneur: EntrepreneurFirestoreService(),
               ),
         ),
+        BlocProvider(create: (BuildContext context) => EhsBloc()),
+
         BlocProvider(
           create:
-              (BuildContext context) => CompanyBloc(
+              (BuildContext context) => RequestScreenBloc(
                 auth: AuthenticationService(),
-                company: CompanyFirestoreService(),
-              ),
-        ),
-        BlocProvider(
-          create:
-              (BuildContext context) => IpsBloc(
-                auth: AuthenticationService(),
-                investor: InvestorFirestoreService(),
+                request: RequestFirestoreService(),
               ),
         ),
         BlocProvider(
@@ -62,6 +67,21 @@ void main() async {
                 request: RequestFirestoreService(),
               ),
         ),
+        BlocProvider(
+          create:
+              (BuildContext context) => IpsBloc(
+                auth: AuthenticationService(),
+                investorService: InvestorFirestoreService(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (BuildContext context) => CompanyBloc(
+                auth: AuthenticationService(),
+                company: CompanyFirestoreService(),
+              ),
+        ),
+
         BlocProvider(
           create:
               (BuildContext context) => ChatListBloc(

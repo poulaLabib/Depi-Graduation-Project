@@ -6,111 +6,141 @@ class InvestorTile extends StatelessWidget {
   final String name;
   final String bio;
   final String photoPath;
-  const InvestorTile({required this.photoPath, required this.name, required this.bio, super.key});
+  final List<String> industries;
+  const InvestorTile({
+    required this.photoPath,
+    required this.name,
+    required this.bio,
+    required this.industries,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
+        color: const Color.fromARGB(255, 245, 245, 245).withAlpha(50),
+        border: Border.all(
+          color: const Color.fromARGB(255, 74, 74, 74),
+          width: 0.2,
+        ),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Row(
-        spacing: 10,
         children: [
-          CircleAvatar(
-            radius: 35,
-            backgroundImage: AssetImage(photoPath),
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(top: 4, bottom: 4, left: 4, right: 4),
+              alignment: Alignment.center,
+              
+              child: GridView.builder(
+                itemCount: industries.length,
+                scrollDirection: Axis.vertical,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  mainAxisSpacing: 1,
+                  childAspectRatio: 1.88,
+                  crossAxisSpacing: 1,
+                ),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: EdgeInsets.all(5),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      // color: Colors.white.withAlpha(150),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.black.withAlpha(30),
+                        width: 0.5,
+                      ),
+                    ),
+                    child: AutoText(
+                      maxFontSize: 11,
+                      minFontSize: 11,
+                      maxLines: 2,
+                      industries[index],
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                  );
+                },
+              ),
+            ),
+          ),
+          VerticalDivider(
+            color: const Color.fromARGB(255, 74, 74, 74),
+            thickness: 0.1,
+            width: 0,
           ),
           Expanded(
-            child: Column(
-              spacing: 4,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 5,
-                  children: [
-                    AutoText(
-                      maxFontSize: 14,
-                      minFontSize: 12,
-                      maxLines: 1,
-                      name,
-                      style: GoogleFonts.openSans(
-                        fontWeight: FontWeight.w900,
-                        color: Theme.of(context).colorScheme.onTertiary,
-                      ),
+            child: Container(
+              // color: Colors.black.withAlpha(5),
+              padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+              child: Column(
+                spacing: 2,
+                children: [
+                  Expanded(
+                    flex: 5,
+
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage: AssetImage(photoPath),
+                          radius: 45,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 12,
+                          child: Image.asset(
+                            'assets/images/verified.png',
+                            height: 14,
+                            width: 14,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
                     ),
-                    Image.asset(
-                      'assets/images/verified.png',
-                      height: 15,
-                      width: 15,
-                      color: Colors.green,
-                    ),
-                  ],
-                ),
-                AutoText(
-                  maxFontSize: 10,
-                  minFontSize: 8,
-                  maxLines: 2,
-                  bio,
-                  style: GoogleFonts.roboto(
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(
-                      context,
-                    ).colorScheme.onTertiary.withAlpha(100),
                   ),
+
+                  Expanded(
+                    flex: 2,
+                    child: Center(
+                      child: AutoText(
+                        maxFontSize: 13.5,
+                        maxLines: 2,
+                        minFontSize: 13.5,
+                        textAlign: TextAlign.center,
+                        name,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          VerticalDivider(
+            color: const Color.fromARGB(255, 74, 74, 74),
+            thickness: 0.1,
+            width: 0,
+          ),
+          Expanded(
+            child: Container(
+              // color: Colors.black.withAlpha(2),
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Center(
+                child: AutoText(
+                  maxFontSize: 11.5,
+                  minFontSize: 11.5,
+                  textAlign: TextAlign.left,
+                  maxLines: 4,
+                  bio,
+                  style: TextStyle(fontWeight: FontWeight.w400),
                 ),
-                Row(
-                  spacing: 5,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSecondary.withAlpha(20),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Text(
-                        'Real Estate',
-                        style: GoogleFonts.openSans(
-                          color: Theme.of(context).colorScheme.onSecondary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5,),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSecondary.withAlpha(20),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Text(
-                        'Health Care',
-                        style: GoogleFonts.openSans(
-                          color: Theme.of(context).colorScheme.onSecondary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 5,),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSecondary.withAlpha(20),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Text(
-                        'Finance',
-                        style: GoogleFonts.openSans(
-                          color: Theme.of(context).colorScheme.onSecondary,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
           ),
         ],
