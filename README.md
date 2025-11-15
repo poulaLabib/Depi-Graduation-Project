@@ -23,22 +23,22 @@ The platform bridges the gap between innovation and funding by offering an easy-
 - Basic registration available for all users  
 - Additional **authorization required** to access full features  
   - Entrepreneurs cannot submit requests or nudge investors without authorization  
-  - Investors cannot directly communicate with entrepreneurs without authorization  
+  - Investors cannot directly communicate with entrepreneurs without authorization
+- Swap between Dark, light mode  
 
 **Entrepreneurs** 🧑‍💻  
 - Create and manage personal & company profiles  
-- Submit requests (currently only **fundraising**)  
+- Submit requests (only **fundraising**)  
 - Browse investor profiles  
 - Nudge investors **(only if the investor has agreed & entrepreneur is authorized)**  
-
+- Sort investors by **industry** and **funding amount**
 **Investors** 💼  
 - Two types: **Angel Investors** & **Venture Capitalists**  
 - Create and manage personal profiles  
 - Browse fundraising requests  
 - View entrepreneur & company profiles **(only for those who submitted requests)**  
 - Sort requests by **industry** and **funding amount**  
-- Communicate directly with entrepreneurs **(only if authorized)**  
-- Choose whether to allow or block nudges  
+- Communicate directly with entrepreneurs **(only if authorized)**    
 
 ---
 
@@ -106,7 +106,7 @@ Each team member contributes across multiple areas to ensure collaboration and s
 ---
 
 ### 📂 Project Management
-- **Task Allocation & Deadlines:** Ahmed Mohamed  
+- **Task Allocation & Deadlines:** Ahmed Mohamed 
 - **Documentation (README, Reports):** Ahmed Mohamed & Youssef Mohamed  
 - **Final Presentation:** All team members
 
@@ -181,14 +181,19 @@ Each team member contributes across multiple areas to ensure collaboration and s
 - 🔐 Authentication & BLoC integration  
 - 🧾 Basic registration for all users  
 
-### 👷‍♂️ In Progress
+### ✅ Completed
 - 👨‍💻 Entrepreneur & company profiles  
 - 💼 Investor profiles  
 - 💰 Fundraising request submission flow  
 
-### ➡️ Next Phase
-- 🔍 Investor browsing & sorting  
+### ✅ Completed
+- 🔍 Investor & Entrepreneur browsing & sorting  
 - 🤝 Nudge & communication authorization system
+- Adding some feature
+  - 🌙☀️ Dark , white mode 
+  - 💬 chatting
+  - 🔔 notifications
+  - 🔎 Searching in chats for a specific conversation 
 
 
 ---
