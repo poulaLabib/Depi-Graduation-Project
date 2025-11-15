@@ -26,7 +26,8 @@ class Message {
       content: map['content'] ?? '',
       senderId: map['senderId'] ?? '',
       receiverId: map['receiverId'] ?? '',
-      timeCreated: (map['timeCreated'] as Timestamp).toDate(),
+      timeCreated:
+          (map['timeCreated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isRead: map['isRead'] ?? false,
       isEdited: map['isEdited'] ?? false,
     );

@@ -6,6 +6,7 @@ import 'package:depi_graduation_project/bloc/request_screen/request_screen_event
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
 import 'package:depi_graduation_project/custom%20widgets/request_card_enrepreneur_view.dart';
 import 'package:depi_graduation_project/screens/request_screen_entrepreneurs_view.dart';
+import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +20,19 @@ class YourRequestsSection extends StatelessWidget {
   final TextEditingController _whyAreYouRaisingController =
       TextEditingController();
   YourRequestsSection({super.key});
+
+  Future<Map<String, String?>> _getCompanyInfo(String uid) async {
+    try {
+      final companyExists = await CompanyFirestoreService().companyExists(uid: uid);
+      if (companyExists) {
+        final company = await CompanyFirestoreService().getCompany(uid: uid);
+        return {'name': company.name, 'logoUrl': company.logoUrl};
+      }
+    } catch (e) {
+      // Handle error
+    }
+    return {'name': null, 'logoUrl': null};
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,21 +73,29 @@ class YourRequestsSection extends StatelessWidget {
                   ),
                   itemCount: state.requests.length,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        context.read<RequestScreenBloc>().add(
-                          LoadRequest(request: state.requests[index]),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RequestPageEntrepreneur(),
+                    final request = state.requests[index];
+                    return FutureBuilder<Map<String, String?>>(
+                      future: _getCompanyInfo(request.uid),
+                      builder: (context, snapshot) {
+                        return InkWell(
+                          onTap: () {
+                            context.read<RequestScreenBloc>().add(
+                              LoadRequest(request: request),
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => RequestPageEntrepreneur(),
+                              ),
+                            );
+                          },
+                          child: RequestCardEnrepreneurView(
+                            request: request,
+                            companyName: snapshot.data?['name'],
+                            companyLogoUrl: snapshot.data?['logoUrl'],
                           ),
                         );
                       },
-                      child: RequestCardEnrepreneurView(
-                        request: state.requests[index],
-                      ),
                     );
                   },
                 ),

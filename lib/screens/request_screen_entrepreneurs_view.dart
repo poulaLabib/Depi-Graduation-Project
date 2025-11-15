@@ -3,6 +3,8 @@ import 'package:depi_graduation_project/bloc/request_screen/request_screen_event
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_state.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
+import 'package:depi_graduation_project/models/request.dart';
+import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,8 +23,9 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8EE),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: BlocConsumer<RequestScreenBloc, RequestScreenState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -44,6 +47,7 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
   }
 
   Widget _buildReadOnlyContent(BuildContext context) {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -54,15 +58,14 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
             child: Align(
               alignment: Alignment.centerRight,
               child: buildTopWhiteButton("Edit", () {
-                context.read<RequestScreenBloc>().add(
-                      EditRequestRequested(),
-                    );
+                context.read<RequestScreenBloc>().add(EditRequestRequested());
               }),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Column(
+              spacing: 20,
               children: [
                 EntrepreneurProfileField(
                   title: 'Description',
@@ -89,29 +92,9 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildTabButton("Founder", const Color(0xFF91C7E5)),
-                    buildTabButton("Company", const Color(0xFF91C7E5)),
-                  ],
-                ),
+               
                 const SizedBox(height: 30),
-                Column(
-                  children: [
-                    buildRoundButton(
-                      "Statue",
-                      Colors.green,
-                      textColor: Colors.white,
-                    ),
-                    const SizedBox(height: 16),
-                    buildRoundButton(
-                      "Cancel",
-                      Colors.red,
-                      textColor: Colors.white,
-                    ),
-                  ],
-                ),
+                buildRoundButton("Cancel", Colors.red, textColor: Colors.white),
               ],
             ),
           ),
@@ -121,6 +104,7 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
   }
 
   Widget _buildEditableContent(BuildContext context) {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,21 +115,19 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                buildTopWhiteButton("cancel", () {
-                  context.read<RequestScreenBloc>().add(
-                        CancelButtonPressed(),
-                      );
+                buildTopWhiteButton("Cancel", () {
+                  context.read<RequestScreenBloc>().add(CancelButtonPressed());
                 }),
                 const SizedBox(width: 10),
                 buildTopWhiteButton("save", () {
                   context.read<RequestScreenBloc>().add(
-                        EditRequestConfirmed(
-                          description: _descriptionController.text,
-                          whyAreYouRaising: _reasonController.text,
-                          amountOfMoney: _amountController.text,
-                          equityInReturn: _equityController.text,
-                        ),
-                      );
+                    EditRequestConfirmed(
+                      description: _descriptionController.text,
+                      whyAreYouRaising: _reasonController.text,
+                      amountOfMoney: _amountController.text,
+                      equityInReturn: _equityController.text,
+                    ),
+                  );
                 }),
               ],
             ),
@@ -173,50 +155,64 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    buildTabButton("Founder", const Color(0xFF91C7E5)),
-                    buildTabButton("Company", const Color(0xFF91C7E5)),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
   }
 
   Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
     return Stack(
       children: [
         Container(
-          height: 180,
+          height: 200,
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: theme.colorScheme.primary.withOpacity(0.1),
             borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(16),
-              bottomRight: Radius.circular(16),
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
             ),
           ),
           alignment: Alignment.center,
-          child: const Text(
-            "Company photo",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+          child: FutureBuilder(
+            future: _getCompanyInfo(),
+            builder: (context, snapshot) {
+              final logoUrl = snapshot.data?['logoUrl'] ?? '';
+              if (snapshot.hasData && logoUrl.isNotEmpty) {
+                return ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  child: Image.network(
+                    logoUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder:
+                        (_, __, ___) => Container(
+                          color: theme.colorScheme.primary.withOpacity(0.1),
+                        ),
+                  ),
+                );
+              }
+              return Center(
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundColor: theme.colorScheme.primary,
+                  child: Text(
+                    (snapshot.data?['name'] ?? 'C')[0].toUpperCase(),
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
         Positioned(
-          top: 30,
+          top: 40,
           left: 16,
           child: InkWell(
             onTap: () {
@@ -224,19 +220,42 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
             },
             child: Container(
               padding: const EdgeInsets.all(8),
-              decoration: const BoxDecoration(
-                color: Colors.white,
+              decoration: BoxDecoration(
+                color: theme.cardColor,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
+              child: Icon(Icons.arrow_back, color: theme.colorScheme.onSurface),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Future<Map<String, String>> _getCompanyInfo() async {
+    try {
+      final state = context.read<RequestScreenBloc>().state;
+      Request? request;
+      if (state is DisplayingRequest) {
+        request = state.request;
+      } else if (state is EditingRequest) {
+        request = state.request;
+      }
+
+      if (request != null) {
+        final uid = request.uid;
+        final companyExists = await CompanyFirestoreService().companyExists(
+          uid: uid,
+        );
+        if (companyExists) {
+          final company = await CompanyFirestoreService().getCompany(uid: uid);
+          return {'name': company.name, 'logoUrl': company.logoUrl};
+        }
+      }
+    } catch (e) {
+      // Handle error
+    }
+    return {'name': 'Company', 'logoUrl': ''};
   }
 
   Widget buildRoundButton(
@@ -245,7 +264,10 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
     Color textColor = Colors.black,
   }) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.pop(context);
+        context.read<RequestScreenBloc>().add(DeleteRequest());
+      },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 14),
@@ -266,45 +288,27 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
     );
   }
 
-  Widget buildTabButton(
-    String text,
-    Color bgColor, {
-    Color textColor = Colors.black,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-          color: textColor,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+
 
   Widget buildTopWhiteButton(String text, VoidCallback onPressed) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(
+            color: theme.colorScheme.onSurface.withOpacity(0.3),
+          ),
         ),
         child: Text(
           text,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 14,
-            color: Colors.black,
+            color: theme.colorScheme.onSurface,
           ),
         ),
       ),

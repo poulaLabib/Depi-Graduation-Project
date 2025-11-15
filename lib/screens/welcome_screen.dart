@@ -2,9 +2,6 @@ import 'package:depi_graduation_project/screens/register_screen.dart';
 import 'package:flutter/material.dart';
 import 'login_screen.dart';
 
-void main() {
-  runApp(WelcomePage());
-}
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});

@@ -1,10 +1,12 @@
-import 'package:depi_graduation_project/bloc/Investor section/investor_section_bloc.dart';
+import 'package:depi_graduation_project/bloc/Investor%20section/investor_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/Request%20section/requests_section_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
 import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_bloc.dart';
 import 'package:depi_graduation_project/bloc/home/entrep_home_screen/ehs_bloc.dart';
+import 'package:depi_graduation_project/bloc/investor%20request/investor_requests_bloc.dart';
 import 'package:depi_graduation_project/bloc/investor_profile_screen/ips_bloc.dart';
+import 'package:depi_graduation_project/bloc/notifications/notifications_bloc.dart';
 import 'package:depi_graduation_project/bloc/request_screen/request_screen_bloc.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
 import 'package:depi_graduation_project/fikraty.dart';
@@ -52,6 +54,13 @@ void main() async {
                 entrepreneur: EntrepreneurFirestoreService(),
               ),
         ),
+        BlocProvider(
+          create:
+              (BuildContext context) => NotificationsBloc(
+                auth: AuthenticationService(),
+                notificationService: NotificationFirestoreService(),
+              ),
+        ),
         BlocProvider(create: (BuildContext context) => EhsBloc()),
 
         BlocProvider(
@@ -94,6 +103,18 @@ void main() async {
               (BuildContext context) => ChatListBloc(
                 chatRoomService: ChatRoomFirestoreService(),
                 auth: AuthenticationService(),
+              ),
+        ),
+        BlocProvider(
+          create:
+              (BuildContext context) => InvestorRequestsBloc(
+                requestService: RequestFirestoreService(),
+              ),
+        ),
+         BlocProvider(
+          create:
+              (BuildContext context) => InvestorSectionBloc(
+                investorService: InvestorFirestoreService(),
               ),
         ),
         

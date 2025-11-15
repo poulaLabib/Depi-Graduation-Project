@@ -147,31 +147,17 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 15),
                 BlocConsumer<AuthBloc, AuthState>(
                   builder: (context, state) {
-                    if (state is InitialState) {
-                      return SizedBox.shrink();
-                    } else if (state is AuthLoading) {
+                    if (state is AuthLoading) {
                       return Center(child: CircularProgressIndicator());
-                    } else if (state is AuthSuccessfull) {
-                      return Text(
-                        'Signed Up Successfully',
-                        style: TextStyle(color: Colors.green),
-                      );
-                    } else if (state is AuthError) {
-                      return Text(
-                        'Something Went Wrong',
-                        style: TextStyle(color: Colors.red),
-                      );
-                    } else if (state is InitialState) {
-                      return SizedBox.shrink();
-                    } else if (state is AuthUnsuccessfull) {
-                      return Text(
-                        'You Entered Wrong Data',
-                        style: TextStyle(color: Colors.red),
-                      );
                     }
                     return SizedBox.shrink();
                   },
-                  listener: (context, state) {},
+                  listener: (context, state) {
+                    if (state is AuthSuccessfull) {
+                      // Navigation will be handled by AuthGate
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    }
+                  },
                 ),
                 const SizedBox(height: 15),
 
@@ -188,16 +174,7 @@ class _SignUpState extends State<SignUp> {
                             userType: widget.userType,
                           ),
                         );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) => LogIn(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                ),
-                          ),
-                        );
+                        // Navigation will be handled by AuthGate listener
                       }
                     },
                     borderRadius: BorderRadius.circular(16),

@@ -5,6 +5,7 @@ import 'package:depi_graduation_project/models/company.dart';
 import 'package:depi_graduation_project/models/entrepreneur.dart';
 import 'package:depi_graduation_project/models/chat_room.dart';
 import 'package:depi_graduation_project/models/message.dart';
+import 'package:depi_graduation_project/models/notification.dart';
 
 // Global variable _db to access firestore functions to use in all 4 classes
 final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -90,7 +91,6 @@ class RequestFirestoreService {
     required double amountOfMoney,
     required String equityInReturn,
     String? whyAreYouRaising,
-
   }) async {
     await _db.collection('requests').add({
       'uid': uid,
@@ -122,7 +122,6 @@ class RequestFirestoreService {
                   .map((doc) => Request.fromFireStore(doc.data(), doc.id))
                   .toList(),
         );
-
   }
 
   //  Get all requests
@@ -315,25 +314,58 @@ class EntrepreneurFirestoreService {
     await _db.collection('entrepreneurs').doc(uid).delete();
   }
 }
+
 class ChatRoomFirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   // Chat Room Management
 
-  Future<void> addOrGetChatRoom(String uid1, String uid2) async {
+  Future<void> addOrGetChatRoom(
+    String uid1,
+    String uid2, {
+    String? name1,
+    String? name2,
+    String? photoUrl1,
+    String? photoUrl2,
+  }) async {
     final chatRooms = _firestore.collection('chatrooms');
 
-    final chatRoomId = uid1.compareTo(uid2) <= 0 ? '${uid1}_$uid2' : '${uid2}_$uid1';
+    final chatRoomId =
+        uid1.compareTo(uid2) <= 0 ? '${uid1}_$uid2' : '${uid2}_$uid1';
     final chatRoomDoc = chatRooms.doc(chatRoomId);
     final chatRoomSnap = await chatRoomDoc.get();
+
     if (!chatRoomSnap.exists) {
+      // Determine which name/photo belongs to which user
+      final isUid1First = uid1.compareTo(uid2) <= 0;
+      final participantsNames =
+          isUid1First ? [name1 ?? '', name2 ?? ''] : [name2 ?? '', name1 ?? ''];
+
       await chatRoomDoc.set({
         'id': chatRoomId,
         'members': [uid1, uid2],
         'timeCreated': FieldValue.serverTimestamp(),
         'lastMessage': '',
         'lastMessageTime': FieldValue.serverTimestamp(),
+        'participantsNames': participantsNames,
+        'unreadCount': 0,
       });
+    } else {
+      // Update participant names and photos if provided
+      final updateData = <String, dynamic>{};
+      if (name1 != null ||
+          name2 != null ||
+          photoUrl1 != null ||
+          photoUrl2 != null) {
+        final isUid1First = uid1.compareTo(uid2) <= 0;
+        final participantsNames =
+            isUid1First
+                ? [name1 ?? '', name2 ?? '']
+                : [name2 ?? '', name1 ?? ''];
+        updateData['participantsNames'] = participantsNames;
+
+        await chatRoomDoc.update(updateData);
+      }
     }
   }
 
@@ -348,15 +380,54 @@ class ChatRoomFirestoreService {
     await chatRoomRef.delete();
   }
 
-  Stream<List<ChatRoom>> getChatRoomStream(String uid) {
-    return _firestore
-        .collection('chatrooms')
-        .where('members', arrayContains: uid)
-        .orderBy('lastMessageTime', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ChatRoom.fromMap(doc.data()))
-            .toList());
+  Stream<List<ChatRoom>> getChatRoomStream(String uid) async* {
+    await for (final snapshot
+        in _firestore
+            .collection('chatrooms')
+            .where('members', arrayContains: uid)
+            .orderBy('lastMessageTime', descending: true)
+            .snapshots()) {
+      final rooms = <ChatRoom>[];
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final members = List<String>.from(data['members'] ?? []);
+        final otherUserId = members.firstWhere(
+          (m) => m != uid,
+          orElse: () => '',
+        );
+
+        // Get participant names and photos if not set
+        if (otherUserId.isNotEmpty) {
+          try {
+            // Try to get entrepreneur
+            final entrepreneurDoc =
+                await _db.collection('entrepreneurs').doc(otherUserId).get();
+            if (entrepreneurDoc.exists) {
+              final entrepreneurData = entrepreneurDoc.data()!;
+              data['targetName'] = entrepreneurData['name'] ?? '';
+              data['targetPhotoUrl'] =
+                  entrepreneurData['profilePhotoUrl'] ?? '';
+            } else {
+              // Try to get investor
+              final investorDoc =
+                  await _db.collection('investors').doc(otherUserId).get();
+              if (investorDoc.exists) {
+                final investorData = investorDoc.data()!;
+                data['targetName'] = investorData['name'] ?? '';
+                data['targetPhotoUrl'] = investorData['photoUrl'] ?? '';
+              }
+            }
+          } catch (e) {
+            // If error, continue with existing data
+          }
+        }
+
+        rooms.add(ChatRoom.fromMap(data));
+      }
+
+      yield rooms;
+    }
   }
 
   // Message Management
@@ -367,11 +438,12 @@ class ChatRoomFirestoreService {
     String senderId,
     String receiverId,
   ) async {
-    final messageRef = _firestore
-        .collection('chatrooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .doc();
+    final messageRef =
+        _firestore
+            .collection('chatrooms')
+            .doc(chatRoomId)
+            .collection('messages')
+            .doc();
 
     final messageData = {
       'id': messageRef.id,
@@ -385,6 +457,45 @@ class ChatRoomFirestoreService {
 
     await messageRef.set(messageData);
     await updateLastMessage(chatRoomId, content);
+
+    // Send notification to receiver for every new message
+    try {
+      // Get sender info
+      String senderName = 'Someone';
+      String? senderPhotoUrl;
+
+      // Try to get entrepreneur first
+      final entrepreneurDoc =
+          await _db.collection('entrepreneurs').doc(senderId).get();
+      if (entrepreneurDoc.exists) {
+        final data = entrepreneurDoc.data()!;
+        senderName = data['name'] ?? 'Someone';
+        senderPhotoUrl = data['profilePhotoUrl'];
+      } else {
+        // Try to get investor
+        final investorDoc =
+            await _db.collection('investors').doc(senderId).get();
+        if (investorDoc.exists) {
+          final data = investorDoc.data()!;
+          senderName = data['name'] ?? 'Someone';
+          senderPhotoUrl = data['photoUrl'];
+        }
+      }
+
+      // Send notification
+      final notificationService = NotificationFirestoreService();
+      await notificationService.addNotification(
+        receiverId: receiverId,
+        senderId: senderId,
+        senderName: senderName,
+        type: 'message',
+        message:
+            content.length > 50 ? '${content.substring(0, 50)}...' : content,
+      );
+    } catch (e) {
+      // If notification fails, continue - don't block message sending
+      print('Error sending notification: $e');
+    }
   }
 
   Future<void> deleteMessage(String chatRoomId, String messageId) async {
@@ -398,17 +509,17 @@ class ChatRoomFirestoreService {
   }
 
   Future<void> updateMessage(
-      String chatRoomId, String messageId, String newContent) async {
+    String chatRoomId,
+    String messageId,
+    String newContent,
+  ) async {
     final messageRef = _firestore
         .collection('chatrooms')
         .doc(chatRoomId)
         .collection('messages')
         .doc(messageId);
 
-    await messageRef.update({
-      'content': newContent,
-      'isEdited': true,
-    });
+    await messageRef.update({'content': newContent, 'isEdited': true});
   }
 
   Stream<List<Message>> getMessagesStream(String chatRoomId) {
@@ -418,14 +529,19 @@ class ChatRoomFirestoreService {
         .collection('messages')
         .orderBy('timeCreated', descending: false)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Message.fromMap(doc.data())).toList(),
+        );
   }
 
   // Message States
 
   Future<void> toggleIsRead(
-      String chatRoomId, String messageId, bool value) async {
+    String chatRoomId,
+    String messageId,
+    bool value,
+  ) async {
     await _firestore
         .collection('chatrooms')
         .doc(chatRoomId)
@@ -435,7 +551,10 @@ class ChatRoomFirestoreService {
   }
 
   Future<void> toggleIsEdited(
-      String chatRoomId, String messageId, bool value) async {
+    String chatRoomId,
+    String messageId,
+    bool value,
+  ) async {
     await _firestore
         .collection('chatrooms')
         .doc(chatRoomId)
@@ -445,20 +564,21 @@ class ChatRoomFirestoreService {
   }
 
   Future<void> markAllAsRead(String chatRoomId, String currentUserId) async {
-    final unreadMessages = await _firestore
-        .collection('chatrooms')
-        .doc(chatRoomId)
-        .collection('messages')
-        .where('receiverId', isEqualTo: currentUserId)
-        .where('isRead', isEqualTo: false)
-        .get();
+    final unreadMessages =
+        await _firestore
+            .collection('chatrooms')
+            .doc(chatRoomId)
+            .collection('messages')
+            .where('receiverId', isEqualTo: currentUserId)
+            .where('isRead', isEqualTo: false)
+            .get();
 
     for (var doc in unreadMessages.docs) {
       await doc.reference.update({'isRead': true});
     }
   }
 
-  // Chat room updates 
+  // Chat room updates
 
   Future<void> updateLastMessage(String chatRoomId, String content) async {
     await _firestore.collection('chatrooms').doc(chatRoomId).update({
@@ -476,5 +596,84 @@ class ChatRoomFirestoreService {
         .where('isRead', isEqualTo: false)
         .snapshots()
         .map((snapshot) => snapshot.docs.length);
+  }
+}
+
+class NotificationFirestoreService {
+  // Add notification
+  Future<void> addNotification({
+    required String receiverId,
+    required String senderId,
+    required String senderName,
+    required String type,
+    required String message,
+  }) async {
+    await _db.collection('notifications').add({
+      'receiverId': receiverId,
+      'senderId': senderId,
+      'senderName': senderName,
+      'type': type,
+      'message': message,
+      'createdAt': FieldValue.serverTimestamp(),
+      'isRead': false,
+    });
+  }
+
+  // Get notifications stream for a user
+  Stream<List<NotificationModel>> getNotificationsStream({
+    required String receiverId,
+  }) {
+    return _db
+        .collection('notifications')
+        .where('receiverId', isEqualTo: receiverId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs
+                  .map(
+                    (doc) =>
+                        NotificationModel.fromFireStore(doc.data(), doc.id),
+                  )
+                  .toList(),
+        );
+  }
+
+  // Mark notification as read
+  Future<void> markAsRead({required String notificationId}) async {
+    await _db.collection('notifications').doc(notificationId).update({
+      'isRead': true,
+    });
+  }
+
+  // Mark all notifications as read
+  Future<void> markAllAsRead({required String receiverId}) async {
+    final unreadNotifications =
+        await _db
+            .collection('notifications')
+            .where('receiverId', isEqualTo: receiverId)
+            .where('isRead', isEqualTo: false)
+            .get();
+
+    final batch = _db.batch();
+    for (var doc in unreadNotifications.docs) {
+      batch.update(doc.reference, {'isRead': true});
+    }
+    await batch.commit();
+  }
+
+  // Get unread count
+  Stream<int> getUnreadCountStream({required String receiverId}) {
+    return _db
+        .collection('notifications')
+        .where('receiverId', isEqualTo: receiverId)
+        .where('isRead', isEqualTo: false)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
+  }
+
+  // Delete notification
+  Future<void> deleteNotification({required String notificationId}) async {
+    await _db.collection('notifications').doc(notificationId).delete();
   }
 }

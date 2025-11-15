@@ -14,31 +14,41 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> {
   final _firestore = FirebaseFirestore.instance;
-  User? _user;
-  String? _userType;
-  bool _isLoading = true;
 
   @override
-  void initState() {
-    super.initState();
-    FirebaseAuth.instance.authStateChanges().listen((user) async {
-      if (user == null) {
-        setState(() {
-          _user = null;
-          _userType = null;
-          _isLoading = false;
-        });
-      } else {
-        final type = await _getUserType(user.uid);
-        if (mounted) {
-          setState(() {
-            _user = user;
-            _userType = type;
-            _isLoading = false;
-          });
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(body: Center(child: CircularProgressIndicator()));
         }
-      }
-    });
+
+        final user = snapshot.data;
+        if (user == null) {
+          return WelcomePage();
+        }
+
+        return FutureBuilder<String?>(
+          future: _getUserType(user.uid),
+          builder: (context, typeSnapshot) {
+            if (typeSnapshot.connectionState == ConnectionState.waiting) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
+
+            final userType = typeSnapshot.data;
+            if (userType == 'investor') {
+              return const InvestorMainScreen();
+            }
+            if (userType == 'entrepreneur') {
+              return const EntrepreneurMainScreen();
+            }
+
+            return WelcomePage();
+          },
+        );
+      },
+    );
   }
 
   Future<String?> _getUserType(String uid) async {
@@ -50,19 +60,5 @@ class _AuthGateState extends State<AuthGate> {
     if (entrepreneurDoc.exists) return 'entrepreneur';
 
     return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (_user == null) return WelcomePage();
-
-    if (_userType == 'investor') return const InvestorMainScreen();
-    if (_userType == 'entrepreneur') return const EntrepreneurMainScreen();
-
-    return WelcomePage();
   }
 }

@@ -1,13 +1,18 @@
+import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:depi_graduation_project/models/request.dart';
 import 'package:flutter/material.dart';
 
-class RequestCardEnrepreneurView extends StatelessWidget {
+class RequestTileInvestorViewNew extends StatelessWidget {
   final Request request;
+  final String? entrepreneurName;
+  final String? entrepreneurPhotoUrl;
   final String? companyName;
   final String? companyLogoUrl;
-  
-  const RequestCardEnrepreneurView({
+
+  const RequestTileInvestorViewNew({
     required this.request,
+    this.entrepreneurName,
+    this.entrepreneurPhotoUrl,
     this.companyName,
     this.companyLogoUrl,
     super.key,
@@ -92,13 +97,26 @@ class RequestCardEnrepreneurView extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: Text(
-                    companyName ?? 'My Request',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        companyName ?? 'Company',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      if (entrepreneurName != null)
+                        Text(
+                          'by $entrepreneurName',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                    ],
                   ),
                 ),
                 Container(
@@ -215,3 +233,4 @@ class RequestCardEnrepreneurView extends StatelessWidget {
     );
   }
 }
+

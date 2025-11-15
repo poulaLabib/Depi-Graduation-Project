@@ -27,9 +27,9 @@ class ChatRoom {
     return ChatRoom(
       id: map['id'] ?? '',
       members: List<String>.from(map['members'] ?? []),
-      timeCreated: (map['timeCreated'] as Timestamp).toDate(),
+      timeCreated: (map['timeCreated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       lastMessage: map['lastMessage'] ?? '',
-      lastMessageTime: (map['lastMessageTime'] as Timestamp).toDate(),
+      lastMessageTime: (map['lastMessageTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
       participantsNames: List<String>.from(
         map['participantsNames'] ?? const <String>[],
       ),
