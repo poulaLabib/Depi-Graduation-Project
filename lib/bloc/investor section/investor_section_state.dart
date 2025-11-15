@@ -41,4 +41,3 @@ class ErrorLoadingInvestors extends InvestorSectionState {
 
   ErrorLoadingInvestors({required this.message});
 }
-

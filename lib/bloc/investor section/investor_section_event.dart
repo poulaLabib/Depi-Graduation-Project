@@ -15,4 +15,3 @@ class FilterInvestors extends InvestorSectionEvent {
 }
 
 class ClearFilters extends InvestorSectionEvent {}
-
