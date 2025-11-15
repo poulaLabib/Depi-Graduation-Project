@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class EntrepreneurProfileTextfield extends StatelessWidget {
   final String title;
@@ -17,13 +16,14 @@ class EntrepreneurProfileTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final inputField = TextFormField(
       maxLines: null,
       controller: controller,
       validator: validator,
       keyboardType: keyboardType,
-      style: GoogleFonts.roboto(
-        color: Colors.black,
+      style: TextStyle(
+        color: theme.colorScheme.onSurface,
         fontWeight: FontWeight.w400,
         fontSize: 15,
       ),
@@ -34,29 +34,32 @@ class EntrepreneurProfileTextfield extends StatelessWidget {
       ),
     );
 
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: GoogleFonts.roboto(
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-            letterSpacing: -0.1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              color: theme.colorScheme.onSecondary,
+            ),
           ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-          decoration: BoxDecoration(
-            color: const Color(0xFF91C7E5).withAlpha(200),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.black.withAlpha(40), width: 1),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: theme.colorScheme.secondary.withAlpha(20),
+              border: Border.all(color: theme.colorScheme.primary, width: 0.2),
+            ),
+            child: inputField,
           ),
-          child: inputField,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

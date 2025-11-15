@@ -17,16 +17,18 @@ class SkillCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 7, horizontal: 5),
+      padding: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.black.withAlpha(state == 'toAdd' ? 150 : 40),
-          width: state == 'toAdd' ? 1 : 1,
+          color: Theme.of(
+            context,
+          ).colorScheme.primary,
+          width: 0.2,
         ),
-        // color:  Colors.white,
+              color: Theme.of(context).colorScheme.secondary.withAlpha(40),
 
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -48,8 +50,8 @@ class SkillCard extends StatelessWidget {
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -57,25 +59,16 @@ class SkillCard extends StatelessWidget {
           if (state != 'toView')
             Expanded(
               flex: 1,
-              child: InkWell(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(7),
-                  bottomRight: Radius.circular(7),
-                ),
+              child: GestureDetector(
                 onTap: onTap,
                 child: Container(
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(7),
-                      bottomRight: Radius.circular(7),
-                    ),
-                  ),
+              
                   child: Icon(
                     state == 'toAdd'
                         ? CupertinoIcons.add
                         : CupertinoIcons.minus,
-                    color: Colors.black.withAlpha(onTap == null ? 120 : 255),
+                    color: Theme.of(context).colorScheme.onSurface.withAlpha(onTap == null ? 120 : 255),
                   ),
                 ),
               ),

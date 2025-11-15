@@ -11,10 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 class InvestorViewProfileScreen extends StatelessWidget {
   final Investor investor;
 
-  const InvestorViewProfileScreen({
-    required this.investor,
-    super.key,
-  });
+  const InvestorViewProfileScreen({required this.investor, super.key});
 
   void _pokeInvestor(BuildContext context) {
     final auth = AuthenticationService();
@@ -24,9 +21,9 @@ class InvestorViewProfileScreen extends StatelessWidget {
     if (currentUser == null) return;
 
     // Get entrepreneur name
-    EntrepreneurFirestoreService()
-        .getEntrepreneur(uid: currentUser.uid)
-        .then((entrepreneur) {
+    EntrepreneurFirestoreService().getEntrepreneur(uid: currentUser.uid).then((
+      entrepreneur,
+    ) {
       notificationService.addNotification(
         receiverId: investor.uid,
         senderId: currentUser.uid,
@@ -52,7 +49,10 @@ class InvestorViewProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                  vertical: 10,
+                ),
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
@@ -61,7 +61,7 @@ class InvestorViewProfileScreen extends StatelessWidget {
                       top: 0,
                       left: 0,
                       child: IconButton(
-                        padding: EdgeInsets.zero,
+                        padding: EdgeInsets.all(10),
                         constraints: const BoxConstraints(),
                         tooltip: 'Back',
                         onPressed: () {
@@ -84,37 +84,52 @@ class InvestorViewProfileScreen extends StatelessWidget {
                                 barrierDismissible: true,
                                 barrierColor: Colors.black.withAlpha(220),
                                 context: context,
-                                builder: (context) => AlertDialog(
-                                  backgroundColor: Colors.transparent,
-                                  elevation: 0,
-                                  contentPadding: EdgeInsets.zero,
-                                  content: Center(
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        investor.photoUrl,
-                                        width: 200,
-                                        height: 200,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (_, __, ___) => Icon(
-                                          Icons.person,
-                                          size: 200,
-                                          color: Colors.grey,
+                                builder:
+                                    (context) => AlertDialog(
+                                      backgroundColor: Colors.transparent,
+                                      elevation: 0,
+                                      contentPadding: EdgeInsets.zero,
+                                      content: Center(
+                                        child: ClipOval(
+                                          child: Image.network(
+                                            investor.photoUrl,
+                                            width: 200,
+                                            height: 200,
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (_, __, ___) => Icon(
+                                                  Icons.person,
+                                                  size: 200,
+                                                  color: Colors.grey,
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ),
                               );
                             }
                           },
                           child: ClipOval(
-                            child: investor.photoUrl.isNotEmpty
-                                ? Image.network(
-                                    investor.photoUrl,
-                                    height: 115,
-                                    width: 115,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (_, __, ___) => Container(
+                            child:
+                                investor.photoUrl.isNotEmpty
+                                    ? Image.network(
+                                      investor.photoUrl,
+                                      height: 115,
+                                      width: 115,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (_, __, ___) => Container(
+                                            height: 115,
+                                            width: 115,
+                                            color: Colors.grey[300],
+                                            child: Icon(
+                                              Icons.person,
+                                              size: 60,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                    )
+                                    : Container(
                                       height: 115,
                                       width: 115,
                                       color: Colors.grey[300],
@@ -124,17 +139,6 @@ class InvestorViewProfileScreen extends StatelessWidget {
                                         color: Colors.grey[600],
                                       ),
                                     ),
-                                  )
-                                : Container(
-                                    height: 115,
-                                    width: 115,
-                                    color: Colors.grey[300],
-                                    child: Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: Colors.grey[600],
-                                    ),
-                                  ),
                           ),
                         ),
                         SizedBox(
@@ -156,61 +160,57 @@ class InvestorViewProfileScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    spacing: 10,
-                    children: [
-                      EntrepreneurProfileField(
-                        title: 'About',
-                        value: investor.about,
-                      ),
-                      EntrepreneurProfileField(
-                        title: 'Phone Number',
-                        value: investor.phoneNumber,
-                      ),
-                      EntrepreneurSkillsField(
-                        title: 'Skills',
-                        skills: investor.skills,
-                        state: 'toView',
-                      ),
-                      EntrepreneurProfileField(
-                        title: 'Investor Type',
-                        value: investor.investorType,
-                      ),
-                      EntrepreneurProfileField(
-                        title: 'Experience',
-                        value: investor.experience,
-                      ),
-                      EntrepreneurProfileField(
-                        title: 'Investment Capacity',
-                        value: investor.investmentCapacity.toString(),
-                      ),
-                      EntrepreneurSkillsField(
-                        title: 'Preferred Industries',
-                        skills: investor.preferredIndustries,
-                        state: 'toView',
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton.icon(
-                        onPressed: () => _pokeInvestor(context),
-                        icon: const Icon(Icons.touch_app),
-                        label: const Text('Poke'),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 30,
-                            vertical: 15,
-                          ),
+               SizedBox(height: 40),
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Column(
+                  spacing: 20,
+                  children: [
+                    EntrepreneurProfileField(
+                      title: 'About',
+                      value: investor.about,
+                    ),
+                    EntrepreneurProfileField(
+                      title: 'Phone Number',
+                      value: investor.phoneNumber,
+                    ),
+                    EntrepreneurSkillsField(
+                      title: 'Skills',
+                      skills: investor.skills,
+                      state: 'toView',
+                    ),
+                    EntrepreneurProfileField(
+                      title: 'Investor Type',
+                      value: investor.investorType,
+                    ),
+                    EntrepreneurProfileField(
+                      title: 'Experience',
+                      value: investor.experience,
+                    ),
+                    EntrepreneurProfileField(
+                      title: 'Investment Capacity',
+                      value: investor.investmentCapacity.toString(),
+                    ),
+                    EntrepreneurSkillsField(
+                      title: 'Preferred Industries',
+                      skills: investor.preferredIndustries,
+                      state: 'toView',
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () => _pokeInvestor(context),
+                      icon: const Icon(Icons.touch_app),
+                      label: const Text('Poke'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 15,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -220,4 +220,3 @@ class InvestorViewProfileScreen extends StatelessWidget {
     );
   }
 }
-

@@ -1,6 +1,6 @@
 import 'package:auto_text_resizer/auto_text_resizer.dart';
+import 'package:depi_graduation_project/custom%20widgets/skill_card.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class InvestorTile extends StatelessWidget {
   final String name;
@@ -21,60 +21,18 @@ class InvestorTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 245, 245, 245).withAlpha(50),
+        // color: Theme.of(context).colorScheme.primary.withAlpha(10),
         border: Border.all(
-          color: const Color.fromARGB(255, 74, 74, 74),
-          width: 0.2,
+          color: Theme.of(context).colorScheme.primary.withAlpha(100),
+          width: 1,
         ),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Row(
+      child: Column(
+
         children: [
           Expanded(
-            child: Container(
-              padding: EdgeInsets.only(top: 4, bottom: 4, left: 4, right: 4),
-              alignment: Alignment.center,
-              
-              child: GridView.builder(
-                itemCount: industries.length,
-                scrollDirection: Axis.vertical,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: 1,
-                  childAspectRatio: 1.88,
-                  crossAxisSpacing: 1,
-                ),
-                itemBuilder: (context, index) {
-                  return Container(
-                    padding: EdgeInsets.all(5),
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      // color: Colors.white.withAlpha(150),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.black.withAlpha(30),
-                        width: 0.5,
-                      ),
-                    ),
-                    child: AutoText(
-                      maxFontSize: 11,
-                      minFontSize: 11,
-                      maxLines: 2,
-                      industries[index],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
-          VerticalDivider(
-            color: const Color.fromARGB(255, 74, 74, 74),
-            thickness: 0.1,
-            width: 0,
-          ),
-          Expanded(
+            flex: 10,
             child: Container(
               // color: Colors.black.withAlpha(5),
               padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
@@ -84,30 +42,19 @@ class InvestorTile extends StatelessWidget {
                   Expanded(
                     flex: 5,
 
-                    child: Stack(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: photoUrl != null && photoUrl!.isNotEmpty
+                    child: CircleAvatar(
+                      backgroundImage:
+                          photoUrl != null && photoUrl!.isNotEmpty
                               ? NetworkImage(photoUrl!)
                               : photoPath != null
-                                  ? AssetImage(photoPath!)
-                                  : null,
-                          radius: 45,
-                          child: (photoUrl == null || photoUrl!.isEmpty) && photoPath == null
+                              ? AssetImage(photoPath!)
+                              : null,
+                      radius: 45,
+                      child:
+                          (photoUrl == null || photoUrl!.isEmpty) &&
+                                  photoPath == null
                               ? Icon(Icons.person, size: 45)
                               : null,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 12,
-                          child: Image.asset(
-                            'assets/images/verified.png',
-                            height: 14,
-                            width: 14,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ],
                     ),
                   ),
 
@@ -115,13 +62,13 @@ class InvestorTile extends StatelessWidget {
                     flex: 2,
                     child: Center(
                       child: AutoText(
-                        maxFontSize: 13.5,
+                        maxFontSize: 16,
                         maxLines: 2,
-                        minFontSize: 13.5,
+                        minFontSize: 15,
                         textAlign: TextAlign.center,
                         name,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -131,23 +78,84 @@ class InvestorTile extends StatelessWidget {
               ),
             ),
           ),
-          VerticalDivider(
-            color: const Color.fromARGB(255, 74, 74, 74),
-            thickness: 0.1,
-            width: 0,
-          ),
           Expanded(
+            flex: 2,
             child: Container(
-              // color: Colors.black.withAlpha(2),
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              // color: Colors.green,
+              alignment: Alignment.topCenter,
+
+              child:
+                  industries.isEmpty
+                      ? Center(
+                        child: AutoText(
+                          maxFontSize: 11,
+                          minFontSize: 11,
+                          maxLines: 2,
+                          'No industries',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      )
+                      : ListView.builder(
+                        itemCount: industries.length,
+                        scrollDirection: Axis.horizontal,
+                        padding: EdgeInsets.symmetric(horizontal: 5),
+                        
+                        itemBuilder: (context, index) {
+                          return Container(
+                            alignment: Alignment.center,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                            ),
+                            margin: EdgeInsets.only(right: 3),
+                            
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary.withAlpha(100),
+                                width: 1,
+                              ),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary.withAlpha(20),
+
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Text(
+                              industries[index],
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+            ),
+          ),
+
+          // Divider(
+          //   color: Theme.of(context).colorScheme.primary,
+          //   thickness: 0.3,
+          //   height: 0,
+          // ),
+          Expanded(
+            flex: 6,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 12),
               child: Center(
                 child: AutoText(
-                  maxFontSize: 11.5,
-                  minFontSize: 11.5,
-                  textAlign: TextAlign.left,
-                  maxLines: 4,
+                  maxFontSize: 12,
+                  minFontSize: 12,
+                  textAlign: TextAlign.center,
+                  maxLines: 3,
                   bio,
-                  style: TextStyle(fontWeight: FontWeight.w400),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ),
             ),

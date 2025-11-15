@@ -75,13 +75,14 @@ class NotificationTile extends StatelessWidget {
                         ? FontWeight.normal
                         : FontWeight.w600,
                     fontSize: 14,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _formatTime(notification.createdAt),
                   style: TextStyle(
-                    color: Colors.grey[600],
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     fontSize: 12,
                   ),
                 ),

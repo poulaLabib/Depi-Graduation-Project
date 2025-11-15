@@ -6,7 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthGate extends StatefulWidget {
-  const AuthGate({super.key});
+  final VoidCallback? toggleTheme;
+  const AuthGate({super.key, this.toggleTheme});
 
   @override
   State<AuthGate> createState() => _AuthGateState();
@@ -26,7 +27,7 @@ class _AuthGateState extends State<AuthGate> {
 
         final user = snapshot.data;
         if (user == null) {
-          return WelcomePage();
+          return Welcome();
         }
 
         return FutureBuilder<String?>(
@@ -38,13 +39,13 @@ class _AuthGateState extends State<AuthGate> {
 
             final userType = typeSnapshot.data;
             if (userType == 'investor') {
-              return const InvestorMainScreen();
+              return InvestorMainScreen(toggleTheme: widget.toggleTheme);
             }
             if (userType == 'entrepreneur') {
-              return const EntrepreneurMainScreen();
+              return EntrepreneurMainScreen(toggleTheme: widget.toggleTheme);
             }
 
-            return WelcomePage();
+            return Welcome();
           },
         );
       },

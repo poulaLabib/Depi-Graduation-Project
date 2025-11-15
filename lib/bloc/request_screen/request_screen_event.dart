@@ -23,3 +23,5 @@ class EditRequestConfirmed extends RequestScreenEvent {
 }
 
 class CancelButtonPressed extends RequestScreenEvent {}
+
+class DeleteRequest extends RequestScreenEvent {}

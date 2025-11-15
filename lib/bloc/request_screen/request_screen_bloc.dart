@@ -47,5 +47,14 @@ class RequestScreenBloc extends Bloc<RequestScreenEvent, RequestScreenState> {
     on<CancelButtonPressed>((event, emit) {
       emit(DisplayingRequest(request: req));
     });
+
+    on<DeleteRequest>((event, emit) async {
+      try {
+        await request.deleteRequest(requestId: req.requestId);
+        emit(RequestDeleted());
+      } catch (e) {
+        emit(RequestError(message: 'Failed to delete request: $e'));
+      }
+    });
   }
 }

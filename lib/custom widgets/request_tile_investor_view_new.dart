@@ -46,18 +46,19 @@ class RequestTileInvestorViewNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardColor,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey.withOpacity(0.2),
+          color: theme.colorScheme.onSurface.withOpacity(0.2),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: theme.colorScheme.onSurface.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 2),
           ),
@@ -87,8 +88,8 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                   child: companyLogoUrl == null || companyLogoUrl!.isEmpty
                       ? Text(
                           (companyName ?? 'C')[0].toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: theme.colorScheme.onPrimary,
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
                           ),
@@ -102,10 +103,10 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                     children: [
                       Text(
                         companyName ?? 'Company',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                          color: theme.colorScheme.onSurface,
                         ),
                       ),
                       if (entrepreneurName != null)
@@ -113,7 +114,7 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                           'by $entrepreneurName',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey[600],
+                            color: theme.colorScheme.onSurface.withOpacity(0.6),
                           ),
                         ),
                     ],
@@ -122,13 +123,13 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     _formatDate(request.submittedAt),
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: theme.colorScheme.onPrimary,
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -146,10 +147,10 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                 // Description
                 Text(
                   request.description,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
-                    color: Colors.black87,
+                    color: theme.colorScheme.onSurface,
                   ),
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
@@ -172,7 +173,7 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                               'Amount',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey[600],
+                                color: theme.colorScheme.onSurface.withOpacity(0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -194,7 +195,7 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: theme.colorScheme.secondary.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -204,17 +205,17 @@ class RequestTileInvestorViewNew extends StatelessWidget {
                               'Equity',
                               style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey[600],
+                                color: theme.colorScheme.onSurface.withOpacity(0.6),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               request.equityInReturn,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.blue,
+                                color: theme.colorScheme.primary,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

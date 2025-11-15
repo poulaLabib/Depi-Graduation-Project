@@ -23,7 +23,9 @@ class YourRequestsSection extends StatelessWidget {
 
   Future<Map<String, String?>> _getCompanyInfo(String uid) async {
     try {
-      final companyExists = await CompanyFirestoreService().companyExists(uid: uid);
+      final companyExists = await CompanyFirestoreService().companyExists(
+        uid: uid,
+      );
       if (companyExists) {
         final company = await CompanyFirestoreService().getCompany(uid: uid);
         return {'name': company.name, 'logoUrl': company.logoUrl};
@@ -43,6 +45,8 @@ class YourRequestsSection extends StatelessWidget {
         } else if (state is NoRequests) {
           return Center(
             child: InkWell(
+              borderRadius: BorderRadius.circular(25),
+
               onTap: () {
                 context.read<RequestsSectionBloc>().add(
                   AddRequestButtonPressed(),
@@ -50,13 +54,21 @@ class YourRequestsSection extends StatelessWidget {
               },
               child: Container(
                 decoration: BoxDecoration(
-                  color: Colors.deepOrange,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(25),
+                  color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 0.2,
+                  ),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 child: Text(
-                  'Add request',
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 22),
+                  'Add Request',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 22,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ),
             ),
@@ -110,124 +122,150 @@ class YourRequestsSection extends StatelessWidget {
           showDialog(
             context: context,
             builder: (context) {
-              return AlertDialog(
-                title: Center(
-                  child: Text(
-                    'Add request',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+              return SafeArea(
+                child: AlertDialog(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
                   ),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          EntrepreneurProfileTextfield(
-                            title: 'Description',
-                            controller: _descriptionController,
-                            validator:
-                                (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'Required'
-                                        : null,
+                  title: Center(
+                    child: Text(
+                      'Add request',
+                      style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+                    ),
+                  ),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      spacing: 10,
+                                    
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            spacing: 10,
+                                    
+                            children: [
+                              EntrepreneurProfileTextfield(
+                                title: 'Description',
+                                controller: _descriptionController,
+                                validator:
+                                    (value) =>
+                                        value == null || value.isEmpty
+                                            ? 'Required'
+                                            : null,
+                              ),
+                              EntrepreneurProfileTextfield(
+                                title: 'Amount of money',
+                                controller: _amountOfMoneyController,
+                                keyboardType: TextInputType.number,
+                                validator:
+                                    (value) =>
+                                        value == null || value.isEmpty
+                                            ? 'Required'
+                                            : null,
+                              ),
+                              EntrepreneurProfileTextfield(
+                                title: 'What do you offer in return ?',
+                                controller: _equityInReturnController,
+                                validator:
+                                    (value) =>
+                                        value == null || value.isEmpty
+                                            ? 'Required'
+                                            : null,
+                              ),
+                              EntrepreneurProfileTextfield(
+                                title: 'Why are you raising ? (optional)',
+                                controller: _whyAreYouRaisingController,
+                              ),
+                            ],
                           ),
-                          EntrepreneurProfileTextfield(
-                            title: 'Amount of money',
-                            controller: _amountOfMoneyController,
-                            keyboardType: TextInputType.number,
-                            validator:
-                                (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'Required'
-                                        : null,
+                        ),
+                      ],
+                    ),
+                  ),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 15,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 7,
+                            ),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary.withAlpha(20),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 0.2,
+                              ),
+                            ),
+                            child: Text(
+                              'Cancel',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
+                            ),
                           ),
-                          EntrepreneurProfileTextfield(
-                            title: 'What do you offer in return ?',
-                            controller: _equityInReturnController,
-                            validator:
-                                (value) =>
-                                    value == null || value.isEmpty
-                                        ? 'Required'
-                                        : null,
+                        ),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(25),
+                
+                          onTap: () {
+                            context.read<RequestsSectionBloc>().add(
+                              AddRequestConfirmed(
+                                description: _descriptionController.text,
+                                amountOfMoney:
+                                    double.tryParse(
+                                      _amountOfMoneyController.text,
+                                    ) ??
+                                    0.0,
+                                equityInReturn: _equityInReturnController.text,
+                                whyAreYouRaising:
+                                    _whyAreYouRaisingController.text,
+                              ),
+                            );
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 15,
+                              vertical: 7,
+                            ),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(25),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.secondary.withAlpha(150),
+                              border: Border.all(
+                                color: Theme.of(context).colorScheme.primary,
+                                width: 0.2,
+                              ),
+                            ),
+                            child: Text(
+                              'Submit',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.onSecondary,
+                                fontSize: 18,
+                              ),
+                            ),
                           ),
-                          EntrepreneurProfileTextfield(
-                            title: 'Why are you raising ? (optional)',
-                            controller: _whyAreYouRaisingController,
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 15,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 7,
-                          ),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            'Cancel',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          context.read<RequestsSectionBloc>().add(
-                            AddRequestConfirmed(
-                              description: _descriptionController.text,
-                              amountOfMoney:
-                                  double.tryParse(
-                                    _amountOfMoneyController.text,
-                                  ) ??
-                                  0.0,
-                              equityInReturn: _equityInReturnController.text,
-                              whyAreYouRaising:
-                                  _whyAreYouRaisingController.text,
-                            ),
-                          );
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 15,
-                            vertical: 7,
-                          ),
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            color: Colors.deepOrange,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            'Submit',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
               );
             },
           );

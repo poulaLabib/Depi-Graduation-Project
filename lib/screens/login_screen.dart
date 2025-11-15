@@ -41,10 +41,12 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      theme: Theme.of(context),
       home: Scaffold(
-        backgroundColor: const Color.fromRGBO(247, 240, 225, 1),
+        backgroundColor: theme.scaffoldBackgroundColor,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -54,18 +56,18 @@ class _LogInState extends State<LogIn> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Sign In",
                       style: TextStyle(
-                        color: Color(0xFF4682A9),
+                        color: theme.colorScheme.primary,
                         fontSize: 30,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const Text(
+                    Text(
                       "To Your Account",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: theme.colorScheme.secondary,
                         fontSize: 30,
                         fontWeight: FontWeight.w600,
                       ),
@@ -73,10 +75,10 @@ class _LogInState extends State<LogIn> {
                     const SizedBox(height: 40),
 
                     //Email
-                    const Text(
+                    Text(
                       "Email",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -87,18 +89,14 @@ class _LogInState extends State<LogIn> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: const Color(0xFF91C7E5),
+                        fillColor: theme.colorScheme.surface,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF91C7E5),
-                          ),
+                          borderSide: BorderSide(color: theme.colorScheme.secondary),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF91C7E5),
-                          ),
+                          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
                         ),
                       ),
                       validator: (value) {
@@ -118,10 +116,10 @@ class _LogInState extends State<LogIn> {
                     const SizedBox(height: 25),
 
                     //Password
-                    const Text(
+                    Text(
                       "Password",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: theme.colorScheme.onSurface,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -132,18 +130,14 @@ class _LogInState extends State<LogIn> {
                       obscureText: true,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: const Color(0xFF91C7E5),
+                        fillColor: theme.colorScheme.surface,
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF91C7E5),
-                          ),
+                          borderSide: BorderSide(color: theme.colorScheme.secondary),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16),
-                          borderSide: const BorderSide(
-                            color: Color(0xFF91C7E5),
-                          ),
+                          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
                         ),
                       ),
                       validator: (value) {
@@ -192,23 +186,23 @@ class _LogInState extends State<LogIn> {
                           width: 150,
                           height: 50,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF91C7E5),
+                            color: theme.colorScheme.secondary,
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withAlpha(100),
+                                color: theme.colorScheme.primary.withAlpha(100),
                                 blurRadius: 4,
                                 offset: const Offset(2, 2),
                               ),
                             ],
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
+                          child: Text(
                             "Sign In",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: theme.colorScheme.onPrimary,
                             ),
                           ),
                         ),
@@ -228,15 +222,15 @@ class _LogInState extends State<LogIn> {
                         },
                         child: Column(
                           children: [
-                            const Text(
+                            Text(
                               "Create new account",
                               style: TextStyle(
                                 fontWeight: FontWeight.w400,
-                                color: Colors.black,
+                                color: theme.colorScheme.onSurface,
                               ),
                             ),
-                            const Divider(
-                              color: Colors.black,
+                            Divider(
+                              color: theme.colorScheme.onSurface,
                               indent: 100,
                               endIndent: 100,
                               height: 0,

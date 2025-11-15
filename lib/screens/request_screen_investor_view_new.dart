@@ -3,6 +3,8 @@ import 'package:depi_graduation_project/bloc/chatlist/chatlist_bloc.dart';
 import 'package:depi_graduation_project/bloc/chatlist/chatlist_event.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
 import 'package:depi_graduation_project/models/request.dart';
+import 'package:depi_graduation_project/screens/company_profile_screen.dart';
+import 'package:depi_graduation_project/screens/entrepreneur_profile_screen.dart';
 import 'package:depi_graduation_project/screens/investor_main_screen.dart';
 import 'package:depi_graduation_project/services/firebase_auth_service.dart';
 import 'package:depi_graduation_project/services/firestore.dart';
@@ -32,23 +34,27 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
 
     try {
       // Get investor info
-      final investor = await InvestorFirestoreService()
-          .getInvestor(uid: currentUser.uid);
+      final investor = await InvestorFirestoreService().getInvestor(
+        uid: currentUser.uid,
+      );
 
       // Get entrepreneur info
-      final entrepreneur = await EntrepreneurFirestoreService()
-          .getEntrepreneur(uid: request.uid);
+      final entrepreneur = await EntrepreneurFirestoreService().getEntrepreneur(
+        uid: request.uid,
+      );
 
       // Get chat room ID
-      final chatRoomId = currentUser.uid.compareTo(request.uid) <= 0
-          ? '${currentUser.uid}_${request.uid}'
-          : '${request.uid}_${currentUser.uid}';
+      final chatRoomId =
+          currentUser.uid.compareTo(request.uid) <= 0
+              ? '${currentUser.uid}_${request.uid}'
+              : '${request.uid}_${currentUser.uid}';
 
       // Check if chat room already exists
-      final chatRoomDoc = await FirebaseFirestore.instance
-          .collection('chatrooms')
-          .doc(chatRoomId)
-          .get();
+      final chatRoomDoc =
+          await FirebaseFirestore.instance
+              .collection('chatrooms')
+              .doc(chatRoomId)
+              .get();
 
       final chatRoomExists = chatRoomDoc.exists;
 
@@ -71,7 +77,8 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
           senderId: currentUser.uid,
           senderName: investor.name,
           type: 'chat',
-          message: '${investor.name} started a chat with you about your request',
+          message:
+              '${investor.name} started a chat with you about your request',
         );
 
         // Create initial message only if chat is new
@@ -94,7 +101,7 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
         Navigator.of(context).popUntil((route) {
           return route.isFirst;
         });
-        
+
         // If chat exists, navigate to chats tab by replacing the main screen
         if (chatRoomExists) {
           // Replace the current route with InvestorMainScreen showing chats tab
@@ -113,7 +120,7 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Error: ${e.toString()}'),
-            backgroundColor: Colors.red,
+            backgroundColor: Theme.of(context).colorScheme.error,
           ),
         );
       }
@@ -143,15 +150,16 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
       'Sep',
       'Oct',
       'Nov',
-      'Dec'
+      'Dec',
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8EE),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -162,43 +170,47 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                 Container(
                   height: 200,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 25),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 25),
                     borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(20),
                       bottomRight: Radius.circular(20),
                     ),
                   ),
-                  child: companyLogoUrl != null && companyLogoUrl!.isNotEmpty
-                      ? ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                          child: Image.network(
-                            companyLogoUrl!,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withValues(alpha: 25),
+                  child:
+                      companyLogoUrl != null && companyLogoUrl!.isNotEmpty
+                          ? ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomLeft: Radius.circular(20),
+                              bottomRight: Radius.circular(20),
                             ),
-                          ),
-                        )
-                      : Center(
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            child: Text(
-                              (companyName ?? 'C')[0].toUpperCase(),
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
+                            child: Image.network(
+                              companyLogoUrl!,
+                              fit: BoxFit.cover,
+                              errorBuilder:
+                                  (_, __, ___) => Container(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary.withValues(alpha: 25),
+                                  ),
+                            ),
+                          )
+                          : Center(
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              child: Text(
+                                (companyName ?? 'C')[0].toUpperCase(),
+                                style: TextStyle(
+                                  color: theme.colorScheme.onPrimary,
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
-                        ),
                 ),
                 Positioned(
                   top: 40,
@@ -207,11 +219,14 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
+                      decoration: BoxDecoration(
+                        color: theme.cardColor,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.arrow_back, color: Colors.black),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: theme.colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ),
@@ -225,10 +240,10 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                   // Company/Entrepreneur name
                   Text(
                     companyName ?? entrepreneurName ?? 'Unknown',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: theme.colorScheme.onSurface,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -239,7 +254,7 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                         'by $entrepreneurName',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Colors.grey[600],
+                          color: theme.colorScheme.onSurface.withOpacity(0.6),
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -267,7 +282,8 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                                 'Amount Requested',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey[600],
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.6),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -299,17 +315,18 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                                 'Equity in Return',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Colors.grey[600],
+                                  color: theme.colorScheme.onSurface
+                                      .withOpacity(0.6),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 request.equityInReturn,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
+                                  color: theme.colorScheme.primary,
                                 ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -333,6 +350,38 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                     value: _formatDate(request.submittedAt),
                   ),
                   const SizedBox(height: 32),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      buildTabButton(
+                        "Founder",
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EntrepreneurProfileScreen(),
+                            ),
+                          );
+                        },
+                        theme.colorScheme.secondary,
+                        textColor: theme.colorScheme.onSecondary,
+                      ),
+                      buildTabButton(
+                        "Company",
+                        () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CompanyProfileScreen(),
+                            ),
+                          );
+                        },
+                        theme.colorScheme.secondary,
+                        textColor: theme.colorScheme.onSecondary,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
                   // Negotiate button
                   ElevatedButton.icon(
                     onPressed: () => _negotiate(context),
@@ -346,8 +395,8 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
                     ),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Colors.white,
+                      backgroundColor: theme.colorScheme.primary,
+                      foregroundColor: theme.colorScheme.onPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -363,3 +412,26 @@ class RequestScreenInvestorViewNew extends StatelessWidget {
   }
 }
 
+Widget buildTabButton(
+  String text,
+  VoidCallback onTap,
+  Color bgColor, {
+  Color textColor = Colors.black,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+    decoration: BoxDecoration(
+      color: bgColor,
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      text,
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 17,
+        color: textColor,
+      ),
+      textAlign: TextAlign.center,
+    ),
+  );
+}

@@ -18,58 +18,56 @@ class EntrepreneurSkillsField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 13.5,
-            letterSpacing: -0.1,
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              color: theme.colorScheme.onSecondary,
+            ),
           ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(
-            left: 5,
-            right: state == 'toView' ? 5 : 45,
-            top: skills.isEmpty ? 14.5 : 5,
-            bottom: skills.isEmpty ? 14.5 : 5,
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(
+              left: 0,
+              right: state == 'toView' ? 0 : 45,
+              top: skills.isEmpty ? 14.5 : 0,
+              bottom: skills.isEmpty ? 14.5 : 0,
+            ),
+            child:
+                skills.isEmpty
+                    ? SizedBox(height: 15)
+                    : StaggeredGridView.countBuilder(
+                      shrinkWrap: true,
+                      itemCount: skills.length,
+                
+                      physics: const NeverScrollableScrollPhysics(),
+                      staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 0.75,
+                      crossAxisSpacing: 0.75,
+                      itemBuilder: (context, index) {
+                        final item = skills[index];
+                        return SkillCard(
+                          text: item,
+                          onTap:
+                              state == 'toRemove' && onRemove != null
+                                  ? () => onRemove!(item)
+                                  : null,
+                          state: state,
+                        );
+                      },
+                    ),
           ),
-          decoration: BoxDecoration(
-            color: const Color(0xFF91C7E5).withAlpha(200),
-            // color: Theme.of(context).colorScheme.surface.withAlpha(150),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.black.withAlpha(40), width: 1),
-          ),
-          child:
-              skills.isEmpty
-                  ? SizedBox(height: 15)
-                  : StaggeredGridView.countBuilder(
-                    shrinkWrap: true,
-                    itemCount: skills.length,
-
-                    physics: const NeverScrollableScrollPhysics(),
-                    staggeredTileBuilder: (_) => const StaggeredTile.fit(1),
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 2,
-                    crossAxisSpacing: 2,
-                    itemBuilder: (context, index) {
-                      final item = skills[index];
-                      return SkillCard(
-                        text: item,
-                        onTap:
-                            state == 'toRemove' && onRemove != null
-                                ? () => onRemove!(item)
-                                : null,
-                        state: state,
-                      );
-                    },
-                  ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

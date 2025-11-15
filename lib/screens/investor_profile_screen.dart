@@ -2,7 +2,6 @@ import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_bloc.dart';
 import 'package:depi_graduation_project/bloc/auth/auth_event.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
-import 'package:depi_graduation_project/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,14 +38,16 @@ class InvestorProfileScreen extends StatelessWidget {
             showDialog(
               context: parentContext,
               barrierDismissible: true,
-              barrierColor: Colors.black.withAlpha(220),
+              barrierColor: Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha(220),
               builder: (dialogContext) {
                 return AlertDialog(
-                  backgroundColor: const Color(0xFF2C3E50).withAlpha(150),
+                  backgroundColor: Theme.of(context).cardColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                  contentPadding: const EdgeInsets.all(12),
                   content: StatefulBuilder(
                     builder: (context, setState) {
                       final editState =
@@ -100,14 +101,16 @@ class InvestorProfileScreen extends StatelessWidget {
             showDialog(
               context: parentContext,
               barrierDismissible: true,
-              barrierColor: Colors.black.withAlpha(220),
+              barrierColor: Theme.of(
+                context,
+              ).colorScheme.onSurface.withAlpha(220),
               builder: (dialogContext) {
                 return AlertDialog(
-                  backgroundColor: const Color(0xFF2C3E50).withAlpha(150),
+                  backgroundColor: Theme.of(context).cardColor,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                  contentPadding: const EdgeInsets.all(12),
                   content: StatefulBuilder(
                     builder: (context, setState) {
                       final editState =
@@ -163,13 +166,26 @@ class InvestorProfileScreen extends StatelessWidget {
           } else if (state is DisplayInvestorInfo) {
             return _viewMode(context, state);
           } else if (state is EditInvestorInfo) {
-            _nameController.text = state.investor.name;
-            _aboutController.text = state.investor.about;
-            _phoneController.text = state.investor.phoneNumber;
-            _experienceController.text = state.investor.experience;
-            _investorTypeController.text = state.investor.investorType;
-            _capacityController.text =
-                state.investor.investmentCapacity.toString();
+            if (_nameController.text != state.investor.name) {
+              _nameController.text = state.investor.name;
+            }
+            if (_aboutController.text != state.investor.about) {
+              _aboutController.text = state.investor.about;
+            }
+            if (_phoneController.text != state.investor.phoneNumber) {
+              _phoneController.text = state.investor.phoneNumber;
+            }
+            if (_experienceController.text != state.investor.experience) {
+              _experienceController.text = state.investor.experience;
+            }
+            if (_investorTypeController.text != state.investor.investorType) {
+              _investorTypeController.text = state.investor.investorType;
+            }
+            if (_capacityController.text !=
+                state.investor.investmentCapacity.toString()) {
+              _capacityController.text =
+                  state.investor.investmentCapacity.toString();
+            }
             return _editMode(context, state);
           }
           return const SizedBox.shrink();
@@ -184,28 +200,19 @@ class InvestorProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Stack(
                 alignment: Alignment.center,
-
                 children: [
-                  Container(width: double.infinity),
+                  Container(),
                   Positioned(
                     top: 0,
                     left: 0,
                     child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.all(4),
                       tooltip: 'Logout',
                       onPressed: () {
                         context.read<AuthBloc>().add(LogoutButtonPressed());
-                        if (Navigator.canPop(context)) {
-                          Navigator.pop(context);
-                        }
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => LogIn()),
-                        );
                       },
                       icon: Icon(
                         CupertinoIcons.square_arrow_right,
@@ -218,8 +225,7 @@ class InvestorProfileScreen extends StatelessWidget {
                     top: 0,
                     right: 0,
                     child: IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
+                      padding: EdgeInsets.all(4),
                       tooltip: 'Edit',
                       onPressed: () {
                         context.read<IpsBloc>().add(
@@ -240,7 +246,9 @@ class InvestorProfileScreen extends StatelessWidget {
                         onTap: () {
                           showDialog(
                             barrierDismissible: true,
-                            barrierColor: Colors.black.withAlpha(220),
+                            barrierColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(220),
                             context: context,
                             builder:
                                 (context) => AlertDialog(
@@ -303,105 +311,104 @@ class InvestorProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    EntrepreneurProfileField(
-                      title: 'About',
-                      value: state.investor.about,
-                    ),
-                    EntrepreneurProfileField(
-                      title: 'Phone Number',
-                      value: state.investor.phoneNumber,
-                    ),
-                    EntrepreneurSkillsField(
-                      title: 'Skills',
-                      skills: state.investor.skills,
-                      state: 'toView',
-                    ),
-                    EntrepreneurProfileField(
-                      title: 'Investor Type',
-                      value: state.investor.investorType,
-                    ),
-                    EntrepreneurProfileField(
-                      title: 'Experience',
-                      value: state.investor.experience,
-                    ),
-                    EntrepreneurProfileField(
-                      title: 'Investment Capacity',
-                      value: state.investor.investmentCapacity.toString(),
-                    ),
-                    EntrepreneurSkillsField(
-                      title: 'Preferred Industries',
-                      skills: state.investor.preferredIndustries,
-                      state: 'toView',
-                    ),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'National ID',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.5,
-                            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                spacing: 10,
+                children: [
+                  EntrepreneurProfileField(
+                    title: 'About',
+                    value: state.investor.about,
+                  ),
+                  EntrepreneurProfileField(
+                    title: 'Phone Number',
+                    value: state.investor.phoneNumber,
+                  ),
+                  EntrepreneurSkillsField(
+                    title: 'Skills',
+                    skills: state.investor.skills,
+                    state: 'toView',
+                  ),
+                  EntrepreneurProfileField(
+                    title: 'Investor Type',
+                    value: state.investor.investorType,
+                  ),
+                  EntrepreneurProfileField(
+                    title: 'Experience',
+                    value: state.investor.experience,
+                  ),
+                  EntrepreneurProfileField(
+                    title: 'Investment Capacity',
+                    value: state.investor.investmentCapacity.toString(),
+                  ),
+                  EntrepreneurSkillsField(
+                    title: 'Preferred Industries',
+                    skills: state.investor.preferredIndustries,
+                    state: 'toView',
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'National ID',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13.5,
                           ),
-                          const SizedBox(height: 6),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                barrierColor: Colors.black.withAlpha(220),
-                                context: context,
-                                builder:
-                                    (context) => AlertDialog(
-                                      backgroundColor: Colors.transparent,
-                                      content: Image.network(
-                                        state.investor.nationalIdUrl,
-                                        fit: BoxFit.contain,
-                                        errorBuilder:
-                                            (_, __, ___) => Image.asset(
-                                              'assets/images/elsweedy.jpeg',
-                                              fit: BoxFit.contain,
-                                            ),
-                                      ),
+                        ),
+                        const SizedBox(height: 6),
+                        GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              barrierColor: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(220),
+                              context: context,
+                              builder:
+                                  (context) => AlertDialog(
+                                    backgroundColor: Colors.transparent,
+                                    content: Image.network(
+                                      state.investor.nationalIdUrl,
+                                      fit: BoxFit.contain,
+                                      errorBuilder:
+                                          (_, __, ___) => Image.asset(
+                                            'assets/images/elsweedy.jpeg',
+                                            fit: BoxFit.contain,
+                                          ),
                                     ),
-                              );
-                            },
-                            child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF91C7E5).withAlpha(200),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  state.investor.nationalIdUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder:
-                                      (_, __, ___) => Image.asset(
-                                        'assets/images/elsweedy.jpeg',
-                                        fit: BoxFit.cover,
-                                      ),
-                                ),
+                                  ),
+                            );
+                          },
+                          child: Container(
+                            height: 200,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF91C7E5).withAlpha(200),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                state.investor.nationalIdUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder:
+                                    (_, __, ___) => Image.asset(
+                                      'assets/images/elsweedy.jpeg',
+                                      fit: BoxFit.cover,
+                                    ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -416,7 +423,7 @@ class InvestorProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -556,213 +563,201 @@ class InvestorProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  spacing: 10,
-                  children: [
-                    EntrepreneurProfileTextfield(
-                      title: 'About',
-                      controller: _aboutController,
-                    ),
-                    EntrepreneurProfileTextfield(
-                      title: 'Phone Number',
-                      controller: _phoneController,
-                    ),
-                    Stack(
-                      children: [
-                        EntrepreneurSkillsField(
-                          title: 'Skills',
-                          skills: [
-                            ...state.investor.skills,
-                            ...state.tempSkills,
-                          ],
-                          state: 'toRemove',
-                          onRemove: (skill) {
-                            context.read<IpsBloc>().add(
-                              RemoveTempSkillInvestor(skill: skill),
-                            );
-                          },
-                        ),
-                        Positioned(
-                          top: 23.5,
-                          bottom: 2,
-                          right: 2,
-                          child: InkWell(
-                            key: skillButtonKey,
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                              context.read<IpsBloc>().add(
-                                AddTempSkillButtonPressed(),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(
-                                  255,
-                                  245,
-                                  245,
-                                  245,
-                                ).withAlpha(80),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: const Color(0xFF2C3E50).withAlpha(50),
-                                  width: 1,
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Color(0xFF2C3E50),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    EntrepreneurProfileTextfield(
-                      title: 'Investor Type',
-                      controller: _investorTypeController,
-                    ),
-                    EntrepreneurProfileTextfield(
-                      title: 'Experience',
-                      controller: _experienceController,
-                    ),
-                    EntrepreneurProfileTextfield(
-                      title: 'Investment Capacity',
-                      controller: _capacityController,
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    // Industries field
-                    Stack(
-                      children: [
-                        EntrepreneurSkillsField(
-                          title: 'Preferred Industries',
-                          skills: [
-                            ...state.investor.preferredIndustries,
-                            ...state.tempIndustries,
-                          ],
-                          state: 'toRemove',
-                          onRemove: (industry) {
-                            context.read<IpsBloc>().add(
-                              RemoveTempIndustryInvestor(industry: industry),
-                            );
-                          },
-                        ),
-                        Positioned(
-                          top: 23.5,
-                          bottom: 2,
-                          right: 2,
-                          child: InkWell(
-                            key: industryButtonKey,
-                            borderRadius: BorderRadius.circular(8),
-                            onTap: () {
-                              context.read<IpsBloc>().add(
-                                AddTempIndustryButtonPressed(),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(
-                                  255,
-                                  245,
-                                  245,
-                                  245,
-                                ).withAlpha(80),
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: const Color(0xFF2C3E50).withAlpha(50),
-                                  width: 1,
-                                ),
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Color(0xFF2C3E50),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'National ID',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 13.5,
-                              letterSpacing: -0.1,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            height: 250,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF91C7E5).withAlpha(200),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Image.network(
-                                      state.investor.nationalIdUrl,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (_, __, ___) => Image.asset(
-                                            'assets/images/elsweedy.jpeg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                    ),
-                                  ),
-                                ),
-                                Positioned.fill(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      context.read<IpsBloc>().add(
-                                        EditInvestorPhoto(type: 'id'),
-                                      );
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withAlpha(80),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Icon(
-                                        CupertinoIcons.cloud_upload_fill,
-                                        color:
-                                            Theme.of(
-                                              context,
-                                            ).colorScheme.primary,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                spacing: 10,
+                children: [
+                  EntrepreneurProfileTextfield(
+                    title: 'About',
+                    controller: _aboutController,
+                  ),
+                  EntrepreneurProfileTextfield(
+                    title: 'Phone Number',
+                    controller: _phoneController,
+                  ),
+                  Stack(
+                    children: [
+                      EntrepreneurSkillsField(
+                        title: 'Skills',
+                        skills: [...state.investor.skills, ...state.tempSkills],
+                        state: 'toRemove',
+                        onRemove: (skill) {
+                          context.read<IpsBloc>().add(
+                            RemoveTempSkillInvestor(skill: skill),
+                          );
+                        },
                       ),
+                      Positioned(
+                        top: 23.5,
+                        bottom: 2,
+                        right: 2,
+                        child: InkWell(
+                          key: skillButtonKey,
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            context.read<IpsBloc>().add(
+                              AddTempSkillButtonPressed(),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(
+                                255,
+                                245,
+                                245,
+                                245,
+                              ).withAlpha(80),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(0xFF2C3E50).withAlpha(50),
+                                width: 1,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Color(0xFF2C3E50),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  EntrepreneurProfileTextfield(
+                    title: 'Investor Type',
+                    controller: _investorTypeController,
+                  ),
+                  EntrepreneurProfileTextfield(
+                    title: 'Experience',
+                    controller: _experienceController,
+                  ),
+                  EntrepreneurProfileTextfield(
+                    title: 'Investment Capacity',
+                    controller: _capacityController,
+                    keyboardType: TextInputType.number,
+                  ),
+
+                  // Industries field
+                  Stack(
+                    children: [
+                      EntrepreneurSkillsField(
+                        title: 'Preferred Industries',
+                        skills: [
+                          ...state.investor.preferredIndustries,
+                          ...state.tempIndustries,
+                        ],
+                        state: 'toRemove',
+                        onRemove: (industry) {
+                          context.read<IpsBloc>().add(
+                            RemoveTempIndustryInvestor(industry: industry),
+                          );
+                        },
+                      ),
+                      Positioned(
+                        top: 23.5,
+                        bottom: 2,
+                        right: 2,
+                        child: InkWell(
+                          key: industryButtonKey,
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            context.read<IpsBloc>().add(
+                              AddTempIndustryButtonPressed(),
+                            );
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(
+                                255,
+                                245,
+                                245,
+                                245,
+                              ).withAlpha(80),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: const Color(0xFF2C3E50).withAlpha(50),
+                                width: 1,
+                              ),
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Color(0xFF2C3E50),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'National ID',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13.5,
+                            letterSpacing: -0.1,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Container(
+                          height: 250,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF91C7E5).withAlpha(200),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    state.investor.nationalIdUrl,
+                                    fit: BoxFit.cover,
+                                    errorBuilder:
+                                        (_, __, ___) => Image.asset(
+                                          'assets/images/elsweedy.jpeg',
+                                          fit: BoxFit.cover,
+                                        ),
+                                  ),
+                                ),
+                              ),
+                              Positioned.fill(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.read<IpsBloc>().add(
+                                      EditInvestorPhoto(type: 'id'),
+                                    );
+                                  },
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withAlpha(80),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      CupertinoIcons.cloud_upload_fill,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

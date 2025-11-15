@@ -45,31 +45,58 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
       rooms.fold<int>(0, (sum, room) => sum + (room.unreadCount));
 
   void _confirmDelete(BuildContext context, ChatRoom room) {
+    final theme = Theme.of(context);
     showDialog<void>(
       context: context,
-      builder:
-          (dialogContext) => AlertDialog(
-            title: const Text('Delete Chat'),
-            content: Text(
-              'Are you sure you want to delete chat with ${room.targetName ?? 'this user'}?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                onPressed: () {
-                  context.read<ChatListBloc>().add(
-                    DeleteChatRoom(chatRoomId: room.id),
-                  );
-                  Navigator.pop(dialogContext);
-                },
-                child: const Text('Delete'),
-              ),
-            ],
+      builder: (dialogContext) => AlertDialog(
+        backgroundColor: theme.colorScheme.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Text(
+          'Delete Chat',
+          style: TextStyle(
+            color: theme.colorScheme.onSurface,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+        content: Text(
+          'Are you sure you want to delete chat with ${room.targetName ?? 'this user'}?',
+          style: TextStyle(
+            color: theme.colorScheme.onSurface,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: theme.colorScheme.error,
+              foregroundColor: theme.colorScheme.onError,
+            ),
+            onPressed: () {
+              context.read<ChatListBloc>().add(
+                DeleteChatRoom(chatRoomId: room.id),
+              );
+              Navigator.pop(dialogContext);
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -109,7 +136,10 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                   ? Theme.of(context).colorScheme.primary.withAlpha(11)
                   : Colors.transparent,
           border: Border(
-            bottom: BorderSide(color: Colors.grey.shade300, width: 0.5),
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              width: 0.5,
+            ),
           ),
         ),
         child: Row(
@@ -143,7 +173,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: hasUnread ? FontWeight.bold : FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -155,7 +185,9 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                       fontSize: 14,
                       fontWeight:
                           hasUnread ? FontWeight.w500 : FontWeight.normal,
-                      color: hasUnread ? Colors.black87 : Colors.grey.shade600,
+                      color: hasUnread
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -172,7 +204,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                     color:
                         hasUnread
                             ? Theme.of(context).colorScheme.primary
-                            : Colors.grey.shade600,
+                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                     fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
@@ -222,16 +254,19 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(
+              Icon(
                 Icons.error_outline,
                 size: 80,
-                color: Colors.redAccent,
+                color: Theme.of(context).colorScheme.error,
               ),
               const SizedBox(height: 16),
               Text(
                 'Oops! Unable to load chats.\n${state.message}',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
               ),
               const SizedBox(height: 24),
               ElevatedButton(
@@ -270,10 +305,27 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                         )
                         : null,
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: Theme.of(context).colorScheme.secondary.withAlpha(20),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    width: 1,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 1.5,
+                  ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 20,
@@ -336,16 +388,16 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
             auth: AuthenticationService(),
           ),
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.surface,
           elevation: 0,
-          title: const Text(
+          title: Text(
             'Chats',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
@@ -368,7 +420,7 @@ class _EmptyState extends StatelessWidget {
           Icon(
             hasQuery ? Icons.search_off : Icons.chat_bubble_outline,
             size: 80,
-            color: Colors.grey.shade300,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
           Text(
@@ -376,7 +428,7 @@ class _EmptyState extends StatelessWidget {
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade700,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
           if (!hasQuery) ...[
@@ -384,7 +436,10 @@ class _EmptyState extends StatelessWidget {
             Text(
               'Start a conversation with\ninvestors or entrepreneurs',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ],

@@ -102,7 +102,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8EE),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -132,8 +132,9 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                     borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
                   ),
                   child: companyLogo != null
                       ? ClipRRect(
@@ -143,10 +144,10 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                             fit: BoxFit.cover,
                           ),
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.camera_alt,
                           size: 40,
-                          color: Colors.grey,
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                         ),
                 ),
               ),
@@ -154,16 +155,20 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
               Center(
                 child: Text(
                   companyName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               ),
               const SizedBox(height: 8),
-              const Divider(
-                color: Colors.black12,
-                thickness: 1,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Divider(
+                  color: Theme.of(context).colorScheme.secondary,
+                  thickness: 0.6,
+                ),
               ),
               const SizedBox(height: 8),
 
@@ -215,68 +220,76 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
 
               // Team Members
               buildLabel("Team Members"),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF91C7E5),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: teamMembers.map((member) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              shape: BoxShape.circle,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: teamMembers.map((member) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.onSurface,
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            "${member.name} - ${member.role}",
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                            const SizedBox(width: 8),
+                            Text(
+                              "${member.name} - ${member.role}",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
 
               // Verified Certificate
               buildLabel("Verified Certificate (optional)"),
-              Container(
-                height: 150,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF91C7E5),
-                  borderRadius: BorderRadius.circular(18),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Container(
+                  height: 150,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(25),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                  ),
+                  child: verifiedCertificate != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Image.memory(
+                            verifiedCertificate!,
+                            fit: BoxFit.contain,
+                          ),
+                        )
+                      : Center(
+                          child: Icon(
+                            Icons.add,
+                            size: 50,
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          ),
+                        ),
                 ),
-                child: verifiedCertificate != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(18),
-                        child: Image.memory(
-                          verifiedCertificate!,
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    : const Center(
-                        child: Icon(
-                          Icons.add,
-                          size: 50,
-                          color: Colors.black54,
-                        ),
-                      ),
               ),
             ],
           ),
@@ -286,29 +299,42 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
   }
 
   Widget buildLabel(String text) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6, top: 14),
-      child: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10, top: 14),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+            color: theme.colorScheme.onSecondary,
+          ),
+        ),
       ),
     );
   }
 
   Widget buildDisplayBox(String text) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: const Color(0xFF91C7E5),
-        borderRadius: BorderRadius.circular(18),
-      ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.black,
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: theme.colorScheme.secondary.withAlpha(20),
+          border: Border.all(color: theme.colorScheme.primary, width: 0.2),
+        ),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 15,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ),
     );
@@ -316,23 +342,24 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
 
   Widget buildTopWhiteButton(IconData? icon, VoidCallback onPressed,
       {String? label}) {
+    final theme = Theme.of(context);
     return InkWell(
       onTap: onPressed,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.grey.shade300),
+          border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.3)),
         ),
         child: icon != null
-            ? Icon(icon, color: Colors.black)
+            ? Icon(icon, color: theme.colorScheme.onSurface)
             : Text(
                 label!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 14,
-                  color: Colors.black,
+                  color: theme.colorScheme.onSurface,
                 ),
               ),
       ),
@@ -529,7 +556,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF8EE),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
@@ -765,33 +792,44 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
   }
 
   Widget buildLabel(String text) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6, top: 12),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10, top: 14),
+        child: Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+            color: theme.colorScheme.onSecondary,
+          ),
         ),
       ),
     );
   }
 
   Widget buildEditBox(TextEditingController controller, {int maxLines = 1}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF91C7E5),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: TextField(
-        controller: controller,
-        maxLines: maxLines,
-        decoration: const InputDecoration(border: InputBorder.none),
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: Colors.black,
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: theme.colorScheme.secondary.withAlpha(20),
+          border: Border.all(color: theme.colorScheme.primary, width: 0.2),
+        ),
+        child: TextField(
+          controller: controller,
+          maxLines: maxLines,
+          decoration: const InputDecoration(border: InputBorder.none),
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
       ),
     );

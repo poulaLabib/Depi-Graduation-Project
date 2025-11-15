@@ -1,57 +1,59 @@
 import 'package:depi_graduation_project/screens/investor_home_screen.dart';
 import 'package:depi_graduation_project/screens/investor_profile_screen.dart';
 import 'package:depi_graduation_project/screens/chat_rooms_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class InvestorMainScreen extends StatefulWidget {
   final int? initialTab;
-  const InvestorMainScreen({super.key, this.initialTab});
+  final VoidCallback? toggleTheme;
+  const InvestorMainScreen({super.key, this.initialTab, this.toggleTheme});
 
   @override
   State<InvestorMainScreen> createState() => _InvestorMainScreenState();
 }
 
 class _InvestorMainScreenState extends State<InvestorMainScreen> {
-  List<Widget> screens = [
-    InvestorHomeScreen(),
-    ChatRoomsScreen(),
-    InvestorProfileScreen(),
-  ];
+  late List<Widget> screens;
   late int selectedIndex;
-  
+
   @override
   void initState() {
     super.initState();
+    screens = [
+      InvestorHomeScreen(toggleTheme: widget.toggleTheme),
+      ChatRoomsScreen(),
+      InvestorProfileScreen(),
+    ];
     selectedIndex = widget.initialTab ?? 0;
   }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: IndexedStack(index: selectedIndex, children: screens),
       bottomNavigationBar: Container(
-        height: 63,
-        padding: EdgeInsets.symmetric(horizontal: 5),
+        height: 68,
+        padding: EdgeInsets.symmetric(horizontal: 18),
         decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
           border: Border(
-            top: BorderSide(
-              color: Color(0xFF2C3E50).withAlpha(30),
-              width: 0.5,
-            ),
+            top: BorderSide(color: theme.colorScheme.primary, width: 0.2),
           ),
         ),
         child: SalomonBottomBar(
           selectedColorOpacity: 0.05,
-          selectedItemColor: Color(0xFF2C3E50),
-          unselectedItemColor: Colors.grey,
+          selectedItemColor: theme.colorScheme.primary,
+          unselectedItemColor: theme.colorScheme.secondary.withAlpha(120),
           currentIndex: selectedIndex,
           onTap: (index) => setState(() => selectedIndex = index),
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          itemPadding: EdgeInsets.symmetric(horizontal: 23, vertical: 5),
+          itemPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           items: List.generate(3, (index) {
             final icons = [
-              Icons.home,
-              Icons.chat,
+              CupertinoIcons.home,
+              Icons.chat_outlined,
               Icons.account_circle,
             ];
             final labels = ['Home', 'Chats', 'Profile'];
@@ -65,7 +67,10 @@ class _InvestorMainScreenState extends State<InvestorMainScreen> {
                   Icon(
                     icons[index],
                     size: 22,
-                    color: isSelected ? Color(0xFF2C3E50) : Colors.grey,
+                    color:
+                        isSelected
+                            ? theme.colorScheme.primary
+                            : theme.colorScheme.secondary.withAlpha(120),
                   ),
                   SizedBox(height: 2),
                   Text(
@@ -73,7 +78,10 @@ class _InvestorMainScreenState extends State<InvestorMainScreen> {
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? Color(0xFF2C3E50) : Colors.grey,
+                      color:
+                          isSelected
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.secondary.withAlpha(120),
                     ),
                   ),
                 ],
@@ -84,6 +92,5 @@ class _InvestorMainScreenState extends State<InvestorMainScreen> {
         ),
       ),
     );
-    
   }
 }

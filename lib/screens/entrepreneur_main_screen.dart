@@ -2,55 +2,61 @@ import 'package:depi_graduation_project/screens/chat_rooms_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_company_profile_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_home_screen.dart';
 import 'package:depi_graduation_project/screens/entrepreneur_profile_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class EntrepreneurMainScreen extends StatefulWidget {
-  const EntrepreneurMainScreen({super.key});
+  final VoidCallback? toggleTheme;
+  const EntrepreneurMainScreen({super.key, this.toggleTheme});
 
   @override
   State<EntrepreneurMainScreen> createState() => _EntrepreneurMainScreenState();
 }
 
 class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
-  List<Widget> screens = [
-    EntrepreneurHomeScreen(),
-    EntrepreneurCompanyProfileScreen(),
-        ChatRoomsScreen(),
-    EntrepreneurProfileScreen(),
-  ];
+  late List<Widget> screens;
+  
+  @override
+  void initState() {
+    super.initState();
+    screens = [
+      EntrepreneurHomeScreen(toggleTheme: widget.toggleTheme),
+      ChatRoomsScreen(),
+      EntrepreneurCompanyProfileScreen(),
+      EntrepreneurProfileScreen(),
+    ];
+  }
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: IndexedStack(index: selectedIndex, children: screens),
       bottomNavigationBar: Container(
-        height: 63,
+        height: 68,
         padding: EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
+          color: theme.scaffoldBackgroundColor,
           border: Border(
-            top: BorderSide(
-              color: Color(0xFF2C3E50).withAlpha(30),
-              width: 0.5,
-            ),
+            top: BorderSide(color: theme.colorScheme.primary, width: 0.2),
           ),
         ),
         child: SalomonBottomBar(
-          selectedColorOpacity: 0.05,
-          selectedItemColor: Color(0xFF2C3E50),
-          unselectedItemColor: Colors.grey,
+          selectedColorOpacity: 0.1,
+          selectedItemColor: theme.colorScheme.primary,
+          unselectedItemColor: theme.colorScheme.secondary.withAlpha(120),
           currentIndex: selectedIndex,
           onTap: (index) => setState(() => selectedIndex = index),
-          backgroundColor: Theme.of(context).colorScheme.surface,
           itemPadding: EdgeInsets.symmetric(horizontal: 23, vertical: 5),
           items: List.generate(4, (index) {
             final icons = [
-              Icons.home,
+              CupertinoIcons.home,
+              Icons.chat_outlined,
               Icons.business,
-              Icons.chat,
               Icons.account_circle,
             ];
-            final labels = ['Home', 'Company', 'Chats','Profile'];
+            final labels = ['Home', 'Chats', 'Company', 'Profile'];
 
             final isSelected = selectedIndex == index;
 
@@ -60,8 +66,11 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
                 children: [
                   Icon(
                     icons[index],
-                    size: 22,
-                    color: isSelected ? Color(0xFF2C3E50) : Colors.grey,
+                    size: 23,
+                    color:
+                        isSelected
+                            ? theme.colorScheme.primary
+                            : (theme.colorScheme.secondary.withAlpha(120)),
                   ),
                   SizedBox(height: 2),
                   Text(
@@ -69,7 +78,10 @@ class _EntrepreneurMainScreenState extends State<EntrepreneurMainScreen> {
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w500,
-                      color: isSelected ? Color(0xFF2C3E50) : Colors.grey,
+                      color:
+                          isSelected
+                              ? theme.colorScheme.primary
+                              : ( theme.colorScheme.secondary.withAlpha(120)),
                     ),
                   ),
                 ],

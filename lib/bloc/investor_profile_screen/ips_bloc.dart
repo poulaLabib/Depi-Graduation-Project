@@ -34,15 +34,15 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       final inv = await investorService.getInvestor(uid: auth.currentUser!.uid);
       final updatedData = {
         'name': event.name,
-        'InvestorType': event.investorType,
+        'investorType': event.investorType,
         'about': event.about,
         'phoneNumber': event.phoneNumber,
         'experience': event.experience,
         'skills': event.skills,
-        'PreferredIndustries': event.preferredIndustries,
+        'preferredIndustries': event.preferredIndustries,
         'investmentCapacity': event.investmentCapacity,
         'photoUrl': inv.photoUrl,
-        'NationalIdUrl': inv.nationalIdUrl,
+        'nationalIdUrl': inv.nationalIdUrl,
       };
 
       await investorService.updateInvestor(

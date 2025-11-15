@@ -33,8 +33,9 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(247, 240, 225, 1),
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -44,10 +45,10 @@ class _SignUpState extends State<SignUp> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 60),
-                const Text(
+                Text(
                   "Sign Up",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
                   ),
@@ -55,10 +56,10 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 20),
 
                 // full name
-                const Text(
+                Text(
                   "Full Name",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -66,7 +67,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 5),
                 TextFormField(
                   controller: _fullNameController,
-                  decoration: _inputDecoration(),
+                  decoration: _inputDecoration(theme),
                   validator:
                       (value) =>
                           value == null || value.isEmpty
@@ -76,10 +77,10 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 8),
 
                 //email
-                const Text(
+                Text(
                   "Email",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -87,7 +88,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 5),
                 TextFormField(
                   controller: _emailController,
-                  decoration: _inputDecoration(),
+                  decoration: _inputDecoration(theme),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Email is required';
@@ -103,10 +104,10 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 8),
 
-                const Text(
+                Text(
                   "Password",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -115,7 +116,7 @@ class _SignUpState extends State<SignUp> {
                 TextFormField(
                   controller: _passwordController,
                   obscureText: true,
-                  decoration: _inputDecoration(),
+                  decoration: _inputDecoration(theme),
                   validator:
                       (value) =>
                           value == null || value.length < 6
@@ -125,10 +126,10 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 8),
 
                 //confirm password
-                const Text(
+                Text(
                   "Confirm Password",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: theme.colorScheme.onSurface,
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),
@@ -137,7 +138,7 @@ class _SignUpState extends State<SignUp> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
-                  decoration: _inputDecoration(),
+                  decoration: _inputDecoration(theme),
                   validator:
                       (value) =>
                           value != _passwordController.text
@@ -182,23 +183,23 @@ class _SignUpState extends State<SignUp> {
                       width: 150,
                       height: 50,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF91C7E5),
+                        color: theme.colorScheme.primary,
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withAlpha(100),
+                            color: theme.colorScheme.primary.withAlpha(100),
                             blurRadius: 4,
                             offset: const Offset(2, 2),
                           ),
                         ],
                       ),
                       alignment: Alignment.center,
-                      child: const Text(
+                      child: Text(
                         "Sign Up",
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black,
+                          color: theme.colorScheme.onPrimary,
                         ),
                       ),
                     ),
@@ -224,11 +225,11 @@ class _SignUpState extends State<SignUp> {
                           "Already have an account?",
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
-                            color: Colors.black,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ),
                         Divider(
-                          color: Colors.black,
+                          color: theme.colorScheme.onSurface,
                           indent: 90,
                           endIndent: 90,
                           height: 0,
@@ -246,17 +247,17 @@ class _SignUpState extends State<SignUp> {
   }
 
   // simple helper for consistent styling
-  InputDecoration _inputDecoration() {
+  InputDecoration _inputDecoration(ThemeData theme) {
     return InputDecoration(
       filled: true,
-      fillColor: const Color(0xFF91C7E5),
+      fillColor: theme.colorScheme.surface,
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xFF91C7E5)),
+        borderSide: BorderSide(color: theme.colorScheme.secondary),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
-        borderSide: const BorderSide(color: Color(0xFF91C7E5)),
+        borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
       ),
     );
   }

@@ -2,6 +2,8 @@ import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/company_bloc.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/cps_event.dart';
 import 'package:depi_graduation_project/bloc/company_profile_screen/cps_state.dart';
+import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_field.dart';
+import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,7 +78,7 @@ class _EntrepreneurCompanyProfileScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocBuilder<CompanyBloc, CompanyState>(
         builder: (context, state) {
           if (state is LoadingCompanyProfile) {
@@ -124,253 +126,360 @@ class _EntrepreneurCompanyProfileScreenState
   Widget _buildDisplayMode(BuildContext context, DisplayCompanyInfo state) {
     return SafeArea(
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Top Bar
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                IconButton(
-                  tooltip: 'Edit',
-
-                  icon: Icon(CupertinoIcons.square_pencil, color: Theme.of(context).colorScheme.primary,),
-                  onPressed: () {
-                    context.read<CompanyBloc>().add(EditCompanyButtonPressed());
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // Company Logo
-            Center(
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child:
-                    state.company.logoUrl.isNotEmpty
-                        ? ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            state.company.logoUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(
-                                Icons.camera_alt,
-                                size: 40,
-                                color: Colors.grey,
-                              );
-                            },
-                          ),
-                        )
-                        : const Icon(
-                          Icons.camera_alt,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: 10,
               ),
-            ),
-            const SizedBox(height: 12),
-            Center(
-              child: SizedBox(
-                width: 200,
-                child: AutoText(
-                  state.company.name.isEmpty
-                      ? "Company Name"
-                      : state.company.name,
-                  maxFontSize: 20,
-                  minFontSize: 18,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.roboto(
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: -0.2,
-                    color: Colors.black87,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Container(),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      padding: EdgeInsets.all(4),
+                      tooltip: 'Edit',
+                      onPressed: () {
+                        context.read<CompanyBloc>().add(EditCompanyButtonPressed());
+                      },
+                      icon: Icon(
+                        CupertinoIcons.square_pencil,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 22,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Divider(color: Colors.black12, thickness: 1),
-            const SizedBox(height: 8),
-
-            // Company Information
-            buildLabel("Description"),
-            buildDisplayBox(
-              state.company.description.isEmpty
-                  ? "No description"
-                  : state.company.description,
-            ),
-
-            Row(
-              children: [
-                Expanded(child: buildLabel("Founded")),
-                const SizedBox(width: 12),
-                Expanded(child: buildLabel("Team Size")),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.founded == 0
-                        ? "Not set"
-                        : state.company.founded.toString(),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.teamSize == 0
-                        ? "Not set"
-                        : state.company.teamSize.toString(),
-                  ),
-                ),
-              ],
-            ),
-
-            Row(
-              children: [
-                Expanded(child: buildLabel("Industry")),
-                const SizedBox(width: 12),
-                Expanded(child: buildLabel("Stage")),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.industry.isEmpty
-                        ? "Not set"
-                        : state.company.industry,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.stage.isEmpty
-                        ? "Not set"
-                        : state.company.stage,
-                  ),
-                ),
-              ],
-            ),
-
-            Row(
-              children: [
-                Expanded(child: buildLabel("Currency")),
-                const SizedBox(width: 12),
-                Expanded(child: buildLabel("Location")),
-              ],
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.currency.isEmpty
-                        ? "Not set"
-                        : state.company.currency,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: buildDisplayBox(
-                    state.company.location.isEmpty
-                        ? "Not set"
-                        : state.company.location,
-                  ),
-                ),
-              ],
-            ),
-
-            // Team Members
-            buildLabel("Team Members"),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-              decoration: BoxDecoration(
-                color: const Color(0xFF91C7E5).withAlpha(200),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.black.withAlpha(40), width: 1),
-              ),
-              child:
-                  state.company.teamMembers.isEmpty
-                      ? Text(
-                        "No team members added",
-                        style: GoogleFonts.roboto(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black54,
-                        ),
-                      )
-                      : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children:
-                            state.company.teamMembers.map((member) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 4,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 6,
-                                      height: 6,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.black,
+                  Column(
+                    spacing: 10,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            barrierDismissible: true,
+                            barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              contentPadding: EdgeInsets.zero,
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Center(
+                                    child: ClipOval(
+                                      child: Image.network(
+                                        state.company.logoUrl,
+                                        fit: BoxFit.cover,
+                                        width: 200,
+                                        height: 200,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            width: 200,
+                                            height: 200,
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.camera_alt,
+                                              size: 60,
+                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                        child: ClipOval(
+                          child: state.company.logoUrl.isNotEmpty
+                              ? Image.network(
+                                  state.company.logoUrl,
+                                  height: 115,
+                                  width: 115,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      height: 115,
+                                      width: 115,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                                         shape: BoxShape.circle,
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        "${member['name'] ?? 'Unknown'} - ${member['role'] ?? 'Unknown'}",
-                                        style: GoogleFonts.roboto(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black87,
-                                        ),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        size: 40,
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                       ),
-                                    ),
-                                  ],
+                                    );
+                                  },
+                                )
+                              : Container(
+                                  height: 115,
+                                  width: 115,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.camera_alt,
+                                    size: 40,
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                  ),
                                 ),
-                              );
-                            }).toList(),
-                      ),
-            ),
-
-            // Verified Certificate
-            buildLabel("Verified Certificate (optional)"),
-            Container(
-              height: 150,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFF91C7E5).withAlpha(200),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: Colors.black.withAlpha(40),
-                  width: 1,
-                ),
-              ),
-              child:
-                  state.company.certificateUrl.isNotEmpty
-                      ? ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          state.company.certificateUrl,
-                          fit: BoxFit.contain,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildCertificatePlaceholder(context);
-                          },
                         ),
-                      )
-                      : _buildCertificatePlaceholder(context),
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: AutoText(
+                          state.company.name.isEmpty
+                              ? "Company Name"
+                              : state.company.name,
+                          maxFontSize: 20,
+                          minFontSize: 20,
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.roboto(
+                            letterSpacing: -0.2,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 15),
+
+            // Company Information
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245).withAlpha(0),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Column(
+                    spacing: 20,
+                    children: [
+                      EntrepreneurProfileField(
+                        title: "Description",
+                        value: state.company.description.isEmpty
+                            ? "No description"
+                            : state.company.description,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Founded",
+                              value: state.company.founded == 0
+                                  ? "Not set"
+                                  : state.company.founded.toString(),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Team Size",
+                              value: state.company.teamSize == 0
+                                  ? "Not set"
+                                  : state.company.teamSize.toString(),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Industry",
+                              value: state.company.industry.isEmpty
+                                  ? "Not set"
+                                  : state.company.industry,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Stage",
+                              value: state.company.stage.isEmpty
+                                  ? "Not set"
+                                  : state.company.stage,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Currency",
+                              value: state.company.currency.isEmpty
+                                  ? "Not set"
+                                  : state.company.currency,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileField(
+                              title: "Location",
+                              value: state.company.location.isEmpty
+                                  ? "Not set"
+                                  : state.company.location,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        thickness: 0.6,
+                      ),
+                      // Team Members
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Column(
+                          spacing: 10,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Team Members",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                              ),
+                              child: state.company.teamMembers.isEmpty
+                                  ? Text(
+                                      "No team members added",
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
+                                        color: Theme.of(context).colorScheme.onSurface,
+                                      ),
+                                    )
+                                  : Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: state.company.teamMembers.map((member) {
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(vertical: 4),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 6,
+                                                height: 6,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context).colorScheme.onSurface,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Expanded(
+                                                child: Text(
+                                                  "${member['name'] ?? 'Unknown'} - ${member['role'] ?? 'Unknown'}",
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Theme.of(context).colorScheme.onSurface,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        thickness: 0.6,
+                      ),
+                      // Verified Certificate
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Column(
+                          spacing: 10,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Verified Certificate (optional)",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color: Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: state.company.certificateUrl.isNotEmpty
+                                  ? () {
+                                      showDialog(
+                                        barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          backgroundColor: Colors.transparent,
+                                          content: Image.network(
+                                            state.company.certificateUrl,
+                                            fit: BoxFit.contain,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return _buildCertificatePlaceholder(context);
+                                            },
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  : null,
+                              child: Container(
+                                height: 170,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: state.company.certificateUrl.isNotEmpty
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.network(
+                                          state.company.certificateUrl,
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            return _buildCertificatePlaceholder(context);
+                                          },
+                                        ),
+                                      )
+                                    : _buildCertificatePlaceholder(context),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -380,402 +489,455 @@ class _EntrepreneurCompanyProfileScreenState
 
   Widget _buildEditMode(BuildContext context, EditCompanyInfo state) {
     return SafeArea(
-      child: Column(
-        children: [
-          // Top Bar
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                buildCircleActionButton(
-                  context,
-                  CupertinoIcons.xmark,
-                  () {
-                    _clearControllers();
-                    context.read<CompanyBloc>().add(
-                      CancelCompanyButtonPressed(),
-                    );
-                  },
-                  iconColor: const Color.fromARGB(255, 173, 47, 38),
-                ),
-                buildCircleActionButton(
-                  context,
-                  CupertinoIcons.check_mark,
-                  () {
-                    // Debug print
-                    print('Saving team members: $_tempTeamMembers');
-
-                    context.read<CompanyBloc>().add(
-                      SaveCompanyButtonPressed(
-                        name: _nameController.text.trim(),
-                        description: _descriptionController.text.trim(),
-                        founded: int.tryParse(_foundedController.text) ?? 0,
-                        teamSize: int.tryParse(_teamSizeController.text) ?? 0,
-                        industry: _industryController.text.trim(),
-                        stage: _stageController.text.trim(),
-                        currency: _currencyController.text.trim(),
-                        location: _locationController.text.trim(),
-                        teamMembers: List<Map<String, dynamic>>.from(
-                          _tempTeamMembers,
-                        ),
-                      ),
-                    );
-
-                    _clearControllers();
-                  },
-                  iconColor: const Color.fromARGB(255, 56, 130, 58),
-                ),
-              ],
-            ),
-          ),
-
-          // Scrollable Content
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 5,
+                vertical: 10,
+              ),
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
-                  // Company Logo & Name
-                  Center(
-                    child: Column(
-                      spacing: 10,
-                      children: [
-                        SizedBox(
-                          width: 120,
-                          height: 120,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child:
-                                    state.company.logoUrl.isNotEmpty
-                                        ? Image.network(
-                                          state.company.logoUrl,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (
-                                            context,
-                                            error,
-                                            stackTrace,
-                                          ) {
-                                            return Container(
-                                              color: const Color(
-                                                0xFF91C7E5,
-                                              ).withAlpha(200),
-                                              alignment: Alignment.center,
-                                              child: const Icon(
-                                                Icons.camera_alt,
-                                                size: 40,
-                                                color: Colors.black54,
-                                              ),
-                                            );
-                                          },
-                                        )
-                                        : Container(
-                                          color: const Color(
-                                            0xFF91C7E5,
-                                          ).withAlpha(200),
-                                          alignment: Alignment.center,
-                                          child: const Icon(
-                                            Icons.camera_alt,
-                                            size: 40,
-                                            color: Colors.black54,
-                                          ),
+                  Container(),
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: IconButton(
+                      padding: EdgeInsets.all(4),
+                      tooltip: 'Save',
+                      onPressed: () {
+                        context.read<CompanyBloc>().add(
+                          SaveCompanyButtonPressed(
+                            name: _nameController.text.trim(),
+                            description: _descriptionController.text.trim(),
+                            founded: int.tryParse(_foundedController.text) ?? 0,
+                            teamSize: int.tryParse(_teamSizeController.text) ?? 0,
+                            industry: _industryController.text.trim(),
+                            stage: _stageController.text.trim(),
+                            currency: _currencyController.text.trim(),
+                            location: _locationController.text.trim(),
+                            teamMembers: List<Map<String, dynamic>>.from(
+                              _tempTeamMembers,
+                            ),
+                          ),
+                        );
+                        _clearControllers();
+                      },
+                      icon: Icon(
+                        CupertinoIcons.check_mark,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: IconButton(
+                      padding: EdgeInsets.all(4),
+                      tooltip: 'Cancel',
+                      onPressed: () {
+                        _clearControllers();
+                        context.read<CompanyBloc>().add(
+                          CancelCompanyButtonPressed(),
+                        );
+                      },
+                      icon: Icon(
+                        CupertinoIcons.xmark,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                  Column(
+                    spacing: 10,
+                    children: [
+                      Stack(
+                        children: [
+                          ClipOval(
+                            child: state.company.logoUrl.isNotEmpty
+                                ? Image.network(
+                                    state.company.logoUrl,
+                                    height: 115,
+                                    width: 115,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 115,
+                                        width: 115,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                          shape: BoxShape.circle,
                                         ),
-                              ),
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Material(
-                                  color: Colors.black.withAlpha(80),
-                                  child: InkWell(
-                                    onTap: () {
-                                      context.read<CompanyBloc>().add(
-                                        EditCompanyLogo(),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 40,
+                                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                        ),
                                       );
                                     },
-                                    child: Icon(
-                                      CupertinoIcons.cloud_upload_fill,
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      size: 32,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 220,
-                          child: TextField(
-                            controller: _nameController,
-                            textAlign: TextAlign.center,
-                            decoration: InputDecoration(
-                              hintText: "Company Name",
-                              hintStyle: GoogleFonts.roboto(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: -0.2,
-                                color: Colors.black38,
-                              ),
-                              border: InputBorder.none,
-                              isDense: true,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                            style: GoogleFonts.roboto(
-                              letterSpacing: -0.2,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                            cursorColor: Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Fields
-                  buildLabel("Description"),
-                  buildEditBox(_descriptionController, maxLines: 3),
-
-                  Row(
-                    children: [
-                      Expanded(child: buildLabel("Founded")),
-                      const SizedBox(width: 12),
-                      Expanded(child: buildLabel("Team Size")),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: buildEditBox(
-                          _foundedController,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: buildEditBox(
-                          _teamSizeController,
-                          keyboardType: TextInputType.number,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(child: buildLabel("Industry")),
-                      const SizedBox(width: 12),
-                      Expanded(child: buildLabel("Stage")),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: buildEditBox(_industryController)),
-                      const SizedBox(width: 12),
-                      Expanded(child: buildEditBox(_stageController)),
-                    ],
-                  ),
-
-                  Row(
-                    children: [
-                      Expanded(child: buildLabel("Currency")),
-                      const SizedBox(width: 12),
-                      Expanded(child: buildLabel("Location")),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      Expanded(child: buildEditBox(_currencyController)),
-                      const SizedBox(width: 12),
-                      Expanded(child: buildEditBox(_locationController)),
-                    ],
-                  ),
-
-                  // Team Members
-                  buildLabel("Team Members"),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                      horizontal: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF91C7E5).withAlpha(200),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.black.withAlpha(40),
-                        width: 1,
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        if (_tempTeamMembers.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Text(
-                              'No team members yet',
-                              style: GoogleFonts.roboto(
-                                color: Colors.black54,
-                                fontSize: 14,
-                              ),
-                            ),
-                          )
-                        else
-                          ..._tempTeamMembers.asMap().entries.map((entry) {
-                            final index = entry.key;
-                            final member = entry.value;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    width: 6,
-                                    height: 6,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.black,
+                                  )
+                                : Container(
+                                    height: 115,
+                                    width: 115,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context).colorScheme.secondary.withAlpha(20),
                                       shape: BoxShape.circle,
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      "${member['name']} - ${member['role']}",
-                                      style: GoogleFonts.roboto(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Colors.black87,
-                                      ),
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      size: 40,
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.remove_circle,
-                                      color: Colors.red,
-                                      size: 20,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _tempTeamMembers.removeAt(index);
-                                      });
-                                    },
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }),
-                        const SizedBox(height: 8),
-                        InkWell(
-                          onTap: _addTeamMember,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 10,
-                              horizontal: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black.withAlpha(30),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  size: 18,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                const SizedBox(width: 6),
-                                Text(
-                                  'Add Team Member',
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Certificate
-                  buildLabel("Verified Certificate (optional)"),
-                  Container(
-                    height: 150,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF91C7E5).withAlpha(200),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.black.withAlpha(40),
-                        width: 1,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          state.company.certificateUrl.isNotEmpty
-                              ? Image.network(
-                                state.company.certificateUrl,
-                                fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    color: const Color(
-                                      0xFF91C7E5,
-                                    ).withAlpha(200),
-                                    child: _buildCertificatePlaceholder(
-                                      context,
-                                    ),
-                                  );
-                                },
-                              )
-                              : Container(
-                                color: const Color(0xFF91C7E5).withAlpha(200),
-                                child: _buildCertificatePlaceholder(context),
-                              ),
-                          Material(
-                            color: Colors.black.withAlpha(80),
-                            child: InkWell(
+                          Positioned.fill(
+                            child: GestureDetector(
                               onTap: () {
                                 context.read<CompanyBloc>().add(
-                                  EditCompanyCertificate(),
+                                  EditCompanyLogo(),
                                 );
                               },
-                              child: Icon(
-                                CupertinoIcons.cloud_upload_fill,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 32,
+                              child: Container(
+                                alignment: Alignment.center,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.onSurface.withAlpha(80),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  CupertinoIcons.cloud_upload_fill,
+                                  color: Theme.of(context).colorScheme.primary,
+                                  size: 32,
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ),
+                      SizedBox(
+                        width: 220,
+                        child: TextField(
+                          controller: _nameController,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: "Company Name",
+                            hintStyle: GoogleFonts.roboto(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: -0.2,
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                            ),
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          style: GoogleFonts.roboto(
+                            letterSpacing: -0.2,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                          cursorColor: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 30),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+            const SizedBox(height: 15),
+            // Fields
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 15),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 245, 245, 245).withAlpha(0),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                children: [
+                  Column(
+                    spacing: 20,
+                    children: [
+                            EntrepreneurProfileTextfield(
+                              title: "Description",
+                              controller: _descriptionController,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Founded",
+                                    controller: _foundedController,
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Team Size",
+                                    controller: _teamSizeController,
+                                    keyboardType: TextInputType.number,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Industry",
+                                    controller: _industryController,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Stage",
+                                    controller: _stageController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Currency",
+                                    controller: _currencyController,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: EntrepreneurProfileTextfield(
+                                    title: "Location",
+                                    controller: _locationController,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(
+                              color: Theme.of(context).colorScheme.secondary,
+                              thickness: 0.6,
+                            ),
+                            // Team Members
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Column(
+                                spacing: 10,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Team Members",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: Theme.of(context).colorScheme.onSecondary,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(25),
+                                      color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                      border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        if (_tempTeamMembers.isEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: Text(
+                                              'No team members yet',
+                                              style: TextStyle(
+                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          )
+                                        else
+                                          ..._tempTeamMembers.asMap().entries.map((entry) {
+                                            final index = entry.key;
+                                            final member = entry.value;
+                                            return Padding(
+                                              padding: const EdgeInsets.symmetric(vertical: 4),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    width: 6,
+                                                    height: 6,
+                                                    decoration: BoxDecoration(
+                                                      color: Theme.of(context).colorScheme.onSurface,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "${member['name']} - ${member['role']}",
+                                                      style: TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight: FontWeight.w400,
+                                                        color: Theme.of(context).colorScheme.onSurface,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.remove_circle,
+                                                      color: Theme.of(context).colorScheme.error,
+                                                      size: 20,
+                                                    ),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        _tempTeamMembers.removeAt(index);
+                                                      });
+                                                    },
+                                                    padding: EdgeInsets.zero,
+                                                    constraints: const BoxConstraints(),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }),
+                                        const SizedBox(height: 8),
+                                        InkWell(
+                                          onTap: _addTeamMember,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 10,
+                                              horizontal: 12,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).cardColor.withOpacity(0.7),
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Icon(
+                                                  Icons.add,
+                                                  size: 18,
+                                                  color: Theme.of(context).colorScheme.primary,
+                                                ),
+                                                const SizedBox(width: 6),
+                                                Text(
+                                                  'Add Team Member',
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Theme.of(context).colorScheme.primary,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Divider(
+                              color: Theme.of(context).colorScheme.secondary,
+                              thickness: 0.6,
+                            ),
+                            // Certificate
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Column(
+                                spacing: 10,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Verified Certificate (optional)",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color: Theme.of(context).colorScheme.onSecondary,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: state.company.certificateUrl.isNotEmpty
+                                        ? () {
+                                            showDialog(
+                                              barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                backgroundColor: Colors.transparent,
+                                                content: Image.network(
+                                                  state.company.certificateUrl,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return _buildCertificatePlaceholder(context);
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        : null,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          height: 170,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: state.company.certificateUrl.isNotEmpty
+                                              ? ClipRRect(
+                                                  borderRadius: BorderRadius.circular(8),
+                                                  child: Image.network(
+                                                    state.company.certificateUrl,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context, error, stackTrace) {
+                                                      return _buildCertificatePlaceholder(context);
+                                                    },
+                                                  ),
+                                                )
+                                              : _buildCertificatePlaceholder(context),
+                                        ),
+                                        Positioned.fill(
+                                          child: Material(
+                                            color: Theme.of(context).colorScheme.onSurface.withAlpha(80),
+                                            borderRadius: BorderRadius.circular(8),
+                                            child: InkWell(
+                                              onTap: () {
+                                                context.read<CompanyBloc>().add(
+                                                  EditCompanyCertificate(),
+                                                );
+                                              },
+                                              child: Icon(
+                                                CupertinoIcons.cloud_upload_fill,
+                                                color: Theme.of(context).colorScheme.primary,
+                                                size: 32,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        );
   }
 
   void _addTeamMember() {
@@ -785,24 +947,61 @@ class _EntrepreneurCompanyProfileScreenState
         final nameController = TextEditingController();
         final roleController = TextEditingController();
 
+        final theme = Theme.of(context);
         return AlertDialog(
-          title: const Text('Add Team Member'),
+          backgroundColor: theme.cardColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Text(
+            'Add Team Member',
+            style: TextStyle(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(
+                style: TextStyle(color: theme.colorScheme.onSurface),
+                decoration: InputDecoration(
                   labelText: 'Name',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary.withOpacity(0.5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: roleController,
-                decoration: const InputDecoration(
+                style: TextStyle(color: theme.colorScheme.onSurface),
+                decoration: InputDecoration(
                   labelText: 'Role',
-                  border: OutlineInputBorder(),
+                  labelStyle: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary.withOpacity(0.5)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                  ),
                 ),
               ),
             ],
@@ -810,7 +1009,10 @@ class _EntrepreneurCompanyProfileScreenState
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: TextStyle(color: theme.colorScheme.onSurface),
+              ),
             ),
             TextButton(
               onPressed: () {
@@ -825,7 +1027,10 @@ class _EntrepreneurCompanyProfileScreenState
                   Navigator.pop(context);
                 }
               },
-              child: const Text('Add'),
+              child: Text(
+                'Add',
+                style: TextStyle(color: theme.colorScheme.primary),
+              ),
             ),
           ],
         );
@@ -834,6 +1039,7 @@ class _EntrepreneurCompanyProfileScreenState
   }
 
   Widget _buildCertificatePlaceholder(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -841,15 +1047,15 @@ class _EntrepreneurCompanyProfileScreenState
           Icon(
             Icons.no_photography,
             size: 42,
-            color: Colors.black,
+            color: theme.colorScheme.onSurface.withOpacity(0.5),
           ),
           const SizedBox(height: 6),
           Text(
             'No certificate uploaded',
-            style: GoogleFonts.roboto(
+            style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Colors.black54,
+              color: theme.colorScheme.onSurface.withOpacity(0.5),
             ),
           ),
         ],
@@ -857,87 +1063,4 @@ class _EntrepreneurCompanyProfileScreenState
     );
   }
 
-  Widget buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6, top: 12),
-      child: Text(
-        text,
-        style: GoogleFonts.roboto(
-          fontWeight: FontWeight.w600,
-          fontSize: 13.5,
-          letterSpacing: -0.1,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-
-  Widget buildDisplayBox(String text) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF91C7E5).withAlpha(200),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black.withAlpha(40), width: 1),
-      ),
-      child: Text(
-        text,
-        style: GoogleFonts.roboto(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Colors.black87,
-          height: 1.3,
-        ),
-      ),
-    );
-  }
-
-  Widget buildEditBox(
-    TextEditingController controller, {
-    int maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF91C7E5).withAlpha(200),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.black.withAlpha(40), width: 1),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        decoration: const InputDecoration(border: InputBorder.none),
-        style: GoogleFonts.roboto(
-          fontSize: 15,
-          fontWeight: FontWeight.w500,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-
-  Widget buildCircleActionButton(
-    BuildContext context,
-    IconData icon,
-    VoidCallback onPressed, {
-    Color? iconColor,
-  }) {
-    final borderColor = Theme.of(context).colorScheme.primary.withOpacity(0.35);
-    final color = iconColor ?? Theme.of(context).colorScheme.primary;
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        padding: const EdgeInsets.all(7),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: borderColor),
-        ),
-        child: Icon(icon, color: color, size: 18),
-      ),
-    );
-  }
 }

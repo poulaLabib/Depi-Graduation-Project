@@ -7,7 +7,6 @@ import 'package:depi_graduation_project/bloc/entrepreneur_profile_screen/eps_sta
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_profile_textfield.dart';
 import 'package:depi_graduation_project/custom%20widgets/entrepreneur_skills_field%20.dart';
 import 'package:depi_graduation_project/custom%20widgets/skill_card.dart';
-import 'package:depi_graduation_project/screens/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +27,7 @@ class EntrepreneurProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: BlocConsumer<EpsBloc, EpsState>(
         builder: (context, state) {
           if (state is LoadingProfile) {
@@ -38,7 +38,10 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 5,
+                        vertical: 10,
+                      ),
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
@@ -47,8 +50,7 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                             top: 0,
                             right: 0,
                             child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
+                              padding: EdgeInsets.all(4),
                               tooltip: 'Edit',
                               onPressed: () {
                                 context.read<EpsBloc>().add(
@@ -66,21 +68,11 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                             top: 0,
                             left: 0,
                             child: IconButton(
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
+                              padding: EdgeInsets.all(4),
                               tooltip: 'Logout',
                               onPressed: () {
                                 context.read<AuthBloc>().add(
                                   LogoutButtonPressed(),
-                                );
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                }
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LogIn(),
-                                  ),
                                 );
                               },
                               icon: Icon(
@@ -173,73 +165,87 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+
                     SizedBox(height: 15),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                            255,
-                            245,
-                            245,
-                            245,
-                          ).withAlpha(0),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(
+                          255,
+                          245,
+                          245,
+                          245,
+                        ).withAlpha(0),
 
-                          // border: Border.all(
-                          //   color: Colors.black.withAlpha(20),
-                          //   width: 1,
-                          // ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            Column(
-                              spacing: 10,
-                              children: [
-                                EntrepreneurProfileField(
-                                  title: "About",
-                                  value: state.entrepreneur.about,
-                                ),
-                                EntrepreneurProfileField(
-                                  title: "Phone Number",
-                                  value: state.entrepreneur.phoneNumber,
-                                ),
-                                EntrepreneurProfileField(
-                                  title: "Experience",
-                                  value: state.entrepreneur.experience,
-                                ),
-                                EntrepreneurSkillsField(
-                                  title: "Skills",
-                                  skills: state.entrepreneur.skills,
-                                  state: 'toView',
-                                ),
+                        // border: Border.all(
+                        //   color: Colors.black.withAlpha(20),
+                        //   width: 1,
+                        // ),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Column(
+                            spacing: 20,
+                            children: [
+                              EntrepreneurProfileField(
+                                title: "About",
+                                value: state.entrepreneur.about,
+                              ),
+                              // Divider(
+                              //   color: Theme.of(context).colorScheme.secondary,
+                              //   thickness: 0.6,
+                              // ),
+                              EntrepreneurProfileField(
+                                title: "Phone Number",
+                                value: state.entrepreneur.phoneNumber,
+                              ),
 
-                                EntrepreneurProfileField(
-                                  title: "Role",
-                                  value: state.entrepreneur.role,
-                                ),
-                              ],
-                            ),
+                              EntrepreneurProfileField(
+                                title: "Experience",
+                                value: state.entrepreneur.experience,
+                              ),
+                              EntrepreneurProfileField(
+                                title: "Role",
+                                value: state.entrepreneur.role,
+                              ),
+                              Divider(
+                                color: Theme.of(context).colorScheme.secondary,
+                                thickness: 0.6,
+                              ),
+                              EntrepreneurSkillsField(
+                                title: "Skills",
+                                skills: state.entrepreneur.skills,
+                                state: 'toView',
+                              ),
 
-                            SizedBox(height: 20),
-                            Align(
+                              Divider(
+                                color: Theme.of(context).colorScheme.secondary,
+                                thickness: 0.6,
+                              ),
+                            ],
+                          ),
+
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Align(
                               alignment: Alignment.centerLeft,
                               child: Column(
+                                spacing: 10,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "Personal ID",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13.5,
-                                      letterSpacing: -0.1,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onSecondary,
                                     ),
                                   ),
-                                  SizedBox(height: 6),
                                   GestureDetector(
                                     onTap: () {
                                       showDialog(
@@ -269,7 +275,7 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                                       );
                                     },
                                     child: Container(
-                                      height: 200, // smaller than 250
+                                      height: 170,
                                       decoration: BoxDecoration(
                                         color: const Color(
                                           0xFF91C7E5,
@@ -298,8 +304,8 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -318,7 +324,10 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
 
                       child: Stack(
                         alignment: Alignment.center,
@@ -461,133 +470,119 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 15),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          // color: const Color.fromARGB(
-                          //   255,
-                          //   245,
-                          //   245,
-                          //   245,
-                          // ).withAlpha(0),
-                          // border: Border.all(
-                          //   color: Colors.black.withAlpha(20),
-                          //   width: 1,
-                          // ),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            Column(
-                              spacing: 10,
-                              children: [
-                                EntrepreneurProfileTextfield(
-                                  title: "About",
-                                  controller: _aboutController,
-                                ),
-                                EntrepreneurProfileTextfield(
-                                  title: "Phone Number",
-                                  controller: _phoneController,
-                                ),
-                                EntrepreneurProfileTextfield(
-                                  title: "Experience",
-                                  controller: _experienceController,
-                                ),
-                                Stack(
-                                  children: [
-                                    EntrepreneurSkillsField(
-                                      title: "Skills",
-                                      skills: [
-                                        ...state.entrepreneur.skills,
-                                        ...state.tempSkills,
-                                      ],
-                                      state: 'toRemove',
-                                      onRemove: (skill) {
-                                        context.read<EpsBloc>().add(
-                                          RemoveTempSkill(skill: skill),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        children: [
+                          Column(
+                            spacing: 20,
+                            children: [
+                              EntrepreneurProfileTextfield(
+                                title: "About",
+                                controller: _aboutController,
+                              ),
+                              EntrepreneurProfileTextfield(
+                                title: "Phone Number",
+                                controller: _phoneController,
+                              ),
+                              EntrepreneurProfileTextfield(
+                                title: "Experience",
+                                controller: _experienceController,
+                              ),
+                              //                       Divider(
+                              //   color: Theme.of(context).colorScheme.secondary,
+                              //   thickness: 0.6,
+                              // ),
+                               EntrepreneurProfileTextfield(
+                                    title: "Role",
+                                    controller: _roleController,
+                                  ),
+                              Stack(
+                                children: [
+                                  EntrepreneurSkillsField(
+                                    title: "Skills",
+                                    skills: [
+                                      ...state.entrepreneur.skills,
+                                      ...state.tempSkills,
+                                    ],
+                                    state: 'toRemove',
+                                    onRemove: (skill) {
+                                      context.read<EpsBloc>().add(
+                                        RemoveTempSkill(skill: skill),
+                                      );
+                                    },
+                                  ),
+                                 
+
+                                  Positioned(
+                                    top: 23.5,
+                                    bottom: 2,
+                                    right: 25,
+                                    child: Builder(
+                                      builder: (context) {
+                                        return InkWell(
+                                          key: skillButtonKey,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+
+                                          onTap: () {
+                                            context.read<EpsBloc>().add(
+                                              AddSkillButtonPressed(),
+                                            );
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 6,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              border: Border.all(
+                                                color: Theme.of(context).colorScheme.primary.withAlpha(150),
+                                                width: 0.5,
+                                              ),
+                                            ),
+                                            child: Icon(
+                                              Icons.add,
+                                              color:Theme.of(context).colorScheme.onSurface,
+                                            ),
+                                          ),
                                         );
                                       },
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
 
-                                    Positioned(
-                                      top: 23.5,
-                                      bottom: 2,
-                                      right: 2,
-                                      child: Builder(
-                                        builder: (context) {
-                                          return InkWell(
-                                            key: skillButtonKey,
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-
-                                            onTap: () {
-                                              context.read<EpsBloc>().add(
-                                                AddSkillButtonPressed(),
-                                              );
-                                            },
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 6,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: const Color.fromARGB(
-                                                  255,
-                                                  245,
-                                                  245,
-                                                  245,
-                                                ).withAlpha(80),
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                border: Border.all(
-                                                  color: Color(
-                                                    0xFF2C3E50,
-                                                  ).withAlpha(50),
-                                                  width: 1,
-                                                ),
-                                              ),
-                                              child: Icon(
-                                                Icons.add,
-                                                color: Color(
-                                                  0xFF2C3E50,
-                                                ).withAlpha(200),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                EntrepreneurProfileTextfield(
-                                  title: "Role",
-                                  controller: _roleController,
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 20),
-                            Align(
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25),
+                            child: Align(
                               alignment: Alignment.centerLeft,
                               child: Column(
+                                spacing: 10,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     "Personal ID",
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 13.5,
-                                      letterSpacing: -0.1,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 13,
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onSecondary,
                                     ),
                                   ),
-                                  SizedBox(height: 6),
                                   Container(
-                                    height: 250,
+                                    height: 170,
                                     // width: 100,
                                     decoration: BoxDecoration(
                                       color: const Color(
@@ -621,13 +616,10 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                                             child: Container(
                                               alignment: Alignment.center,
                                               decoration: BoxDecoration(
-                                                color: Colors.black.withAlpha(
-                                                  80,
-                                                ),
+                                                color: Colors.black.withAlpha(80),
                                               ),
                                               child: Icon(
-                                                CupertinoIcons
-                                                    .cloud_upload_fill,
+                                                CupertinoIcons.cloud_upload_fill,
                                                 color:
                                                     Theme.of(
                                                       context,
@@ -642,8 +634,8 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                                 ],
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -662,14 +654,14 @@ class EntrepreneurProfileScreen extends StatelessWidget {
               showDialog(
                 context: parentContext,
                 barrierDismissible: true,
-                barrierColor: Colors.black.withAlpha(220),
+                barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
                 builder: (context) {
                   return AlertDialog(
-                    backgroundColor: Color(0xFF2C3E50).withAlpha(150),
+                    backgroundColor: Theme.of(context).cardColor,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(16),
                     ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                    contentPadding: const EdgeInsets.all(12),
                     content: StatefulBuilder(
                       builder: (context, setState) {
                         final editState =

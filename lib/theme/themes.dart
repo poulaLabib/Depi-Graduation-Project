@@ -1,16 +1,30 @@
 import 'package:flutter/material.dart';
 
-final appTheme = ThemeData(
-  useMaterial3: false,
-  colorScheme: ColorScheme.light(
-    // for scaffold background color
-    surface: Color.fromARGB(255, 255, 251, 222),
-    primary: Color.fromARGB(255, 106, 167, 226),
-    onPrimary: Colors.black,
-    secondary: Color.fromARGB(255, 161, 209, 255),
+final ThemeData lightTheme = ThemeData(
+  useMaterial3: true,
+  brightness: Brightness.light,
+  scaffoldBackgroundColor: const Color(0xFFFAF7F2),
+  colorScheme:  ColorScheme.light(
+    primary: Color(0xFF8C7A5B),
+    secondary: Color(0xFFC4B8A1),
+    surface: Color(0xFFEFE8DE),
+    onPrimary: Colors.white,
     onSecondary: Colors.black,
-    tertiary: Colors.white,
-    onTertiary: Colors.black,
+    onSurface: Colors.black87,
   ),
-  scaffoldBackgroundColor: const Color.fromARGB(255, 255, 251, 222),
+);
+
+final ThemeData darkTheme = ThemeData(
+  useMaterial3: true,
+
+  brightness: Brightness.dark,
+  scaffoldBackgroundColor: const Color(0xFF1F1C18),
+  colorScheme: const ColorScheme.dark(
+    primary: Color(0xFF9F8C6A),
+    secondary: Color(0xFF6A5E4B),
+    surface: Color(0xFF2A2622),
+    onPrimary: Colors.black,
+    onSecondary: Color.fromARGB(239, 255, 255, 255),
+    onSurface: Color.fromARGB(225, 255, 255, 255),
+  ),
 );

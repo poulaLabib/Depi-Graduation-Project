@@ -13,36 +13,42 @@ class EntrepreneurProfileField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: 6,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 13.5,
-            letterSpacing: -0.1,
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 10),
-          decoration: BoxDecoration(
-            color: const Color(0xFF91C7E5).withAlpha(200),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.black.withAlpha(40), width: 1),
-          ),
-          child: Text(
-            value,
+    final theme = Theme.of(context);
+    return Padding(
+      padding:  EdgeInsets.symmetric(horizontal: 25),
+      child: Column(
+        spacing: 10,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
             style: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 15,
-              color: Colors.black,
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              color: theme.colorScheme.onSecondary,
             ),
           ),
-        ),
-      ],
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: theme.colorScheme.secondary.withAlpha(20),
+              border: Border.all(color: theme.colorScheme.primary, width: 0.2),
+            ),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 16,
+                color: theme.colorScheme.onSurface,
+                // height: 1.6,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

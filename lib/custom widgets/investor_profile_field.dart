@@ -8,24 +8,37 @@ class ProfileField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 25),
       child: Column(
+        spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: cs.onSurface)),
-          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 13,
+              color: theme.colorScheme.onSecondary,
+            ),
+          ),
           Container(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-                color: cs.secondary, borderRadius: BorderRadius.circular(8)),
-            child: Text(value, style: TextStyle(color: cs.onSecondary)),
+              borderRadius: BorderRadius.circular(25),
+              color: theme.colorScheme.secondary.withAlpha(20),
+              border: Border.all(color: theme.colorScheme.primary, width: 0.2),
+            ),
+            child: Text(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                fontSize: 15,
+                color: theme.colorScheme.onSurface,
+              ),
+            ),
           ),
         ],
       ),
