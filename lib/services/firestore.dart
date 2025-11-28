@@ -654,6 +654,7 @@ class NotificationFirestoreService {
             .where('receiverId', isEqualTo: receiverId)
             .where('isRead', isEqualTo: false)
             .get();
+    if (unreadNotifications.docs.isEmpty) return;
 
     final batch = _db.batch();
     for (var doc in unreadNotifications.docs) {
