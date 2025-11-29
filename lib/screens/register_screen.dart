@@ -146,18 +146,12 @@ class _SignUpState extends State<SignUp> {
                               : null,
                 ),
                 const SizedBox(height: 15),
-                BlocConsumer<AuthBloc, AuthState>(
+                BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is AuthLoading) {
                       return Center(child: CircularProgressIndicator());
                     }
                     return SizedBox.shrink();
-                  },
-                  listener: (context, state) {
-                    if (state is AuthSuccessfull) {
-                      // Navigation will be handled by AuthGate
-                      Navigator.of(context).popUntil((route) => route.isFirst);
-                    }
                   },
                 ),
                 const SizedBox(height: 15),
@@ -175,7 +169,7 @@ class _SignUpState extends State<SignUp> {
                             userType: widget.userType,
                           ),
                         );
-                        // Navigation will be handled by AuthGate listener
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder:(context) =>  LogIn(email: _emailController.text, password: _passwordController.text,)));
                       }
                     },
                     borderRadius: BorderRadius.circular(16),
