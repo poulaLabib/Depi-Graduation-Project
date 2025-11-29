@@ -16,7 +16,7 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
   final AuthenticationService auth;
 
   IpsBloc({required this.investorService, required this.auth})
-      : super(LoadingInvestorProfile()) {
+    : super(LoadingInvestorProfile()) {
     on<LoadInvestorData>((event, emit) async {
       await emit.forEach(
         investorService.getInvestorStream(uid: auth.currentUser!.uid),
@@ -25,8 +25,9 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
     });
 
     on<EditInvestorButtonPressed>((event, emit) async {
-      final investor =
-          await investorService.getInvestor(uid: auth.currentUser!.uid);
+      final investor = await investorService.getInvestor(
+        uid: auth.currentUser!.uid,
+      );
       emit(EditInvestorInfo(investor: investor));
     });
 
@@ -50,14 +51,16 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
         updatedData: updatedData,
       );
 
-      final updatedInvestor =
-          await investorService.getInvestor(uid: auth.currentUser!.uid);
+      final updatedInvestor = await investorService.getInvestor(
+        uid: auth.currentUser!.uid,
+      );
       emit(DisplayInvestorInfo(investor: updatedInvestor));
     });
 
     on<CancelInvestorButtonPressed>((event, emit) async {
-      final investor =
-          await investorService.getInvestor(uid: auth.currentUser!.uid);
+      final investor = await investorService.getInvestor(
+        uid: auth.currentUser!.uid,
+      );
       emit(DisplayInvestorInfo(investor: investor));
     });
 
@@ -76,10 +79,23 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
         if (photoUrl != null) {
           await investorService.updateInvestor(
             uid: auth.currentUser!.uid,
-            updatedData: event.type == 'profile'
-                ? {'photoUrl': photoUrl}
-                : {'NationalIdUrl': photoUrl},
+            updatedData:
+                event.type == 'profile'
+                    ? {'photoUrl': photoUrl}
+                    : {
+                      'nationalIdUrl': photoUrl,
+                    }, // Fixed field name to match Firestore
           );
+
+          // Force a refresh of the investor data
+          final updatedInvestor = await investorService.getInvestor(
+            uid: auth.currentUser!.uid,
+          );
+          if (state is EditInvestorInfo) {
+            emit(
+              (state as EditInvestorInfo).copyWith(investor: updatedInvestor),
+            );
+          }
         }
       }
     });
@@ -88,9 +104,10 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       if (state is! EditInvestorInfo) return;
       final current = state as EditInvestorInfo;
       final unavailable = [...current.investor.skills, ...current.tempSkills];
-      final available = entrepreneurSkills
-          .where((skill) => !unavailable.contains(skill))
-          .toList();
+      final available =
+          entrepreneurSkills
+              .where((skill) => !unavailable.contains(skill))
+              .toList();
       emit(current.copyWith(showSkills: true, availableSkills: available));
     });
 
@@ -99,9 +116,10 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       final current = state as EditInvestorInfo;
       final updatedTemp = [...current.tempSkills, event.skill];
       final unavailable = [...current.investor.skills, ...updatedTemp];
-      final available = entrepreneurSkills
-          .where((skill) => !unavailable.contains(skill))
-          .toList();
+      final available =
+          entrepreneurSkills
+              .where((skill) => !unavailable.contains(skill))
+              .toList();
 
       emit(
         current.copyWith(
@@ -117,13 +135,15 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       final current = state as EditInvestorInfo;
       final updatedTemp =
           current.tempSkills.where((skill) => skill != event.skill).toList();
-      final updatedSaved = current.investor.skills
-          .where((skill) => skill != event.skill)
-          .toList();
+      final updatedSaved =
+          current.investor.skills
+              .where((skill) => skill != event.skill)
+              .toList();
       final unavailable = [...updatedSaved, ...updatedTemp];
-      final available = entrepreneurSkills
-          .where((skill) => !unavailable.contains(skill))
-          .toList();
+      final available =
+          entrepreneurSkills
+              .where((skill) => !unavailable.contains(skill))
+              .toList();
 
       emit(
         current.copyWith(
@@ -142,15 +162,13 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
         ...current.investor.preferredIndustries,
         ...current.tempIndustries,
       ];
-      final available = industries
-          .where((industry) => !unavailable.contains(industry))
-          .toList();
+      final available =
+          industries
+              .where((industry) => !unavailable.contains(industry))
+              .toList();
 
       emit(
-        current.copyWith(
-          showIndustries: true,
-          availableIndustries: available,
-        ),
+        current.copyWith(showIndustries: true, availableIndustries: available),
       );
     });
 
@@ -162,9 +180,10 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
         ...current.investor.preferredIndustries,
         ...updatedTemp,
       ];
-      final available = industries
-          .where((industry) => !unavailable.contains(industry))
-          .toList();
+      final available =
+          industries
+              .where((industry) => !unavailable.contains(industry))
+              .toList();
 
       emit(
         current.copyWith(
@@ -180,9 +199,10 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       final current = state as EditInvestorInfo;
       final updatedTemp =
           current.tempIndustries.where((i) => i != event.industry).toList();
-      final updatedSaved = current.investor.preferredIndustries
-          .where((i) => i != event.industry)
-          .toList();
+      final updatedSaved =
+          current.investor.preferredIndustries
+              .where((i) => i != event.industry)
+              .toList();
       final unavailable = [...updatedSaved, ...updatedTemp];
       final available =
           industries.where((i) => !unavailable.contains(i)).toList();
@@ -190,8 +210,9 @@ class IpsBloc extends Bloc<IpsEvent, IpsState> {
       emit(
         current.copyWith(
           tempIndustries: updatedTemp,
-          investor:
-              current.investor.copyWith(preferredIndustries: updatedSaved),
+          investor: current.investor.copyWith(
+            preferredIndustries: updatedSaved,
+          ),
           availableIndustries: available,
           showIndustries: false,
         ),

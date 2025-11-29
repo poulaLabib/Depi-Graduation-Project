@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class RequestTileInvestorView extends StatelessWidget {
   const RequestTileInvestorView({ super.key});

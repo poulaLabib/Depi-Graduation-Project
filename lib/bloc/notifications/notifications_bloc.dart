@@ -34,9 +34,11 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
     });
 
     on<MarkAllAsRead>((event, emit) async {
+      emit(LoadingNotifications());
       await notificationService.markAllAsRead(
         receiverId: auth.currentUser!.uid,
       );
+      add(LoadNotifications());
     });
 
     on<DeleteNotification>((event, emit) async {

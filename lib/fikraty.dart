@@ -22,7 +22,8 @@ class _FikratyState extends State<Fikraty> {
       } else {
         // If system, check current brightness and switch
         final brightness = MediaQuery.of(context).platformBrightness;
-        _themeMode = brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
+        _themeMode =
+            brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark;
       }
     });
   }
@@ -34,7 +35,7 @@ class _FikratyState extends State<Fikraty> {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: _themeMode,
-      home: AuthGate(toggleTheme: toggleTheme),
+      home: AuthGate(),
     );
   }
 }

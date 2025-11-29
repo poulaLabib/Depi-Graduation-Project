@@ -14,6 +14,7 @@ import '../bloc/investor_profile_screen/ips_state.dart';
 import '../custom widgets/entrepreneur_profile_textfield.dart';
 import '../custom widgets/entrepreneur_skills_field .dart';
 import '../custom widgets/skill_card.dart';
+import '../constants/image_constants.dart';
 
 class InvestorProfileScreen extends StatelessWidget {
   final TextEditingController _nameController = TextEditingController();
@@ -264,7 +265,8 @@ class InvestorProfileScreen extends StatelessWidget {
                                         fit: BoxFit.cover,
                                         errorBuilder:
                                             (_, __, ___) => Image.asset(
-                                              'assets/images/elsweedy.jpeg',
+                                              ImageConstants
+                                                  .defaultProfilePhoto,
                                               width: 200,
                                               height: 200,
                                               fit: BoxFit.cover,
@@ -283,7 +285,7 @@ class InvestorProfileScreen extends StatelessWidget {
                             fit: BoxFit.cover,
                             errorBuilder:
                                 (_, __, ___) => Image.asset(
-                                  'assets/images/elsweedy.jpeg',
+                                  ImageConstants.defaultProfilePhoto,
                                   height: 115,
                                   width: 115,
                                   fit: BoxFit.cover,
@@ -378,7 +380,7 @@ class InvestorProfileScreen extends StatelessWidget {
                                       fit: BoxFit.contain,
                                       errorBuilder:
                                           (_, __, ___) => Image.asset(
-                                            'assets/images/elsweedy.jpeg',
+                                            ImageConstants.defaultIdPhoto,
                                             fit: BoxFit.contain,
                                           ),
                                     ),
@@ -398,7 +400,7 @@ class InvestorProfileScreen extends StatelessWidget {
                                 fit: BoxFit.cover,
                                 errorBuilder:
                                     (_, __, ___) => Image.asset(
-                                      'assets/images/elsweedy.jpeg',
+                                      ImageConstants.defaultIdPhoto,
                                       fit: BoxFit.cover,
                                     ),
                               ),
@@ -511,7 +513,7 @@ class InvestorProfileScreen extends StatelessWidget {
                               fit: BoxFit.cover,
                               errorBuilder:
                                   (_, __, ___) => Image.asset(
-                                    'assets/images/elsweedy.jpeg',
+                                    ImageConstants.defaultProfilePhoto,
                                     height: 115,
                                     width: 115,
                                     fit: BoxFit.cover,
@@ -724,7 +726,7 @@ class InvestorProfileScreen extends StatelessWidget {
                                     fit: BoxFit.cover,
                                     errorBuilder:
                                         (_, __, ___) => Image.asset(
-                                          'assets/images/elsweedy.jpeg',
+                                          ImageConstants.defaultIdPhoto,
                                           fit: BoxFit.cover,
                                         ),
                                   ),

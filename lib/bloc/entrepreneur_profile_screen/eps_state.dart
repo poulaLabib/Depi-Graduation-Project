@@ -6,7 +6,15 @@ class LoadingProfile extends EpsState {}
 
 class DisplayInfo extends EpsState {
   final Entrepreneur entrepreneur;
-  DisplayInfo({required this.entrepreneur});
+  final bool isViewOnly;
+
+  DisplayInfo({required this.entrepreneur, this.isViewOnly = false});
+}
+
+class ErrorLoadingProfile extends EpsState {
+  final String message;
+
+  ErrorLoadingProfile({required this.message});
 }
 
 class EditInfo extends EpsState {

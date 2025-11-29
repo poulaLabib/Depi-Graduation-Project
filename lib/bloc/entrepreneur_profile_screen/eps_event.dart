@@ -4,6 +4,12 @@ abstract class EpsEvent {}
 
 class LoadProfileData extends EpsEvent {}
 
+class LoadEntrepreneurProfile extends EpsEvent {
+  final String entrepreneurId;
+
+  LoadEntrepreneurProfile(this.entrepreneurId);
+}
+
 class EditButtonPressed extends EpsEvent {}
 
 class SaveButtonPressed extends EpsEvent {

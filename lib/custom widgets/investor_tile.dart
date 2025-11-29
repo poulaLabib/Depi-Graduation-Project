@@ -1,5 +1,4 @@
 import 'package:auto_text_resizer/auto_text_resizer.dart';
-import 'package:depi_graduation_project/custom%20widgets/skill_card.dart';
 import 'package:flutter/material.dart';
 
 class InvestorTile extends StatelessWidget {

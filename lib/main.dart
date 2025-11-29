@@ -32,8 +32,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness:
-          Brightness.dark,
+      statusBarIconBrightness: Brightness.dark,
     ),
   );
   runApp(
@@ -111,13 +110,12 @@ void main() async {
                 requestService: RequestFirestoreService(),
               ),
         ),
-         BlocProvider(
+        BlocProvider(
           create:
               (BuildContext context) => InvestorSectionBloc(
                 investorService: InvestorFirestoreService(),
               ),
         ),
-        
       ],
       child: Fikraty(),
     ),

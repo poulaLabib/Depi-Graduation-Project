@@ -47,7 +47,7 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
   }
 
   Widget _buildReadOnlyContent(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -104,7 +104,7 @@ class _RequestPageState extends State<RequestPageEntrepreneur> {
   }
 
   Widget _buildEditableContent(BuildContext context) {
-    final theme = Theme.of(context);
+    Theme.of(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

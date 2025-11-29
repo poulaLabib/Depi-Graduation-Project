@@ -19,9 +19,23 @@ class EpsBloc extends Bloc<EpsEvent, EpsState> {
       await emit.forEach(
         entrepreneur.getEntrepreneurStream(uid: auth.currentUser!.uid),
         onData: (data) {
-          return DisplayInfo(entrepreneur: data);
+          return DisplayInfo(entrepreneur: data, isViewOnly: false);
         },
       );
+    });
+
+    on<LoadEntrepreneurProfile>((event, emit) async {
+      try {
+        emit(LoadingProfile());
+        final entrepreneurData = await entrepreneur.getEntrepreneur(
+          uid: event.entrepreneurId,
+        );
+        emit(DisplayInfo(entrepreneur: entrepreneurData, isViewOnly: true));
+      } catch (e) {
+        emit(
+          ErrorLoadingProfile(message: 'Failed to load entrepreneur profile'),
+        );
+      }
     });
     on<EditButtonPressed>((event, emit) async {
       final entrep = await entrepreneur.getEntrepreneur(
@@ -51,14 +65,14 @@ class EpsBloc extends Bloc<EpsEvent, EpsState> {
       final updatedEntrepreneur = await entrepreneur.getEntrepreneur(
         uid: auth.currentUser!.uid,
       );
-      emit(DisplayInfo(entrepreneur: updatedEntrepreneur));
+      emit(DisplayInfo(entrepreneur: updatedEntrepreneur, isViewOnly: false));
     });
 
     on<CancelButtonPressed>((event, emit) async {
       final updatedEntrepreneur = await entrepreneur.getEntrepreneur(
         uid: auth.currentUser!.uid,
       );
-      emit(DisplayInfo(entrepreneur: updatedEntrepreneur));
+      emit(DisplayInfo(entrepreneur: updatedEntrepreneur, isViewOnly: false));
     });
     on<EditPhoto>((event, emit) async {
       final picker = ImagePicker();

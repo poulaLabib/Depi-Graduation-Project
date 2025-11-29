@@ -70,7 +70,7 @@ class InvestorHomeScreen extends StatelessWidget {
                 onPressed: () => Scaffold.of(context).openDrawer(),
               ),
         ),
-        actionsPadding: EdgeInsets.only(right: 10),
+        actionsPadding: EdgeInsets.only(right: 20),
         elevation: 0,
         actions: [
           Stack(
@@ -125,7 +125,7 @@ class InvestorHomeScreen extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           GestureDetector(
             onTap: toggleTheme,
             child: Icon(
@@ -135,6 +135,7 @@ class InvestorHomeScreen extends StatelessWidget {
             ),
           ),
         ],
+
       ),
       body: BlocBuilder<InvestorRequestsBloc, InvestorRequestsState>(
         builder: (context, state) {

@@ -1,4 +1,3 @@
-import 'package:auto_text_resizer/auto_text_resizer.dart';
 import 'package:depi_graduation_project/models/request.dart';
 import 'package:flutter/material.dart';
 

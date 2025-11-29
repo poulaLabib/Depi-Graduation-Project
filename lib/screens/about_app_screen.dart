@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 class AboutAppScreen extends StatefulWidget {
   const AboutAppScreen({super.key});
@@ -10,77 +9,11 @@ class AboutAppScreen extends StatefulWidget {
 
 class _AboutAppScreenState extends State<AboutAppScreen> {
   final ScrollController _scrollController = ScrollController();
-  Timer? _autoScrollTimer;
-  bool _isUserScrolling = false;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _startAutoScroll();
-    });
-    _scrollController.addListener(_onScroll);
-  }
 
   @override
   void dispose() {
-    _autoScrollTimer?.cancel();
-    _scrollController.removeListener(_onScroll);
     _scrollController.dispose();
     super.dispose();
-  }
-
-  double _lastScrollPosition = 0;
-  
-  void _onScroll() {
-    if (_scrollController.hasClients) {
-      final currentPosition = _scrollController.position.pixels;
-      final difference = (currentPosition - _lastScrollPosition).abs();
-      
-      // If scroll position changed significantly, user is scrolling
-      if (difference > 5) {
-        setState(() {
-          _isUserScrolling = true;
-        });
-        _autoScrollTimer?.cancel();
-        _lastScrollPosition = currentPosition;
-        
-        Future.delayed(const Duration(seconds: 3), () {
-          if (mounted) {
-            setState(() {
-              _isUserScrolling = false;
-            });
-            _lastScrollPosition = _scrollController.position.pixels;
-            _startAutoScroll();
-          }
-        });
-      }
-    }
-  }
-
-  void _startAutoScroll() {
-    _autoScrollTimer?.cancel();
-    _autoScrollTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-      if (!_isUserScrolling && _scrollController.hasClients) {
-        final maxScroll = _scrollController.position.maxScrollExtent;
-        final currentScroll = _scrollController.position.pixels;
-        
-        if (currentScroll < maxScroll) {
-          _scrollController.animateTo(
-            currentScroll + 2,
-            duration: const Duration(milliseconds: 50),
-            curve: Curves.linear,
-          );
-        } else {
-          // Reset to top when reaching bottom
-          _scrollController.animateTo(
-            0,
-            duration: const Duration(milliseconds: 1500),
-            curve: Curves.easeInOut,
-          );
-        }
-      }
-    });
   }
 
   @override
@@ -96,9 +29,7 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
           decoration: BoxDecoration(
             color: theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: theme.colorScheme.outline.withAlpha(50),
-            ),
+            border: Border.all(color: theme.colorScheme.outline.withAlpha(50)),
           ),
           child: IconButton(
             icon: Icon(
@@ -171,7 +102,10 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
             const SizedBox(height: 12),
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 8,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.primary.withAlpha(20),
                   borderRadius: BorderRadius.circular(20),
@@ -308,7 +242,10 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
             const SizedBox(height: 48),
             Center(
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 decoration: BoxDecoration(
                   color: theme.colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
@@ -344,15 +281,18 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
     );
   }
 
-  Widget _buildSection(ThemeData theme, String title, String content, IconData icon) {
+  Widget _buildSection(
+    ThemeData theme,
+    String title,
+    String content,
+    IconData icon,
+  ) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: theme.colorScheme.outline.withAlpha(50),
-        ),
+        border: Border.all(color: theme.colorScheme.outline.withAlpha(50)),
         boxShadow: [
           BoxShadow(
             color: theme.colorScheme.shadow.withAlpha(10),
@@ -379,11 +319,7 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
                   ),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
-                  icon,
-                  color: theme.colorScheme.onPrimary,
-                  size: 24,
-                ),
+                child: Icon(icon, color: theme.colorScheme.onPrimary, size: 24),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -415,4 +351,3 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
     );
   }
 }
-

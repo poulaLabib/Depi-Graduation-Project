@@ -52,10 +52,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           emit(AuthUnsuccessfull());
         } else {
-          emit(AuthSuccessfull());
+          emit(AuthSuccessfull(user: user));
         }
       } catch (e) {
-        emit(AuthError());
+        emit(AuthError(message: e.toString()));
       }
     });
 
@@ -63,7 +63,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         await auth.logout();
-        emit(AuthSuccessfull());
+        emit(const LoggedOut());
       } catch (e) {
         emit(AuthError());
       }
