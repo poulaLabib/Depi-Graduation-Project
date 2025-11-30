@@ -10,6 +10,7 @@ import 'package:depi_graduation_project/screens/about_app_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_graduation_project/screens/ai_advisor_screen.dart';
 
 class EntrepreneurHomeScreen extends StatelessWidget {
   final PageController _pageController = PageController();
@@ -30,6 +31,28 @@ class EntrepreneurHomeScreen extends StatelessWidget {
           return Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             drawer: _buildDrawer(context),
+             floatingActionButton: FloatingActionButton.extended(
+    onPressed: () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AIAdvisorScreen(userType: 'entrepreneur'),
+        ),
+      );
+    },
+    backgroundColor: Theme.of(context).colorScheme.primary,
+    icon: Icon(
+      Icons.psychology,
+      color: Theme.of(context).colorScheme.onPrimary,
+    ),
+    label: Text(
+      'AI Advisor',
+      style: TextStyle(
+        color: Theme.of(context).colorScheme.onPrimary,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ),
             body: Column(
               children: [
                 SizedBox(height: 50),

@@ -11,6 +11,7 @@ import 'package:depi_graduation_project/services/firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:depi_graduation_project/screens/ai_advisor_screen.dart';
 
 class _RequestDetails {
   String? entrepreneurName;
@@ -56,6 +57,28 @@ class InvestorHomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       drawer: _buildDrawer(context),
+       floatingActionButton: FloatingActionButton.extended(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AIAdvisorScreen(userType: 'investor'),
+          ),
+        );
+      },
+      backgroundColor: Theme.of(context).colorScheme.primary,
+      icon: Icon(
+        Icons.psychology,
+        color: Theme.of(context).colorScheme.onPrimary,
+      ),
+      label: Text(
+        'AI Advisor',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onPrimary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         leading: Builder(
