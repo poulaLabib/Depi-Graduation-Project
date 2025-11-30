@@ -150,9 +150,10 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
         isMine
             ? Theme.of(context).colorScheme.primary
             : Theme.of(context).colorScheme.secondary.withAlpha(20);
-    final textColor = isMine
-        ? Theme.of(context).colorScheme.onPrimary
-        : Theme.of(context).colorScheme.onSurface;
+    final textColor =
+        isMine
+            ? Theme.of(context).colorScheme.onPrimary
+            : Theme.of(context).colorScheme.onSurface;
 
     return Align(
       alignment: isMine ? Alignment.centerRight : Alignment.centerLeft,
@@ -261,18 +262,24 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
                     decoration: InputDecoration(
                       hintText: 'Type a message',
                       filled: true,
-                      fillColor: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                      fillColor: Theme.of(
+                        context,
+                      ).colorScheme.secondary.withAlpha(20),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withAlpha(51),
                           width: 1,
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.primary.withAlpha(51),
                           width: 1,
                         ),
                       ),
@@ -395,7 +402,7 @@ class _EmptyConversation extends StatelessWidget {
           Icon(
             Icons.chat_bubble_outline,
             size: 72,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(77),
           ),
           const SizedBox(height: 16),
           Text(
@@ -411,7 +418,7 @@ class _EmptyConversation extends StatelessWidget {
             'Start the conversation by sending a message.',
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
             ),
           ),
         ],

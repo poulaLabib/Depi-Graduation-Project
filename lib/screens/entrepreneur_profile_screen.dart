@@ -81,7 +81,6 @@ class EntrepreneurProfileScreen extends StatelessWidget {
                       ),
                       child: Stack(
                         alignment: Alignment.center,
-                        // fit: StackFit.expand,
                         children: [
                           if (!isViewOnlyMode) ...[
                             Container(
@@ -723,19 +722,6 @@ class EntrepreneurProfileScreen extends StatelessWidget {
           }
         }
       },
-    );
-  }
-
-  Widget _buildEditBottomSheet(BuildContext context, EpsState state) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Edit Profile', style: Theme.of(context).textTheme.titleLarge),
-          // Add your form fields here
-        ],
-      ),
     );
   }
 }

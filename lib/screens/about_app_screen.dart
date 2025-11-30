@@ -262,7 +262,7 @@ class _AboutAppScreenState extends State<AboutAppScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      '© 2024 Fikraty. All rights reserved.',
+                      '© 2025 Fikraty. All rights reserved.',
                       style: TextStyle(
                         fontSize: 14,
                         color: theme.colorScheme.onSurface.withAlpha(70),

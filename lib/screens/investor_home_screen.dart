@@ -45,11 +45,9 @@ class InvestorHomeScreen extends StatelessWidget {
         details.companyLogoUrl = company.logoUrl;
       } else {
         details.companyName =
-            entrepreneur.name; // Use entrepreneur name as fallback
+            entrepreneur.name;
       }
-    } catch (e) {
-      // Handle error silently
-    }
+    } catch (e) {}
     return details;
   }
 

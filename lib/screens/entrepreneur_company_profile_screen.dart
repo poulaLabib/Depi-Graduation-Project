@@ -131,10 +131,7 @@ class _EntrepreneurCompanyProfileScreenState
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 5,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -146,7 +143,9 @@ class _EntrepreneurCompanyProfileScreenState
                       padding: EdgeInsets.all(4),
                       tooltip: 'Edit',
                       onPressed: () {
-                        context.read<CompanyBloc>().add(EditCompanyButtonPressed());
+                        context.read<CompanyBloc>().add(
+                          EditCompanyButtonPressed(),
+                        );
                       },
                       icon: Icon(
                         CupertinoIcons.square_pencil,
@@ -162,81 +161,104 @@ class _EntrepreneurCompanyProfileScreenState
                         onTap: () {
                           showDialog(
                             barrierDismissible: true,
-                            barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
+                            barrierColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(220),
                             context: context,
-                            builder: (context) => AlertDialog(
-                              backgroundColor: Colors.transparent,
-                              elevation: 0,
-                              contentPadding: EdgeInsets.zero,
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Center(
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        state.company.logoUrl,
-                                        fit: BoxFit.cover,
-                                        width: 200,
-                                        height: 200,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
+                            builder:
+                                (context) => AlertDialog(
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  contentPadding: EdgeInsets.zero,
+                                  content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Center(
+                                        child: ClipOval(
+                                          child: Image.network(
+                                            state.company.logoUrl,
+                                            fit: BoxFit.cover,
                                             width: 200,
                                             height: 200,
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                              shape: BoxShape.circle,
-                                            ),
-                                            child: Icon(
-                                              Icons.camera_alt,
-                                              size: 60,
-                                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                            ),
-                                          );
-                                        },
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              return Container(
+                                                width: 200,
+                                                height: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .secondary
+                                                      .withAlpha(20),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.camera_alt,
+                                                  size: 60,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withAlpha(128),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
+                                ),
                           );
                         },
                         child: ClipOval(
-                          child: state.company.logoUrl.isNotEmpty
-                              ? Image.network(
-                                  state.company.logoUrl,
-                                  height: 115,
-                                  width: 115,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      height: 115,
-                                      width: 115,
-                                      decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(
-                                        Icons.camera_alt,
-                                        size: 40,
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                      ),
-                                    );
-                                  },
-                                )
-                              : Container(
-                                  height: 115,
-                                  width: 115,
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                    shape: BoxShape.circle,
+                          child:
+                              state.company.logoUrl.isNotEmpty
+                                  ? Image.network(
+                                    state.company.logoUrl,
+                                    height: 115,
+                                    width: 115,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        height: 115,
+                                        width: 115,
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.secondary.withAlpha(20),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 40,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(128),
+                                        ),
+                                      );
+                                    },
+                                  )
+                                  : Container(
+                                    height: 115,
+                                    width: 115,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary.withAlpha(20),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      Icons.camera_alt,
+                                      size: 40,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withAlpha(128),
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.camera_alt,
-                                    size: 40,
-                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                  ),
-                                ),
                         ),
                       ),
                       SizedBox(
@@ -277,27 +299,30 @@ class _EntrepreneurCompanyProfileScreenState
                     children: [
                       EntrepreneurProfileField(
                         title: "Description",
-                        value: state.company.description.isEmpty
-                            ? "No description"
-                            : state.company.description,
+                        value:
+                            state.company.description.isEmpty
+                                ? "No description"
+                                : state.company.description,
                       ),
                       Row(
                         children: [
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Founded",
-                              value: state.company.founded == 0
-                                  ? "Not set"
-                                  : state.company.founded.toString(),
+                              value:
+                                  state.company.founded == 0
+                                      ? "Not set"
+                                      : state.company.founded.toString(),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Team Size",
-                              value: state.company.teamSize == 0
-                                  ? "Not set"
-                                  : state.company.teamSize.toString(),
+                              value:
+                                  state.company.teamSize == 0
+                                      ? "Not set"
+                                      : state.company.teamSize.toString(),
                             ),
                           ),
                         ],
@@ -307,18 +332,20 @@ class _EntrepreneurCompanyProfileScreenState
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Industry",
-                              value: state.company.industry.isEmpty
-                                  ? "Not set"
-                                  : state.company.industry,
+                              value:
+                                  state.company.industry.isEmpty
+                                      ? "Not set"
+                                      : state.company.industry,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Stage",
-                              value: state.company.stage.isEmpty
-                                  ? "Not set"
-                                  : state.company.stage,
+                              value:
+                                  state.company.stage.isEmpty
+                                      ? "Not set"
+                                      : state.company.stage,
                             ),
                           ),
                         ],
@@ -328,18 +355,20 @@ class _EntrepreneurCompanyProfileScreenState
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Currency",
-                              value: state.company.currency.isEmpty
-                                  ? "Not set"
-                                  : state.company.currency,
+                              value:
+                                  state.company.currency.isEmpty
+                                      ? "Not set"
+                                      : state.company.currency,
                             ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: EntrepreneurProfileField(
                               title: "Location",
-                              value: state.company.location.isEmpty
-                                  ? "Not set"
-                                  : state.company.location,
+                              value:
+                                  state.company.location.isEmpty
+                                      ? "Not set"
+                                      : state.company.location,
                             ),
                           ),
                         ],
@@ -360,57 +389,84 @@ class _EntrepreneurCompanyProfileScreenState
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13,
-                                color: Theme.of(context).colorScheme.onSecondary,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 14,
+                                horizontal: 15,
+                              ),
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(25),
-                                color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondary.withAlpha(20),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 0.2,
+                                ),
                               ),
-                              child: state.company.teamMembers.isEmpty
-                                  ? Text(
-                                      "No team members added",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w400,
-                                        color: Theme.of(context).colorScheme.onSurface,
+                              child:
+                                  state.company.teamMembers.isEmpty
+                                      ? Text(
+                                        "No team members added",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
+                                        ),
+                                      )
+                                      : Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children:
+                                            state.company.teamMembers.map((
+                                              member,
+                                            ) {
+                                              return Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 4,
+                                                    ),
+                                                child: Row(
+                                                  children: [
+                                                    Container(
+                                                      width: 6,
+                                                      height: 6,
+                                                      decoration: BoxDecoration(
+                                                        color:
+                                                            Theme.of(context)
+                                                                .colorScheme
+                                                                .onSurface,
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 8),
+                                                    Expanded(
+                                                      child: Text(
+                                                        "${member['name'] ?? 'Unknown'} - ${member['role'] ?? 'Unknown'}",
+                                                        style: TextStyle(
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.w400,
+                                                          color:
+                                                              Theme.of(context)
+                                                                  .colorScheme
+                                                                  .onSurface,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }).toList(),
                                       ),
-                                    )
-                                  : Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: state.company.teamMembers.map((member) {
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 4),
-                                          child: Row(
-                                            children: [
-                                              Container(
-                                                width: 6,
-                                                height: 6,
-                                                decoration: BoxDecoration(
-                                                  color: Theme.of(context).colorScheme.onSurface,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                              ),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: Text(
-                                                  "${member['name'] ?? 'Unknown'} - ${member['role'] ?? 'Unknown'}",
-                                                  style: TextStyle(
-                                                    fontSize: 15,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: Theme.of(context).colorScheme.onSurface,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
                             ),
                           ],
                         ),
@@ -431,46 +487,70 @@ class _EntrepreneurCompanyProfileScreenState
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
                                 fontSize: 13,
-                                color: Theme.of(context).colorScheme.onSecondary,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
                             GestureDetector(
-                              onTap: state.company.certificateUrl.isNotEmpty
-                                  ? () {
-                                      showDialog(
-                                        barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
-                                        context: context,
-                                        builder: (context) => AlertDialog(
-                                          backgroundColor: Colors.transparent,
-                                          content: Image.network(
-                                            state.company.certificateUrl,
-                                            fit: BoxFit.contain,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return _buildCertificatePlaceholder(context);
-                                            },
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  : null,
+                              onTap:
+                                  state.company.certificateUrl.isNotEmpty
+                                      ? () {
+                                        showDialog(
+                                          barrierColor: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(220),
+                                          context: context,
+                                          builder:
+                                              (context) => AlertDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                content: Image.network(
+                                                  state.company.certificateUrl,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) {
+                                                    return _buildCertificatePlaceholder(
+                                                      context,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                        );
+                                      }
+                                      : null,
                               child: Container(
                                 height: 170,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.secondary.withAlpha(20),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
-                                child: state.company.certificateUrl.isNotEmpty
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(8),
-                                        child: Image.network(
-                                          state.company.certificateUrl,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return _buildCertificatePlaceholder(context);
-                                          },
-                                        ),
-                                      )
-                                    : _buildCertificatePlaceholder(context),
+                                child:
+                                    state.company.certificateUrl.isNotEmpty
+                                        ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          child: Image.network(
+                                            state.company.certificateUrl,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (
+                                              context,
+                                              error,
+                                              stackTrace,
+                                            ) {
+                                              return _buildCertificatePlaceholder(
+                                                context,
+                                              );
+                                            },
+                                          ),
+                                        )
+                                        : _buildCertificatePlaceholder(context),
                               ),
                             ),
                           ],
@@ -494,10 +574,7 @@ class _EntrepreneurCompanyProfileScreenState
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 5,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -514,7 +591,8 @@ class _EntrepreneurCompanyProfileScreenState
                             name: _nameController.text.trim(),
                             description: _descriptionController.text.trim(),
                             founded: int.tryParse(_foundedController.text) ?? 0,
-                            teamSize: int.tryParse(_teamSizeController.text) ?? 0,
+                            teamSize:
+                                int.tryParse(_teamSizeController.text) ?? 0,
                             industry: _industryController.text.trim(),
                             stage: _stageController.text.trim(),
                             currency: _currencyController.text.trim(),
@@ -558,41 +636,56 @@ class _EntrepreneurCompanyProfileScreenState
                       Stack(
                         children: [
                           ClipOval(
-                            child: state.company.logoUrl.isNotEmpty
-                                ? Image.network(
-                                    state.company.logoUrl,
-                                    height: 115,
-                                    width: 115,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Container(
-                                        height: 115,
-                                        width: 115,
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: Icon(
-                                          Icons.camera_alt,
-                                          size: 40,
-                                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                        ),
-                                      );
-                                    },
-                                  )
-                                : Container(
-                                    height: 115,
-                                    width: 115,
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                      shape: BoxShape.circle,
+                            child:
+                                state.company.logoUrl.isNotEmpty
+                                    ? Image.network(
+                                      state.company.logoUrl,
+                                      height: 115,
+                                      width: 115,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (
+                                        context,
+                                        error,
+                                        stackTrace,
+                                      ) {
+                                        return Container(
+                                          height: 115,
+                                          width: 115,
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary
+                                                .withAlpha(20),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: Icon(
+                                            Icons.camera_alt,
+                                            size: 40,
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .onSurface
+                                                .withAlpha(128),
+                                          ),
+                                        );
+                                      },
+                                    )
+                                    : Container(
+                                      height: 115,
+                                      width: 115,
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.secondary.withAlpha(20),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.camera_alt,
+                                        size: 40,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurface.withAlpha(128),
+                                      ),
                                     ),
-                                    child: Icon(
-                                      Icons.camera_alt,
-                                      size: 40,
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                    ),
-                                  ),
                           ),
                           Positioned.fill(
                             child: GestureDetector(
@@ -604,7 +697,9 @@ class _EntrepreneurCompanyProfileScreenState
                               child: Container(
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.onSurface.withAlpha(80),
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface.withAlpha(80),
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
@@ -628,7 +723,9 @@ class _EntrepreneurCompanyProfileScreenState
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                               letterSpacing: -0.2,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(102),
                             ),
                             border: InputBorder.none,
                             isDense: true,
@@ -661,269 +758,224 @@ class _EntrepreneurCompanyProfileScreenState
                   Column(
                     spacing: 20,
                     children: [
-                            EntrepreneurProfileTextfield(
-                              title: "Description",
-                              controller: _descriptionController,
+                      EntrepreneurProfileTextfield(
+                        title: "Description",
+                        controller: _descriptionController,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Founded",
+                              controller: _foundedController,
+                              keyboardType: TextInputType.number,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Founded",
-                                    controller: _foundedController,
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Team Size",
-                                    controller: _teamSizeController,
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Team Size",
+                              controller: _teamSizeController,
+                              keyboardType: TextInputType.number,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Industry",
-                                    controller: _industryController,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Stage",
-                                    controller: _stageController,
-                                  ),
-                                ),
-                              ],
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Industry",
+                              controller: _industryController,
                             ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Currency",
-                                    controller: _currencyController,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: EntrepreneurProfileTextfield(
-                                    title: "Location",
-                                    controller: _locationController,
-                                  ),
-                                ),
-                              ],
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Stage",
+                              controller: _stageController,
                             ),
-                            Divider(
-                              color: Theme.of(context).colorScheme.secondary,
-                              thickness: 0.6,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Currency",
+                              controller: _currencyController,
                             ),
-                            // Team Members
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 25),
-                              child: Column(
-                                spacing: 10,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "Team Members",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: Theme.of(context).colorScheme.onSecondary,
-                                    ),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(25),
-                                      color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                      border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        if (_tempTeamMembers.isEmpty)
-                                          Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                                            child: Text(
-                                              'No team members yet',
-                                              style: TextStyle(
-                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          )
-                                        else
-                                          ..._tempTeamMembers.asMap().entries.map((entry) {
-                                            final index = entry.key;
-                                            final member = entry.value;
-                                            return Padding(
-                                              padding: const EdgeInsets.symmetric(vertical: 4),
-                                              child: Row(
-                                                children: [
-                                                  Container(
-                                                    width: 6,
-                                                    height: 6,
-                                                    decoration: BoxDecoration(
-                                                      color: Theme.of(context).colorScheme.onSurface,
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                  ),
-                                                  const SizedBox(width: 8),
-                                                  Expanded(
-                                                    child: Text(
-                                                      "${member['name']} - ${member['role']}",
-                                                      style: TextStyle(
-                                                        fontSize: 15,
-                                                        fontWeight: FontWeight.w400,
-                                                        color: Theme.of(context).colorScheme.onSurface,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.remove_circle,
-                                                      color: Theme.of(context).colorScheme.error,
-                                                      size: 20,
-                                                    ),
-                                                    onPressed: () {
-                                                      setState(() {
-                                                        _tempTeamMembers.removeAt(index);
-                                                      });
-                                                    },
-                                                    padding: EdgeInsets.zero,
-                                                    constraints: const BoxConstraints(),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          }),
-                                        const SizedBox(height: 8),
-                                        InkWell(
-                                          onTap: _addTeamMember,
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              vertical: 10,
-                                              horizontal: 12,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: Theme.of(context).cardColor.withOpacity(0.7),
-                                              borderRadius: BorderRadius.circular(10),
-                                              border: Border.all(
-                                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-                                              ),
-                                            ),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              children: [
-                                                Icon(
-                                                  Icons.add,
-                                                  size: 18,
-                                                  color: Theme.of(context).colorScheme.primary,
-                                                ),
-                                                const SizedBox(width: 6),
-                                                Text(
-                                                  'Add Team Member',
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Theme.of(context).colorScheme.primary,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: EntrepreneurProfileTextfield(
+                              title: "Location",
+                              controller: _locationController,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        thickness: 0.6,
+                      ),
+                      // Team Members
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Column(
+                          spacing: 10,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Team Members",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
                               ),
                             ),
-                            Divider(
-                              color: Theme.of(context).colorScheme.secondary,
-                              thickness: 0.6,
-                            ),
-                            // Certificate
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 14,
+                                horizontal: 15,
+                              ),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.secondary.withAlpha(20),
+                                border: Border.all(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 0.2,
+                                ),
+                              ),
                               child: Column(
-                                spacing: 10,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "Verified Certificate (optional)",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: Theme.of(context).colorScheme.onSecondary,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: state.company.certificateUrl.isNotEmpty
-                                        ? () {
-                                            showDialog(
-                                              barrierColor: Theme.of(context).colorScheme.onSurface.withAlpha(220),
-                                              context: context,
-                                              builder: (context) => AlertDialog(
-                                                backgroundColor: Colors.transparent,
-                                                content: Image.network(
-                                                  state.company.certificateUrl,
-                                                  fit: BoxFit.contain,
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    return _buildCertificatePlaceholder(context);
-                                                  },
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        : null,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: 170,
-                                          decoration: BoxDecoration(
-                                            color: Theme.of(context).colorScheme.secondary.withAlpha(20),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
-                                          child: state.company.certificateUrl.isNotEmpty
-                                              ? ClipRRect(
-                                                  borderRadius: BorderRadius.circular(8),
-                                                  child: Image.network(
-                                                    state.company.certificateUrl,
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context, error, stackTrace) {
-                                                      return _buildCertificatePlaceholder(context);
-                                                    },
-                                                  ),
-                                                )
-                                              : _buildCertificatePlaceholder(context),
+                                  if (_tempTeamMembers.isEmpty)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                      ),
+                                      child: Text(
+                                        'No team members yet',
+                                        style: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(128),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w400,
                                         ),
-                                        Positioned.fill(
-                                          child: Material(
-                                            color: Theme.of(context).colorScheme.onSurface.withAlpha(80),
-                                            borderRadius: BorderRadius.circular(8),
-                                            child: InkWell(
-                                              onTap: () {
-                                                context.read<CompanyBloc>().add(
-                                                  EditCompanyCertificate(),
-                                                );
-                                              },
-                                              child: Icon(
-                                                CupertinoIcons.cloud_upload_fill,
-                                                color: Theme.of(context).colorScheme.primary,
-                                                size: 32,
+                                      ),
+                                    )
+                                  else
+                                    ..._tempTeamMembers.asMap().entries.map((
+                                      entry,
+                                    ) {
+                                      final index = entry.key;
+                                      final member = entry.value;
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 4,
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 6,
+                                              height: 6,
+                                              decoration: BoxDecoration(
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).colorScheme.onSurface,
+                                                shape: BoxShape.circle,
                                               ),
                                             ),
-                                          ),
+                                            const SizedBox(width: 8),
+                                            Expanded(
+                                              child: Text(
+                                                "${member['name']} - ${member['role']}",
+                                                style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color:
+                                                      Theme.of(
+                                                        context,
+                                                      ).colorScheme.onSurface,
+                                                ),
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.remove_circle,
+                                                color:
+                                                    Theme.of(
+                                                      context,
+                                                    ).colorScheme.error,
+                                                size: 20,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  _tempTeamMembers.removeAt(
+                                                    index,
+                                                  );
+                                                });
+                                              },
+                                              padding: EdgeInsets.zero,
+                                              constraints:
+                                                  const BoxConstraints(),
+                                            ),
+                                          ],
                                         ),
-                                      ],
+                                      );
+                                    }),
+                                  const SizedBox(height: 8),
+                                  InkWell(
+                                    onTap: _addTeamMember,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 12,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Theme.of(
+                                          context,
+                                        ).cardColor.withAlpha(179),
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface.withAlpha(77),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.add,
+                                            size: 18,
+                                            color:
+                                                Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                          ),
+                                          const SizedBox(width: 6),
+                                          Text(
+                                            'Add Team Member',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w500,
+                                              color:
+                                                  Theme.of(
+                                                    context,
+                                                  ).colorScheme.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -931,13 +983,129 @@ class _EntrepreneurCompanyProfileScreenState
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Divider(
+                        color: Theme.of(context).colorScheme.secondary,
+                        thickness: 0.6,
+                      ),
+                      // Certificate
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25),
+                        child: Column(
+                          spacing: 10,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Verified Certificate (optional)",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                                color:
+                                    Theme.of(context).colorScheme.onSecondary,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap:
+                                  state.company.certificateUrl.isNotEmpty
+                                      ? () {
+                                        showDialog(
+                                          barrierColor: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withAlpha(220),
+                                          context: context,
+                                          builder:
+                                              (context) => AlertDialog(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                content: Image.network(
+                                                  state.company.certificateUrl,
+                                                  fit: BoxFit.contain,
+                                                  errorBuilder: (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) {
+                                                    return _buildCertificatePlaceholder(
+                                                      context,
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                        );
+                                      }
+                                      : null,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: 170,
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary.withAlpha(20),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child:
+                                        state.company.certificateUrl.isNotEmpty
+                                            ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.network(
+                                                state.company.certificateUrl,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (
+                                                  context,
+                                                  error,
+                                                  stackTrace,
+                                                ) {
+                                                  return _buildCertificatePlaceholder(
+                                                    context,
+                                                  );
+                                                },
+                                              ),
+                                            )
+                                            : _buildCertificatePlaceholder(
+                                              context,
+                                            ),
+                                  ),
+                                  Positioned.fill(
+                                    child: Material(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurface.withAlpha(80),
+                                      borderRadius: BorderRadius.circular(8),
+                                      child: InkWell(
+                                        onTap: () {
+                                          context.read<CompanyBloc>().add(
+                                            EditCompanyCertificate(),
+                                          );
+                                        },
+                                        child: Icon(
+                                          CupertinoIcons.cloud_upload_fill,
+                                          color:
+                                              Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
+                                          size: 32,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-        );
+          ],
+        ),
+      ),
+    );
   }
 
   void _addTeamMember() {
@@ -968,18 +1136,25 @@ class _EntrepreneurCompanyProfileScreenState
                 style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                  labelStyle: TextStyle(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: theme.colorScheme.primary),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary.withOpacity(0.5),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -989,18 +1164,25 @@ class _EntrepreneurCompanyProfileScreenState
                 style: TextStyle(color: theme.colorScheme.onSurface),
                 decoration: InputDecoration(
                   labelText: 'Role',
-                  labelStyle: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                  labelStyle: TextStyle(
+                    color: theme.colorScheme.onSurface.withOpacity(0.7),
+                  ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: theme.colorScheme.primary),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary.withOpacity(0.5),
+                    ),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
+                    borderSide: BorderSide(
+                      color: theme.colorScheme.primary,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -1062,5 +1244,4 @@ class _EntrepreneurCompanyProfileScreenState
       ),
     );
   }
-
 }

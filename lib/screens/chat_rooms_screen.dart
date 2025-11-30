@@ -48,55 +48,52 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
     final theme = Theme.of(context);
     showDialog<void>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: theme.colorScheme.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        title: Text(
-          'Delete Chat',
-          style: TextStyle(
-            color: theme.colorScheme.onSurface,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: Text(
-          'Are you sure you want to delete chat with ${room.targetName ?? 'this user'}?',
-          style: TextStyle(
-            color: theme.colorScheme.onSurface,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: Text(
-              'Cancel',
+      builder:
+          (dialogContext) => AlertDialog(
+            backgroundColor: theme.colorScheme.surface,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              'Delete Chat',
               style: TextStyle(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          TextButton(
-            style: TextButton.styleFrom(
-              backgroundColor: theme.colorScheme.error,
-              foregroundColor: theme.colorScheme.onError,
+            content: Text(
+              'Are you sure you want to delete chat with ${room.targetName ?? 'this user'}?',
+              style: TextStyle(color: theme.colorScheme.onSurface),
             ),
-            onPressed: () {
-              context.read<ChatListBloc>().add(
-                DeleteChatRoom(chatRoomId: room.id),
-              );
-              Navigator.pop(dialogContext);
-            },
-            child: const Text(
-              'Delete',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
-            ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: theme.colorScheme.error,
+                  foregroundColor: theme.colorScheme.onError,
+                ),
+                onPressed: () {
+                  context.read<ChatListBloc>().add(
+                    DeleteChatRoom(chatRoomId: room.id),
+                  );
+                  Navigator.pop(dialogContext);
+                },
+                child: const Text(
+                  'Delete',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -137,7 +134,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                   : Colors.transparent,
           border: Border(
             bottom: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.onSurface.withAlpha(25),
               width: 0.5,
             ),
           ),
@@ -185,9 +182,12 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                       fontSize: 14,
                       fontWeight:
                           hasUnread ? FontWeight.w500 : FontWeight.normal,
-                      color: hasUnread
-                          ? Theme.of(context).colorScheme.onSurface
-                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color:
+                          hasUnread
+                              ? Theme.of(context).colorScheme.onSurface
+                              : Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(153),
                     ),
                   ),
                 ],
@@ -204,7 +204,9 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                     color:
                         hasUnread
                             ? Theme.of(context).colorScheme.primary
-                            : Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            : Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(153),
                     fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
                   ),
                 ),
@@ -305,18 +307,20 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                         )
                         : null,
                 filled: true,
-                fillColor: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                fillColor: Theme.of(
+                  context,
+                ).colorScheme.secondary.withAlpha(20),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    color: Theme.of(context).colorScheme.primary.withAlpha(51),
                     width: 1,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(25),
                   borderSide: BorderSide(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                    color: Theme.of(context).colorScheme.primary.withAlpha(51),
                     width: 1,
                   ),
                 ),
@@ -420,7 +424,7 @@ class _EmptyState extends StatelessWidget {
           Icon(
             hasQuery ? Icons.search_off : Icons.chat_bubble_outline,
             size: 80,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.onSurface.withAlpha(76),
           ),
           const SizedBox(height: 16),
           Text(
@@ -438,7 +442,7 @@ class _EmptyState extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
               ),
             ),
           ],

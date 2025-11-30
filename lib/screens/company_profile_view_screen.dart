@@ -119,7 +119,7 @@ class CompanyProfileViewScreen extends StatelessWidget {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                color: Theme.of(context).colorScheme.onSurface.withAlpha(179),
                 fontWeight: FontWeight.w500,
               ),
             ),

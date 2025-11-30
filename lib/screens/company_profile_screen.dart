@@ -50,51 +50,52 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
       });
     }
   }
-
+  
   void _openEditScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => CompanyProfileEditScreen(
-          companyName: companyName,
-          description: description,
-          founded: founded,
-          teamSize: teamSize,
-          industry: industry,
-          stage: stage,
-          currency: currency,
-          location: location,
-          teamMembers: teamMembers,
-          companyLogo: companyLogo,
-          verifiedCertificate: verifiedCertificate,
-          onSave: (
-            String newName,
-            String newDescription,
-            String newFounded,
-            String newTeamSize,
-            String newIndustry,
-            String newStage,
-            String newCurrency,
-            String newLocation,
-            List<TeamMember> newTeamMembers,
-            Uint8List? newLogo,
-            Uint8List? newCertificate,
-          ) {
-            setState(() {
-              companyName = newName;
-              description = newDescription;
-              founded = newFounded;
-              teamSize = newTeamSize;
-              industry = newIndustry;
-              stage = newStage;
-              currency = newCurrency;
-              location = newLocation;
-              teamMembers = newTeamMembers;
-              companyLogo = newLogo;
-              verifiedCertificate = newCertificate;
-            });
-          },
-        ),
+        builder:
+            (context) => CompanyProfileEditScreen(
+              companyName: companyName,
+              description: description,
+              founded: founded,
+              teamSize: teamSize,
+              industry: industry,
+              stage: stage,
+              currency: currency,
+              location: location,
+              teamMembers: teamMembers,
+              companyLogo: companyLogo,
+              verifiedCertificate: verifiedCertificate,
+              onSave: (
+                String newName,
+                String newDescription,
+                String newFounded,
+                String newTeamSize,
+                String newIndustry,
+                String newStage,
+                String newCurrency,
+                String newLocation,
+                List<TeamMember> newTeamMembers,
+                Uint8List? newLogo,
+                Uint8List? newCertificate,
+              ) {
+                setState(() {
+                  companyName = newName;
+                  description = newDescription;
+                  founded = newFounded;
+                  teamSize = newTeamSize;
+                  industry = newIndustry;
+                  stage = newStage;
+                  currency = newCurrency;
+                  location = newLocation;
+                  teamMembers = newTeamMembers;
+                  companyLogo = newLogo;
+                  verifiedCertificate = newCertificate;
+                });
+              },
+            ),
       ),
     );
   }
@@ -117,11 +118,7 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                     Icons.arrow_back,
                     () => Navigator.pop(context),
                   ),
-                  buildTopWhiteButton(
-                    null,
-                    _openEditScreen,
-                    label: "Edit",
-                  ),
+                  buildTopWhiteButton(null, _openEditScreen, label: "Edit"),
                 ],
               ),
               const SizedBox(height: 24),
@@ -132,23 +129,31 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                   width: 100,
                   height: 100,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withAlpha(20),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 0.2,
+                    ),
                   ),
-                  child: companyLogo != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.memory(
-                            companyLogo!,
-                            fit: BoxFit.cover,
+                  child:
+                      companyLogo != null
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.memory(
+                              companyLogo!,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                          : Icon(
+                            Icons.camera_alt,
+                            size: 40,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(128),
                           ),
-                        )
-                      : Icon(
-                          Icons.camera_alt,
-                          size: 40,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                        ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -226,38 +231,46 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withAlpha(20),
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 0.2,
+                    ),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: teamMembers.map((member) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.onSurface,
-                                shape: BoxShape.circle,
-                              ),
+                    children:
+                        teamMembers.map((member) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 6,
+                                  height: 6,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "${member.name} - ${member.role}",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w400,
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 8),
-                            Text(
-                              "${member.name} - ${member.role}",
-                              style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                 ),
               ),
@@ -270,25 +283,33 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
                   height: 150,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.secondary.withAlpha(20),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.secondary.withAlpha(20),
                     borderRadius: BorderRadius.circular(25),
-                    border: Border.all(color: Theme.of(context).colorScheme.primary, width: 0.2),
+                    border: Border.all(
+                      color: Theme.of(context).colorScheme.primary,
+                      width: 0.2,
+                    ),
                   ),
-                  child: verifiedCertificate != null
-                      ? ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
-                          child: Image.memory(
-                            verifiedCertificate!,
-                            fit: BoxFit.contain,
+                  child:
+                      verifiedCertificate != null
+                          ? ClipRRect(
+                            borderRadius: BorderRadius.circular(18),
+                            child: Image.memory(
+                              verifiedCertificate!,
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                          : Center(
+                            child: Icon(
+                              Icons.add,
+                              size: 50,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(128),
+                            ),
                           ),
-                        )
-                      : Center(
-                          child: Icon(
-                            Icons.add,
-                            size: 50,
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                          ),
-                        ),
                 ),
               ),
             ],
@@ -340,8 +361,11 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
     );
   }
 
-  Widget buildTopWhiteButton(IconData? icon, VoidCallback onPressed,
-      {String? label}) {
+  Widget buildTopWhiteButton(
+    IconData? icon,
+    VoidCallback onPressed, {
+    String? label,
+  }) {
     final theme = Theme.of(context);
     return InkWell(
       onTap: onPressed,
@@ -350,18 +374,21 @@ class _CompanyProfileScreenState extends State<CompanyProfileScreen> {
         decoration: BoxDecoration(
           color: theme.cardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: theme.colorScheme.onSurface.withOpacity(0.3)),
+          border: Border.all(
+            color: theme.colorScheme.onSurface.withAlpha(77),
+          ),
         ),
-        child: icon != null
-            ? Icon(icon, color: theme.colorScheme.onSurface)
-            : Text(
-                label!,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  color: theme.colorScheme.onSurface,
+        child:
+            icon != null
+                ? Icon(icon, color: theme.colorScheme.onSurface)
+                : Text(
+                  label!,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
-              ),
       ),
     );
   }
@@ -392,7 +419,8 @@ class CompanyProfileEditScreen extends StatefulWidget {
     List<TeamMember>,
     Uint8List?,
     Uint8List?,
-  ) onSave;
+  )
+  onSave;
 
   const CompanyProfileEditScreen({
     super.key,
@@ -514,10 +542,12 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                 if (nameController.text.isNotEmpty &&
                     roleController.text.isNotEmpty) {
                   setState(() {
-                    tempTeamMembers.add(TeamMember(
-                      name: nameController.text,
-                      role: roleController.text,
-                    ));
+                    tempTeamMembers.add(
+                      TeamMember(
+                        name: nameController.text,
+                        role: roleController.text,
+                      ),
+                    );
                   });
                   Navigator.pop(context);
                 }
@@ -593,19 +623,20 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: tempCompanyLogo != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Image.memory(
-                                    tempCompanyLogo!,
-                                    fit: BoxFit.cover,
+                          child:
+                              tempCompanyLogo != null
+                                  ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.memory(
+                                      tempCompanyLogo!,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                  : const Icon(
+                                    Icons.camera_alt,
+                                    size: 40,
+                                    color: Colors.grey,
                                   ),
-                                )
-                              : const Icon(
-                                  Icons.camera_alt,
-                                  size: 40,
-                                  color: Colors.grey,
-                                ),
                         ),
                       ),
                     ),
@@ -613,10 +644,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                     const Center(
                       child: Text(
                         'Upload Company Logo',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey,
-                        ),
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -709,8 +737,11 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                                     ),
                                   ),
                                   IconButton(
-                                    icon: const Icon(Icons.remove_circle,
-                                        color: Colors.red, size: 20),
+                                    icon: const Icon(
+                                      Icons.remove_circle,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
                                     onPressed: () => _removeTeamMember(index),
                                     padding: EdgeInsets.zero,
                                     constraints: const BoxConstraints(),
@@ -725,7 +756,7 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                             child: Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withAlpha(128),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: const Row(
@@ -753,31 +784,35 @@ class _CompanyProfileEditScreenState extends State<CompanyProfileEditScreen> {
                           color: const Color(0xFF91C7E5),
                           borderRadius: BorderRadius.circular(18),
                         ),
-                        child: tempCertificate != null
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(18),
-                                child: Image.memory(
-                                  tempCertificate!,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                            : const Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.add,
-                                        size: 40, color: Colors.black54),
-                                    SizedBox(height: 8),
-                                    Text(
-                                      'Upload Certificate',
-                                      style: TextStyle(
+                        child:
+                            tempCertificate != null
+                                ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(18),
+                                  child: Image.memory(
+                                    tempCertificate!,
+                                    fit: BoxFit.contain,
+                                  ),
+                                )
+                                : const Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.add,
+                                        size: 40,
                                         color: Colors.black54,
-                                        fontSize: 14,
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Upload Certificate',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
                       ),
                     ),
                     const SizedBox(height: 30),
